@@ -1,0 +1,38 @@
+{
+  "name": "@castalia/platform",
+  "version": "0.4.0",
+  "description": "Castalia Web Platform: shared shell (header/footer), design tokens, route visibility contracts, and entitlement-aware helpers for all castalia.institute properties.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "./dist/tokens.css",
+    "./src/tokens.css"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./src/tokens.css"
+  },
+  "files": [
+    "dist",
+    "src/tokens.css"
+  ],
+  "peerDependencies": {
+    "lucide-react": ">=0.400.0",
+    "next": ">=14.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "keywords": [
+    "castalia",
+    "header",
+    "footer",
+    "entitlements",
+    "visibility"
+  ]
+}

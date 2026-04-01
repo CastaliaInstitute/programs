@@ -1,0 +1,27 @@
+'use client';
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import Link from 'next/link';
+function ColumnLink({ href, className, children, external, }) {
+    const abs = href.startsWith('http://') || href.startsWith('https://');
+    if (abs && external) {
+        return (_jsx("a", { href: href, target: "_blank", rel: "noopener noreferrer", className: className, children: children }));
+    }
+    if (abs) {
+        return (_jsx("a", { href: href, className: className, children: children }));
+    }
+    return (_jsx(Link, { href: href, className: className, children: children }));
+}
+const defaultLegal = (base = '') => [
+    { href: `${base}/terms`, label: 'Terms of Service', navVisibility: 'always' },
+    { href: `${base}/privacy`, label: 'Privacy Policy', navVisibility: 'always' },
+    { href: `${base}/compliance`, label: 'Compliance', navVisibility: 'always' },
+];
+export function CastaliaFooter({ embed, institutionTitle = 'Institution', institutionBody, membershipLinks = [], propertyLinks = [], legalLinks, topSlot, copyright, platformVersion = 'Castalia Web Platform v0.4', siteLabel, environment = 'production', versionDetailHref = '/version', className = '', deploymentSlot, versionInfoSlot, cornerSlot, logoSrc = '/logo.png', logoWhiteSrc = '/logo-white.png', }) {
+    if (embed)
+        return null;
+    const year = new Date().getFullYear();
+    const legal = legalLinks?.length ? legalLinks : defaultLegal();
+    const envBadge = environment !== 'production' ? (_jsx("span", { className: "rounded bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900 dark:bg-amber-900/40 dark:text-amber-200", children: environment })) : null;
+    const linkCls = 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-sm';
+    return (_jsxs("footer", { className: `border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 relative ${className}`, children: [_jsxs("div", { className: "container mx-auto px-4 py-12", children: [topSlot, _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8", children: [_jsxs("div", { className: "lg:col-span-1", children: [_jsx("h3", { className: "text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3", children: institutionTitle }), _jsx("div", { className: "text-slate-600 dark:text-slate-400 text-sm space-y-2", children: institutionBody ?? (_jsx(_Fragment, { children: _jsx("p", { children: "About Castalia, mission, and contact \u2014 customize per site." }) })) })] }), _jsxs("div", { children: [_jsx("h3", { className: "text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3", children: "Membership" }), _jsx("ul", { className: "space-y-2", children: membershipLinks.map((l) => (_jsx("li", { children: _jsx(ColumnLink, { href: l.href, className: linkCls, external: l.external, children: l.label }) }, `${l.href}-${l.label}`))) })] }), _jsxs("div", { children: [_jsx("h3", { className: "text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3", children: "Properties" }), _jsx("ul", { className: "space-y-2", children: propertyLinks.map((l) => (_jsx("li", { children: _jsx(ColumnLink, { href: l.href, className: linkCls, external: l.external, children: l.label }) }, `${l.href}-${l.label}`))) })] }), _jsxs("div", { children: [_jsx("h3", { className: "text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3", children: "Legal" }), _jsx("ul", { className: "space-y-2", children: legal.map((l) => (_jsx("li", { children: _jsx(ColumnLink, { href: l.href, className: linkCls, external: l.external, children: l.label }) }, `${l.href}-${l.label}`))) })] })] }), _jsx("div", { className: "border-t border-slate-200 dark:border-slate-700 pt-8 mt-8", children: _jsxs("div", { className: "flex flex-col gap-4", children: [_jsxs("div", { className: "flex flex-col md:flex-row justify-between items-center gap-4", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("img", { src: logoSrc, alt: "", width: 24, height: 24, className: "object-contain block dark:hidden" }), _jsx("img", { src: logoWhiteSrc, alt: "", width: 24, height: 24, className: "object-contain hidden dark:block" }), _jsx("p", { className: "text-sm text-slate-600 dark:text-slate-400", children: copyright ?? `© ${year} Castalia Institute. All rights reserved.` })] }), _jsxs("div", { className: "flex flex-wrap items-center gap-3 justify-center", children: [legal.map((l) => (_jsx(ColumnLink, { href: l.href, className: "text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors", external: l.external, children: l.label }, `bar-${l.href}`))), deploymentSlot] })] }), _jsxs("div", { className: "flex flex-col sm:flex-row justify-between items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500", children: [versionInfoSlot ?? (_jsxs("span", { children: [platformVersion, siteLabel ? ` · ${siteLabel}` : '', " \u00B7 ", environment, envBadge ? _jsxs(_Fragment, { children: [" ", envBadge] }) : null] })), versionDetailHref ? (_jsx(ColumnLink, { href: versionDetailHref, className: "hover:text-slate-600 dark:hover:text-slate-400 transition-colors", children: "View version details" })) : null] })] }) })] }), cornerSlot ? _jsx("div", { className: "absolute bottom-4 right-4 z-10", children: cornerSlot }) : null] }));
+}

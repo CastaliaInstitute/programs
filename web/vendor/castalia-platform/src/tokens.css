@@ -1,0 +1,29 @@
+/**
+ * Castalia design tokens — import once per app layout.
+ * @import "@castalia/platform/tokens.css";
+ */
+:root {
+  --castalia-bg: #ffffff;
+  --castalia-surface: #f8fafc;
+  --castalia-text: #0f172a;
+  --castalia-muted: #64748b;
+  --castalia-accent: #d97706;
+  --castalia-accent-hover: #b45309;
+  --castalia-border: #e2e8f0;
+  --castalia-header-height: 4rem;
+  --castalia-radius-sm: 0.375rem;
+  --castalia-radius-md: 0.75rem;
+  --castalia-radius-lg: 1rem;
+  --castalia-radius-xl: 1.5rem;
+}
+
+.dark,
+html.dark {
+  --castalia-bg: #0f172a;
+  --castalia-surface: #1e293b;
+  --castalia-text: #f1f5f9;
+  --castalia-muted: #94a3b8;
+  --castalia-accent: #fbbf24;
+  --castalia-accent-hover: #f59e0b;
+  --castalia-border: #334155;
+}

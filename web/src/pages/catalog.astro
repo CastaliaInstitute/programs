@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  title="Programs Catalog"
+  description="Starter catalog structure for institution-ready Castalia course offerings."
+>
+  <main class="programs-page section">
+    <div class="section__intro">
+      <h1>Catalog</h1>
+      <p>
+        This route is ready for the first indexed offerings. Replace the placeholder cards with
+        real program data or wire this page to a content source when the catalog is ready.
+      </p>
+    </div>
+
+    <div class="grid grid--cards">
+      <article class="card">
+        <h3>Program title</h3>
+        <p>Short summary, delivery mode, audience, and institution fit.</p>
+      </article>
+      <article class="card">
+        <h3>Credential type</h3>
+        <p>Standalone course, certificate sequence, or embedded degree module.</p>
+      </article>
+      <article class="card">
+        <h3>Implementation notes</h3>
+        <p>Faculty support, platform dependencies, LMS packaging, and launch timeline.</p>
+      </article>
+    </div>
+  </main>
+</BaseLayout>

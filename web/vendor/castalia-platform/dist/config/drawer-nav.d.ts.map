@@ -1,0 +1,1 @@
+{"version":3,"file":"drawer-nav.d.ts","sourceRoot":"","sources":["../../src/config/drawer-nav.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,OAAO,EAAE,MAAM,eAAe,CAAA;AA2C5C;;;GAGG;AACH,wBAAgB,oBAAoB,CAAC,MAAM,EAAE,MAAM,GAAG,OAAO,EAAE,CAQ9D;AAED,eAAO,MAAM,yBAAyB,GAAI,QAAQ,MAAM,KAAG,OAAO,EAGjE,CAAA;AAED,yEAAyE;AACzE,wBAAgB,gCAAgC,CAAC,MAAM,EAAE,MAAM;;;;EA4B9D"}

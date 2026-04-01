@@ -1,0 +1,181 @@
+@import "@castalia/platform/tokens.css";
+@import "tailwindcss";
+
+@source "../../node_modules/@castalia/platform/dist/**/*.js";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fb;
+  color: #0f172a;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+.programs-page {
+  min-height: 100vh;
+}
+
+.hero {
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 30rem),
+    linear-gradient(180deg, #ffffff, #eef4ff);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.hero__inner,
+.section,
+.cta {
+  width: min(72rem, calc(100% - 3rem));
+  margin: 0 auto;
+}
+
+.hero__inner {
+  padding: 5rem 0 4rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.1);
+  color: #1d4ed8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hero h1,
+.section h2 {
+  margin: 0;
+  line-height: 1.05;
+}
+
+.hero h1 {
+  max-width: 12ch;
+  margin-top: 1rem;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+}
+
+.hero p,
+.section p,
+.faq li,
+.list li {
+  color: #334155;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.hero p {
+  max-width: 48rem;
+  margin: 1.25rem 0 0;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.85rem 1.2rem;
+  border-radius: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button--primary {
+  background: #1d4ed8;
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(29, 78, 216, 0.22);
+}
+
+.button--secondary {
+  background: #fff;
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.section__intro {
+  max-width: 44rem;
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.grid--cards {
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.card {
+  padding: 1.4rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 1.2rem;
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.05);
+}
+
+.card h3 {
+  margin-top: 0;
+  margin-bottom: 0.7rem;
+  font-size: 1.1rem;
+}
+
+.list,
+.faq {
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.cta {
+  margin-bottom: 5rem;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, #0f172a, #1e3a8a);
+  color: #fff;
+}
+
+.cta p {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.cta .button--secondary {
+  border: 0;
+}
+
+@media (max-width: 720px) {
+  .hero__inner {
+    padding-top: 4rem;
+  }
+
+  .section,
+  .cta {
+    width: min(72rem, calc(100% - 1.5rem));
+  }
+}

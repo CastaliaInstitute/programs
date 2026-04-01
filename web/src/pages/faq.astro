@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  title="Programs FAQ"
+  description="Operational details for the Castalia Programs GitHub Pages deployment and domain setup."
+>
+  <main class="programs-page section">
+    <div class="section__intro">
+      <h1>FAQ</h1>
+      <p>Initial notes for operating this repository as the programs catalog.</p>
+    </div>
+
+    <ul class="faq">
+      <li>Builds run on GitHub Actions and publish automatically on pushes to `main`.</li>
+      <li>The custom domain is declared via the repository `CNAME` file as `programs.castalia.institute`.</li>
+      <li>DNS should point the subdomain at GitHub Pages using the repository’s final Pages target.</li>
+      <li>The frontend is Astro, while the shared shell comes from the vendored `@castalia/platform` package.</li>
+    </ul>
+  </main>
+</BaseLayout>

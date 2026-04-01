@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  title="Castalia Programs"
+  description="Index institution-ready Castalia courses for licensing, adoption, and resale to universities, schools, and other learning organizations."
+  isHomePage={true}
+>
+  <main class="programs-page">
+    <section class="hero">
+      <div class="hero__inner">
+        <span class="eyebrow">Institution Sales Index</span>
+        <h1>Courses packaged for institutional adoption.</h1>
+        <p>
+          programs.castalia.institute is the public catalog for Castalia programs offered to
+          universities, schools, colleges, accelerators, and workforce partners. It runs on the
+          shared @castalia/platform shell so it stays visually and structurally aligned with the
+          broader institute web ecosystem.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="/catalog">Browse catalog</a>
+          <a class="button button--secondary" href="/institutions">For institutions</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section__intro">
+        <h2>What belongs here</h2>
+        <p>
+          Use this repository to index programs for sale to institutions, not direct-to-learner
+          landing pages. Each listing can point to curriculum summaries, deployment notes,
+          accreditation context, pricing models, and implementation requirements.
+        </p>
+      </div>
+      <div class="grid grid--cards">
+        <article class="card">
+          <h3>Degree-adjacent courses</h3>
+          <p>Catalog courses that can be licensed into existing university or school offerings.</p>
+        </article>
+        <article class="card">
+          <h3>Certificate bundles</h3>
+          <p>Package related courses as stackable certificates for institutional partners.</p>
+        </article>
+        <article class="card">
+          <h3>Faculty infrastructure</h3>
+          <p>Document the platform requirements needed to deploy AI-supported instruction.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section__intro">
+        <h2>Repository baseline</h2>
+        <p>
+          This scaffold includes GitHub Pages deployment, the `programs.castalia.institute` custom
+          domain, and the shared Castalia satellite shell. Add new Astro routes under `web/src/pages`
+          as the catalog expands.
+        </p>
+      </div>
+      <ul class="list">
+        <li>GitHub Actions builds the Astro site from `web/` and publishes `web/dist` to Pages.</li>
+        <li>`CNAME` is set to `programs.castalia.institute` for GitHub Pages custom-domain support.</li>
+        <li>`@castalia/platform` is vendored locally so Pages builds do not depend on sibling repos.</li>
+      </ul>
+    </section>
+
+    <section class="cta">
+      <h2>Ready for first listings</h2>
+      <p>
+        Add detailed program pages next, then point the domain in DNS to GitHub Pages for this
+        repository.
+      </p>
+      <a class="button button--secondary" href="/faq">Review setup details</a>
+    </section>
+  </main>
+</BaseLayout>
