@@ -1,33 +1,130 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import { programOfferings } from '../lib/programs'
 ---
 
 <BaseLayout
   title="Programs Catalog"
-  description="Starter catalog structure for institution-ready Castalia course offerings."
+  description="Browse institution-ready Castalia programs available for licensing, pilots, and certificate deployment."
 >
   <main class="programs-page section">
     <div class="section__intro">
-      <h1>Catalog</h1>
+      <span class="eyebrow">Programs Catalog</span>
+      <h1>Licensable offerings for institutional launch.</h1>
       <p>
-        This route is ready for the first indexed offerings. Replace the placeholder cards with
-        real program data or wire this page to a content source when the catalog is ready.
+        Review programs by audience, delivery format, and implementation load. Each listing is
+        designed to support a buyer conversation with enough detail for academic and operational
+        review.
       </p>
     </div>
 
-    <div class="grid grid--cards">
-      <article class="card">
-        <h3>Program title</h3>
-        <p>Short summary, delivery mode, audience, and institution fit.</p>
-      </article>
-      <article class="card">
-        <h3>Credential type</h3>
-        <p>Standalone course, certificate sequence, or embedded degree module.</p>
-      </article>
-      <article class="card">
-        <h3>Implementation notes</h3>
-        <p>Faculty support, platform dependencies, LMS packaging, and launch timeline.</p>
-      </article>
-    </div>
+    <section class="grid grid--cards">
+      {
+        programOfferings.map((program) => (
+          <article class="card card--program">
+            <div class="card__chips">
+              <span class="chip">{program.format}</span>
+              <span class="chip chip--muted">{program.modality}</span>
+            </div>
+            <h2>{program.title}</h2>
+            <p>{program.summary}</p>
+
+            {program.detailHref && (
+              <p class="card__detail-link">
+                <a class="button button--secondary" href={program.detailHref}>
+                  {program.deliverableDemos?.length
+                    ? `View ${program.deliverableDemos.length} delivery demos`
+                    : 'View details'}
+                </a>
+              </p>
+            )}
+
+            <dl class="meta-grid">
+              <div>
+                <dt>Audience</dt>
+                <dd>{program.audience}</dd>
+              </div>
+              {program.credits && (
+                <div>
+                  <dt>Credits</dt>
+                  <dd>{program.credits}</dd>
+                </div>
+              )}
+              <div>
+                <dt>Duration</dt>
+                <dd>{program.duration}</dd>
+              </div>
+              <div>
+                <dt>Implementation</dt>
+                <dd>{program.implementation}</dd>
+              </div>
+            </dl>
+
+            <div class="card__section">
+              <h3>What institutions get</h3>
+              <ul class="list">
+                {program.outcomes.map((outcome) => <li>{outcome}</li>)}
+              </ul>
+            </div>
+
+            {program.curriculumHighlights && (
+              <div class="card__section">
+                <h3>Curriculum highlights</h3>
+                <ul class="list">
+                  {program.curriculumHighlights.map((course) => <li>{course}</li>)}
+                </ul>
+              </div>
+            )}
+
+            {program.specializations && (
+              <div class="card__section">
+                <h3>Specialization tracks</h3>
+                <div class="track-grid">
+                  {program.specializations.map((track) => (
+                    <section class="track-card">
+                      <h4>{track.title}</h4>
+                      <ul class="list">
+                        {track.courses.map((course) => <li>{course}</li>)}
+                      </ul>
+                    </section>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div class="card__section">
+              <h3>Best fit</h3>
+              <ul class="list">
+                {program.institutionFit.map((fit) => <li>{fit}</li>)}
+              </ul>
+            </div>
+          </article>
+        ))
+      }
+    </section>
+
+    <section class="section section--tight">
+      <div class="section__intro">
+        <h2>Common buying structures</h2>
+        <p>
+          The curriculum can be sold in multiple academic formats depending on your
+          institution's program strategy and launch timeline.
+        </p>
+      </div>
+      <div class="grid grid--cards">
+        <article class="card">
+          <h3>Full MSAI program launch</h3>
+          <p>Best for institutions that want a complete graduate AI degree with built-in specialization pathways.</p>
+        </article>
+        <article class="card">
+          <h3>Certificate portfolio</h3>
+          <p>Best for institutions that want stackable AI certificates drawn from the core and Local AI course set.</p>
+        </article>
+        <article class="card">
+          <h3>Specialization-first pilot</h3>
+          <p>Best for teams starting with a healthcare, business, or cybersecurity AI concentration before full rollout.</p>
+        </article>
+      </div>
+    </section>
   </main>
 </BaseLayout>

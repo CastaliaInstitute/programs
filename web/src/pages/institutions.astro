@@ -1,33 +1,86 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import { buyingFaqs, salesProcess } from '../lib/programs'
 ---
 
 <BaseLayout
   title="For Institutions"
-  description="How Castalia programs can be adopted by universities, schools, and workforce partners."
+  description="How institutions evaluate, license, and launch the MSAI curriculum."
 >
   <main class="programs-page section">
     <div class="section__intro">
-      <h1>For institutions</h1>
+      <span class="eyebrow">Institution Partnerships</span>
+      <h1>From curriculum review to program launch.</h1>
       <p>
-        Use this section to explain how institutions evaluate, pilot, and deploy programs from the
-        catalog.
+        The MSAI is designed for institutions that want a launch-ready graduate AI program
+        with enough flexibility to fit local faculty, accreditation, and delivery requirements.
       </p>
     </div>
 
     <div class="grid grid--cards">
       <article class="card">
-        <h3>Deployment model</h3>
-        <p>Document whether courses ship as LMS packages, hosted experiences, or hybrid delivery.</p>
+        <h3>Academic fit</h3>
+        <p>Position the curriculum as a full graduate degree, a concentration-based launch, or a certificate-bearing extension of an existing portfolio.</p>
       </article>
       <article class="card">
-        <h3>Commercial model</h3>
-        <p>Clarify licensing, cohort pricing, revenue share, or minimum-seat structures.</p>
+        <h3>Commercial structure</h3>
+        <p>The program can be licensed as a complete degree package, a specialization-first rollout, or a certificate portfolio with optional implementation support.</p>
       </article>
       <article class="card">
-        <h3>Support model</h3>
-        <p>Explain faculty onboarding, technical support, and assessment or reporting options.</p>
+        <h3>Operational support</h3>
+        <p>We align staffing, launch sequence, student support, and online delivery assumptions to your institution's operational model.</p>
       </article>
     </div>
+
+    <section class="section section--tight">
+      <div class="section__intro">
+        <h2>How engagement works</h2>
+        <p>
+          Institutional sales move faster when the path is explicit. We recommend a structured
+          sequence from fit assessment through implementation.
+        </p>
+      </div>
+      <ol class="steps">
+        {salesProcess.map((step) => <li>{step}</li>)}
+      </ol>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section__intro">
+        <h2>What we can package</h2>
+        <p>
+          The curriculum can be sold in multiple institutional forms depending on how quickly
+          you want to enter market and how broad the initial launch should be.
+        </p>
+      </div>
+      <div class="grid grid--cards">
+        <article class="card">
+          <h3>Full degree package</h3>
+          <p>Adopt the complete 36-credit online MSAI structure with core, specialization, capstone, and certificate extension options.</p>
+        </article>
+        <article class="card">
+          <h3>Concentration-first rollout</h3>
+          <p>Lead with healthcare AI, business AI, or cybersecurity AI to validate market demand before scaling the full degree.</p>
+        </article>
+        <article class="card">
+          <h3>Market-facing certificates</h3>
+          <p>Use Local AI & Deployment to Hardware and selected core courses to create stackable AI certificate offers.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section__intro">
+        <h2>Buyer FAQ</h2>
+      </div>
+      <div class="faq-cards">
+        {buyingFaqs.map((item) => (
+          <article class="card">
+            <h3>{item.question}</h3>
+            <p>{item.answer}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   </main>
 </BaseLayout>

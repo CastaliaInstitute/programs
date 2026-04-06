@@ -1,22 +1,48 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import { buyingFaqs } from '../lib/programs'
 ---
 
 <BaseLayout
   title="Programs FAQ"
-  description="Operational details for the Castalia Programs GitHub Pages deployment and domain setup."
+  description="Frequently asked questions for institutions evaluating Castalia programs."
 >
   <main class="programs-page section">
     <div class="section__intro">
       <h1>FAQ</h1>
-      <p>Initial notes for operating this repository as the programs catalog.</p>
+      <p>
+        Common questions from institutional buyers, program directors, and implementation teams.
+      </p>
     </div>
 
-    <ul class="faq">
-      <li>Builds run on GitHub Actions and publish automatically on pushes to `main`.</li>
-      <li>The custom domain is declared via the repository `CNAME` file as `programs.castalia.institute`.</li>
-      <li>DNS should point the subdomain at GitHub Pages using the repository’s final Pages target.</li>
-      <li>The frontend is Astro, while the shared shell comes from the vendored `@castalia/platform` package.</li>
-    </ul>
+    <div class="faq-cards">
+      {buyingFaqs.map((item) => (
+        <article class="card">
+          <h2>{item.question}</h2>
+          <p>{item.answer}</p>
+        </article>
+      ))}
+      <article class="card">
+        <h2>Do programs require a specific LMS?</h2>
+        <p>
+          No single LMS is required. Offerings can be packaged for common LMS environments or
+          delivered through supported hosted workflows depending on the program.
+        </p>
+      </article>
+      <article class="card">
+        <h2>Can we start with a narrow audience?</h2>
+        <p>
+          Yes. Many partners begin with a special topics section, honors cohort, summer pilot, or
+          executive education audience before scaling wider.
+        </p>
+      </article>
+      <article class="card">
+        <h2>What does implementation support include?</h2>
+        <p>
+          Depending on scope, support can include faculty onboarding, launch planning, learner
+          communications, delivery recommendations, and reporting structure.
+        </p>
+      </article>
+    </div>
   </main>
 </BaseLayout>

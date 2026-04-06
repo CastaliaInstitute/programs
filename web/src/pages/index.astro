@@ -4,75 +4,100 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
 <BaseLayout
   title="Castalia Programs"
-  description="Index institution-ready Castalia courses for licensing, adoption, and resale to universities, schools, and other learning organizations."
+  description="License the MSAI curriculum and related AI certificate offerings for institutional launch."
   isHomePage={true}
 >
   <main class="programs-page">
     <section class="hero">
       <div class="hero__inner">
-        <span class="eyebrow">Institution Sales Index</span>
-        <h1>Courses packaged for institutional adoption.</h1>
+        <span class="eyebrow">AI Curriculum Available for Licensing</span>
+        <h1>Launch an AI master's program without building the curriculum from zero.</h1>
         <p>
-          programs.castalia.institute is the public catalog for Castalia programs offered to
-          universities, schools, colleges, accelerators, and workforce partners. It runs on the
-          shared @castalia/platform shell so it stays visually and structurally aligned with the
-          broader institute web ecosystem.
+          The programs catalog now features the MSAI: a 36-credit online master's degree
+          with a nine-course core, capstone, specialization tracks in healthcare, business, and
+          cybersecurity AI, plus a Local AI certificate course for portfolio expansion.
+          AIN 2001 (AIMA) is also listed with sample PDF slides, an IMS Common Cartridge on every demo row, and live GitHub delivery demos.
         </p>
         <div class="hero__actions">
-          <a class="button button--primary" href="/catalog">Browse catalog</a>
-          <a class="button button--secondary" href="/institutions">For institutions</a>
+          <a class="button button--primary" href="/catalog">Explore the catalog</a>
+          <a class="button button--secondary" href="/institutions">Discuss program licensing</a>
         </div>
       </div>
     </section>
 
     <section class="section">
       <div class="section__intro">
-        <h2>What belongs here</h2>
+        <h2>Built for institutional procurement</h2>
         <p>
-          Use this repository to index programs for sale to institutions, not direct-to-learner
-          landing pages. Each listing can point to curriculum summaries, deployment notes,
-          accreditation context, pricing models, and implementation requirements.
+          This site is designed for deans, provosts, online learning leaders, and academic
+          entrepreneurs evaluating whether the curriculum fits their institution, launch
+          timeline, staffing model, and enrollment strategy.
         </p>
       </div>
       <div class="grid grid--cards">
         <article class="card">
-          <h3>Degree-adjacent courses</h3>
-          <p>Catalog courses that can be licensed into existing university or school offerings.</p>
+          <h3>Clear academic value</h3>
+          <p>Present a coherent AI curriculum with core foundations, applied specializations, and a capstone aligned to workforce demand.</p>
         </article>
         <article class="card">
-          <h3>Certificate bundles</h3>
-          <p>Package related courses as stackable certificates for institutional partners.</p>
+          <h3>Operational readiness</h3>
+          <p>Show how a fully online program can be launched, staffed, adapted, and supported inside an institutional delivery model.</p>
         </article>
         <article class="card">
-          <h3>Faculty infrastructure</h3>
-          <p>Document the platform requirements needed to deploy AI-supported instruction.</p>
+          <h3>Commercial clarity</h3>
+          <p>Frame the curriculum for degree launch, specialization pilots, or certificate extensions with clear partnership structures.</p>
         </article>
       </div>
     </section>
 
     <section class="section">
       <div class="section__intro">
-        <h2>Repository baseline</h2>
+        <h2>What institutions can buy</h2>
         <p>
-          This scaffold includes GitHub Pages deployment, the `programs.castalia.institute` custom
-          domain, and the shared Castalia satellite shell. Add new Astro routes under `web/src/pages`
-          as the catalog expands.
+          The curriculum can be packaged as a full master's degree, a specialization-first
+          launch, or stackable certificate offerings that extend an existing institutional catalog.
+        </p>
+      </div>
+      <div class="grid grid--cards">
+        <article class="card">
+          <h3>Full MSAI launch</h3>
+          <p>Adopt the 36-credit master's structure with core sequence, capstone, and specialization tracks.</p>
+        </article>
+        <article class="card">
+          <h3>Specialization pathways</h3>
+          <p>Start with healthcare, business, or cybersecurity AI as a market-facing concentration or pilot pathway.</p>
+        </article>
+        <article class="card">
+          <h3>Certificate expansion</h3>
+          <p>Use Local AI & Deployment to Hardware and related courses to build applied certificate inventory for technical learners.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section__intro">
+        <h2>What each program page includes</h2>
+        <p>
+          Every listing is written so your team can evaluate fit quickly: curriculum scope,
+          academic positioning, how delivery can work on your campus, and what each specialization
+          delivers for students.
         </p>
       </div>
       <ul class="list">
-        <li>GitHub Actions builds the Astro site from `web/` and publishes `web/dist` to Pages.</li>
-        <li>`CNAME` is set to `programs.castalia.institute` for GitHub Pages custom-domain support.</li>
-        <li>`@castalia/platform` is vendored locally so Pages builds do not depend on sibling repos.</li>
+        <li>Program structure, total credit hours, core curriculum, and specialization pathways.</li>
+        <li>Delivery model, online implementation assumptions, and faculty or student support expectations.</li>
+        <li>Licensing structure for full-program launch, certificate packaging, or concentration pilots.</li>
+        <li>Review artifacts such as course descriptions, syllabi, capstone framing, and launch planning materials.</li>
       </ul>
     </section>
 
     <section class="cta">
-      <h2>Ready for first listings</h2>
+      <h2>Ready to launch the MSAI?</h2>
       <p>
-        Add detailed program pages next, then point the domain in DNS to GitHub Pages for this
-        repository.
+        Browse the curriculum and start an institutional conversation about degree launch,
+        specialization rollout, certificate packaging, and implementation support.
       </p>
-      <a class="button button--secondary" href="/faq">Review setup details</a>
+      <a class="button button--secondary" href="/catalog">Browse the curriculum</a>
     </section>
   </main>
 </BaseLayout>

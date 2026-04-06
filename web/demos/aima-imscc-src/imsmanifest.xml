@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest
+  identifier="manifest_aima_programs_demo"
+  xmlns="http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1"
+  xmlns:lom="http://ltsc.ieee.org/xsd/imsccv1p1/LOM/resource"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1 http://www.imsglobal.org/profile/cc/ccv1p1/imscp_v1p2.xsd"
+>
+  <metadata>
+    <schema>IMS Common Cartridge</schema>
+    <schemaversion>1.1.0</schemaversion>
+  </metadata>
+  <organizations />
+  <resources>
+    <resource identifier="R_week1_pdf" type="webcontent" href="web_resources/week1-search-slides.pdf">
+      <file href="web_resources/week1-search-slides.pdf" />
+    </resource>
+    <resource identifier="R_assignment_md" type="webcontent" href="web_resources/assignment-pathfinding.md">
+      <file href="web_resources/assignment-pathfinding.md" />
+    </resource>
+  </resources>
+</manifest>

@@ -2,3 +2,5 @@ web/node_modules/
 web/dist/
 web/.astro/
 .DS_Store
+web/public/demos/*.imscc
+web/public/demos/imscc-unpacked/

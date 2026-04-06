@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import PopuliDemoShell from '../../components/PopuliDemoShell.astro'
+import ImsccViewer from '../../components/ImsccViewer'
+import { loadImsccViewerPackages } from '../../lib/imscc-packages'
+import { AIMA_IMSCC_DEMO } from '../../lib/programs'
+
+const packages = loadImsccViewerPackages()
+---
+
+<BaseLayout
+  title="IMS Common Cartridge viewer"
+  description="Browse unpacked IMS CC packages published with this site—PDF and markdown from the same payload as each .imscc download."
+>
+  <main class="programs-page" style="padding-top: 0.5rem;">
+    <PopuliDemoShell
+      courseCode="IMS Demo"
+      courseTitle="Common Cartridge viewer"
+      pillLabel="IMS: Dashboard"
+    >
+      <section class="populi-demo__panel">
+        <div class="populi-demo__panel-head">
+          <h2 class="populi-demo__panel-title">Notifications</h2>
+          <button type="button" class="populi-demo__icon-btn" aria-label="Notifications menu" disabled>⋮</button>
+        </div>
+        <p class="populi-demo__panel-body populi-demo__panel-body--empty">You have no notifications for this course.</p>
+      </section>
+
+      <p class="populi-demo__intro">
+        Each cartridge is unpacked to static files during <code>npm run build:demos</code>, so GitHub Pages can serve the
+        same resources you get from the <code>.imscc</code> zip—preview PDFs and assignments here without an LMS. Download
+        the packaged file: <a href={AIMA_IMSCC_DEMO}>aima-lms-demo.imscc</a>.
+      </p>
+
+      <div class="populi-demo__actions">
+        <a class="populi-demo__btn populi-demo__btn--ghost" href="/catalog/aima">Back to AIMA demos</a>
+        <a class="populi-demo__btn populi-demo__btn--ghost" href="/catalog">Programs catalog</a>
+      </div>
+
+      {
+        packages.map((pkg) => (
+          <section style="margin-top: 1.5rem;">
+            <h2 class="populi-demo__section-title">{pkg.label}</h2>
+            <p class="populi-demo__intro">{pkg.description}</p>
+            <p class="imscc-viewer__path">
+              <span class="imscc-viewer__path-label">Unpacked path</span>
+              <code>{pkg.publicBasePath}</code>
+            </p>
+            <ImsccViewer client:load packageLabel={pkg.label} files={pkg.files} />
+          </section>
+        ))
+      }
+
+      <div slot="secondary">
+        <section class="populi-demo__panel">
+          <div class="populi-demo__panel-head">
+            <h2 class="populi-demo__panel-title">Schedule</h2>
+          </div>
+          <p class="populi-demo__panel-body populi-demo__panel-body--empty">
+            There are no scheduled events in the next seven days.
+          </p>
+        </section>
+        <section class="populi-demo__panel">
+          <div class="populi-demo__panel-head">
+            <h2 class="populi-demo__panel-title">My Discussions</h2>
+          </div>
+          <p class="populi-demo__panel-body populi-demo__panel-body--empty">
+            There are no recent discussion updates.
+          </p>
+        </section>
+      </div>
+    </PopuliDemoShell>
+  </main>
+</BaseLayout>

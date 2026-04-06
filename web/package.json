@@ -7,8 +7,10 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "predev": "npm run build:demos",
     "dev": "astro dev",
-    "build": "astro build",
+    "build:demos": "node scripts/copy-aima-demo-pdfs.mjs && node scripts/zip-aima-imscc.mjs && node scripts/imscc-unpack-to-public.mjs",
+    "build": "npm run build:demos && astro build",
     "preview": "astro preview"
   },
   "dependencies": {

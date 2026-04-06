@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import PopuliDemoShell from '../../components/PopuliDemoShell.astro'
+import { AIMA_IMSCC_DEMO, AIMA_REPO, IMSCC_VIEWER_PATH, programOfferings } from '../../lib/programs'
+
+const program = programOfferings.find((p) => p.slug === 'aima')
+if (!program || !program.deliverableDemos) {
+  throw new Error('AIMA offering or demos missing from programs data')
+}
+---
+
+<BaseLayout
+  title="AIN 2001 — AIMA product demos"
+  description="Live demos and downloads for each AIMA delivery option—each includes an IMS Common Cartridge for LMS import—plus PDF slide samples, GitHub Pages, Classroom, Dialogic, SAMWISE, and BEATRICE."
+>
+  <main class="programs-page" style="padding-top: 0.5rem;">
+    <PopuliDemoShell
+      courseCode="AIN 2001"
+      courseTitle="AIMA (Using AI to Make AI)"
+      pillLabel="AIN2001: Dashboard"
+    >
+      <section class="populi-demo__panel">
+        <div class="populi-demo__panel-head">
+          <h2 class="populi-demo__panel-title">Notifications</h2>
+          <button type="button" class="populi-demo__icon-btn" aria-label="Notifications menu" disabled>⋮</button>
+        </div>
+        <p class="populi-demo__panel-body populi-demo__panel-body--empty">
+          You have no notifications for this course.
+        </p>
+      </section>
+
+      <section class="populi-demo__panel">
+        <div class="populi-demo__panel-head">
+          <h2 class="populi-demo__panel-title">Bulletin Board</h2>
+          <button type="button" class="populi-demo__icon-btn" aria-label="Bulletin menu" disabled>⋮</button>
+        </div>
+        <div class="populi-demo__composer">
+          <textarea
+            class="populi-demo__textarea"
+            rows="3"
+            placeholder="Share something with the class…"
+            disabled
+          />
+          <div class="populi-demo__composer-foot">
+            <span style="color: var(--populi-text-muted);">Formatting guide</span>
+            <button type="button" class="populi-demo__btn populi-demo__btn--primary" disabled>Post</button>
+          </div>
+        </div>
+        <p class="populi-demo__panel-body" style="margin-top: 0.85rem;">
+          Preview-only shell—posts are not saved on this demo site.
+        </p>
+      </section>
+
+      <p class="populi-demo__intro">{program.summary}</p>
+
+      <div class="populi-demo__actions">
+        <a class="populi-demo__btn populi-demo__btn--primary" href={AIMA_REPO}>Open course repository</a>
+        <a class="populi-demo__btn populi-demo__btn--ghost" href={IMSCC_VIEWER_PATH}>IMS CC viewer</a>
+        <a class="populi-demo__btn populi-demo__btn--ghost" href="/catalog">Programs catalog</a>
+      </div>
+
+      <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Deliverable demos</h2>
+      <p class="populi-demo__intro">
+        Each row is a buyer-ready slice of the product. <strong>Every row includes the same IMS Common Cartridge</strong>{' '}
+        (import into Canvas, Moodle, or other LTI-capable LMS) in addition to the format-specific link—PDF samples, hosted
+        slides, Classroom, or docs.
+      </p>
+
+      <ul class="demo-list">
+        {
+          program.deliverableDemos.map((demo) => (
+            <li class="demo-list__item card">
+              <h3 class="demo-list__title">{demo.title}</h3>
+              <p class="demo-list__summary">{demo.summary}</p>
+              <div class="demo-list__actions">
+                <a class="button button--primary" href={demo.primaryHref}>
+                  {demo.primaryLabel}
+                </a>
+                {demo.secondaryHref && demo.secondaryLabel && (
+                  <a class="button button--secondary" href={demo.secondaryHref}>
+                    {demo.secondaryLabel}
+                  </a>
+                )}
+                <a class="button button--secondary" href={AIMA_IMSCC_DEMO}>
+                  Download IMS CC (.imscc)
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Implementation notes</h2>
+      <ul class="list">
+        <li>
+          Demos build: run <code>npm run build:demos</code> in <code>web/</code> before <code>astro build</code> so PDFs
+          from <code>demos/aima-demo-content/</code> land in <code>public/demos/</code>, the IMS CC zip is written to{' '}
+          <code>public/demos/aima-lms-demo.imscc</code>, and the same tree is unpacked to{' '}
+          <code>public/demos/imscc-unpacked/aima-lms-demo/</code> for the <a href={IMSCC_VIEWER_PATH}>IMS CC viewer</a>.
+        </li>
+        <li>
+          GitHub Pages: slides deploy from the main branch of the AIMA repo; demo URLs assume the InquiryInstitute org
+          Pages site.
+        </li>
+        <li>
+          SAMWISE and BEATRICE: SAMWISE is primarily local curriculum-server tooling; BEATRICE uses instructor notes and
+          optional Supabase functions—see the linked docs above.
+        </li>
+      </ul>
+
+      <div slot="secondary">
+        <section class="populi-demo__panel">
+          <div class="populi-demo__panel-head">
+            <h2 class="populi-demo__panel-title">Schedule</h2>
+          </div>
+          <p class="populi-demo__panel-body populi-demo__panel-body--empty">
+            There are no scheduled events in the next seven days.
+          </p>
+        </section>
+        <section class="populi-demo__panel">
+          <div class="populi-demo__panel-head">
+            <h2 class="populi-demo__panel-title">My Discussions</h2>
+          </div>
+          <p class="populi-demo__panel-body populi-demo__panel-body--empty">
+            There are no recent discussion updates.
+          </p>
+        </section>
+      </div>
+    </PopuliDemoShell>
+  </main>
+</BaseLayout>
