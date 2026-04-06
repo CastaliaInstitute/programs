@@ -32,9 +32,11 @@ import { programOfferings } from '../lib/programs'
             {program.detailHref && (
               <p class="card__detail-link">
                 <a class="button button--secondary" href={program.detailHref}>
-                  {program.deliverableDemos?.length
-                    ? `View ${program.deliverableDemos.length} delivery demos`
-                    : 'View details'}
+                  {program.slug === 'aima' && program.deliverableDemos?.length
+                    ? `View ${program.deliverableDemos.length} AIN2001 course variants`
+                    : program.deliverableDemos?.length
+                      ? `View ${program.deliverableDemos.length} delivery demos`
+                      : 'View details'}
                 </a>
               </p>
             )}

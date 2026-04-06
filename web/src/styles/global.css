@@ -197,6 +197,14 @@ a {
   font-size: 1.15rem;
 }
 
+.course-variant__code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
 .demo-list__summary {
   margin: 0 0 1rem;
   color: #334155;

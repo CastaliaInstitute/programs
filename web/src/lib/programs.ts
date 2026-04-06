@@ -1,5 +1,7 @@
+/** One licensable product line for AIN 2001, named like a course (e.g. AIN2001: Basic). */
 export interface DeliverableDemo {
-  title: string
+  /** Display name, e.g. `AIN2001: Basic` or `AIN2001: AI Delivery`. */
+  courseCode: string
   summary: string
   primaryLabel: string
   primaryHref: string
@@ -134,7 +136,7 @@ export const programOfferings: ProgramOffering[] = [
     implementation:
       'Full course repo with Reveal slides, sample PDF slide packs, IMSCC-ready bundles for Canvas/Moodle-style import, GitHub Pages, SAMWISE curriculum tooling, and BEATRICE (AI TA) integration',
     summary:
-      'A complete, licensable deployment of Artificial Intelligence: A Modern Approach with AI-generated slide decks, assignments, autograding hooks, and optional teaching-assistant stack. Every delivery option includes the same IMS Common Cartridge download for LMS import; buyers can also review PDF slide samples, the hosted slide experience, GitHub-native delivery, or the full Dialogic + SAMWISE + BEATRICE stack.',
+      'A complete, licensable deployment of Artificial Intelligence: A Modern Approach with AI-generated slide decks, assignments, autograding hooks, and optional teaching-assistant stack. Each row below is a distinct AIN2001 course product (Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE)—same syllabus spine, different delivery and tooling. Every variant includes the same IMS Common Cartridge for LMS import where applicable.',
     outcomes: [
       'Ship a turnkey AIMA-aligned course with slides, readings, and assignments in one repository.',
       'Offer students GitHub Classroom assignments with Codespaces and automated feedback.',
@@ -146,6 +148,7 @@ export const programOfferings: ProgramOffering[] = [
       'Teams that want buyer-visible demos for each delivery format before licensing',
     ],
     curriculumHighlights: [
+      'Six licensable course products: AIN2001 Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE',
       '24 lecture tracks mapped to AIMA 4e with Reveal.js delivery',
       '556+ indexed exercises with autograding and AI-rubric pathways (see course analysis docs)',
       'GitHub Classroom templates with devcontainer / Codespaces for assignments',
@@ -154,54 +157,54 @@ export const programOfferings: ProgramOffering[] = [
     detailHref: '/catalog/aima',
     deliverableDemos: [
       {
-        title: 'PDF slide samples',
+        courseCode: 'AIN2001: Basic',
         summary:
-          'Downloadable lecture slides as PDFs so curriculum committees and instructors can review the same material students see—week-by-week samples from the AIMA-aligned sequence. Use the IMS CC on every row for the same content packaged for LMS import.',
+          'LMS-first delivery: IMS Common Cartridge import plus PDF slide samples so committees and instructors can adopt the AIMA-aligned sequence without GitHub on day one. Best for institutions that standardize on Canvas, Moodle, or similar.',
         primaryLabel: 'Download sample slides (PDF)',
         primaryHref: '/demos/week1-search-slides.pdf',
         secondaryLabel: 'AIMA course repository',
         secondaryHref: AIMA_REPO,
       },
       {
-        title: 'AI-delivered slides (GitHub Pages)',
+        courseCode: 'AIN2001: AI Delivery',
         summary:
-          'Reveal.js lectures built from markdown, deployed by GitHub Actions to GitHub Pages—this is the default “AI-delivered” slide experience for the course.',
+          'Hosted slide experience: Reveal.js lectures built from markdown and deployed by GitHub Actions to GitHub Pages—the default AI-delivered slide path for students who browse the web syllabus.',
         primaryLabel: 'Open hosted slide index',
         primaryHref: 'https://inquiryinstitute.github.io/aima/lectures/reveal/lectures.html',
         secondaryLabel: 'Publish workflow (source)',
         secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/.github/workflows/publish-lectures.yml',
       },
       {
-        title: 'GitHub Classroom + Codespaces',
+        courseCode: 'AIN2001: Classroom',
         summary:
-          'Classroom assignment templates include devcontainer definitions so students open a preconfigured environment, run tests, and push for autograding—mirroring production delivery.',
+          'GitHub-native cohorts: Classroom assignment templates with devcontainer definitions so students open Codespaces (or local devcontainers), run tests, and push for autograding—mirroring production engineering workflows.',
         primaryLabel: 'Exercise starter template',
         primaryHref: 'https://github.com/InquiryInstitute/aima/tree/main/classroom-templates/aima-exercise-starter',
         secondaryLabel: 'Classroom setup guide',
         secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/docs/CLASSROOM_SETUP.md',
       },
       {
-        title: 'Dialogic slides (AI co-teaching)',
+        courseCode: 'AIN2001: Dialogic',
         summary:
-          'Lectures support SCRIPT blocks with speaker tags for dialogic delivery—your questions, AI lecturer answers—aligned with the co-teaching Q&A model. Try a full built lecture on Pages.',
+          'Co-teaching delivery: SCRIPT blocks with speaker tags for dialogic lectures—you pose questions, AI lecturers answer on slide + narration—aligned with the Q&A co-teaching model.',
         primaryLabel: 'Sample lecture (Search)',
         primaryHref: 'https://inquiryinstitute.github.io/aima/lectures/reveal/lecture-03.html',
         secondaryLabel: 'Co-teaching Q&A guide',
         secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/docs/AI-COTEACHING-QA.md',
       },
       {
-        title: 'SAMWISE add-on',
+        courseCode: 'AIN2001: SAMWISE',
         summary:
-          'SAMWISE curriculum server and local tooling (npm scripts, traces) support curriculum authoring, exercise flows, and demos alongside the static site.',
+          'Authoring and curriculum server tier: SAMWISE tooling (npm scripts, traces, local curriculum server) for teams building exercises, demos, and custom flows alongside the static Pages site.',
         primaryLabel: 'Documentation index (SAMWISE section)',
         primaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/docs/DOCUMENTATION_INDEX.md',
         secondaryLabel: 'Package scripts',
         secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/package.json',
       },
       {
-        title: 'BEATRICE add-on',
+        courseCode: 'AIN2001: BEATRICE',
         summary:
-          'BEATRICE is the AI teaching assistant role: structured access to instructor notes, escalation patterns, and (with your Supabase project) server-side Q&A functions.',
+          'AI teaching assistant tier: BEATRICE uses structured instructor notes, escalation patterns, and (with your Supabase project) server-side Q&A—paired with human facilitation.',
         primaryLabel: 'BEATRICE instructions',
         primaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/BEATRICE-INSTRUCTIONS.md',
         secondaryLabel: 'Instructor notes + Supabase',

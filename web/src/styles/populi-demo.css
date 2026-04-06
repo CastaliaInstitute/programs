@@ -408,6 +408,50 @@
   color: #e4e4e7;
 }
 
+/* Six course lines — visible “multiple courses” strip */
+.populi-demo__at-a-glance {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.65rem;
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  background: var(--populi-surface-2);
+  border: 1px solid var(--populi-border);
+  border-radius: 0.5rem;
+}
+
+.populi-demo__at-a-glance-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--populi-text-muted);
+  width: 100%;
+  margin-bottom: 0.15rem;
+}
+
+@media (min-width: 40rem) {
+  .populi-demo__at-a-glance-label {
+    width: auto;
+    margin-bottom: 0;
+    margin-right: 0.35rem;
+  }
+}
+
+.populi-demo__course-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.35rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #f8fafc;
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+}
+
 .populi-demo h2.populi-demo__section-title {
   margin: 0 0 0.75rem;
   font-size: 1.05rem;
@@ -431,6 +475,14 @@
 .populi-demo .demo-list__title {
   color: #fff;
   font-size: 1rem;
+}
+
+/* global.css .course-variant__code uses dark ink — must win on dark Populi cards */
+.populi-demo .course-variant__code {
+  color: #f8fafc !important;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .populi-demo .demo-list__summary {

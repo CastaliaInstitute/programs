@@ -11,13 +11,13 @@ if (!program || !program.deliverableDemos) {
 
 <BaseLayout
   title="AIN 2001 — AIMA product demos"
-  description="Live demos and downloads for each AIMA delivery option—each includes an IMS Common Cartridge for LMS import—plus PDF slide samples, GitHub Pages, Classroom, Dialogic, SAMWISE, and BEATRICE."
+  description="AIN 2001 course products (Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE)—each with live demos, IMS Common Cartridge where applicable, and links into the AIMA repository."
 >
   <main class="programs-page" style="padding-top: 0.5rem;">
     <PopuliDemoShell
       courseCode="AIN 2001"
       courseTitle="AIMA (Using AI to Make AI)"
-      pillLabel="AIN2001: Dashboard"
+      pillLabel="AIN2001: Variants"
     >
       <section class="populi-demo__panel">
         <div class="populi-demo__panel-head">
@@ -59,18 +59,29 @@ if (!program || !program.deliverableDemos) {
         <a class="populi-demo__btn populi-demo__btn--ghost" href="/catalog">Programs catalog</a>
       </div>
 
-      <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Deliverable demos</h2>
+      <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Six AIN2001 course products</h2>
       <p class="populi-demo__intro">
-        Each row is a buyer-ready slice of the product. <strong>Every row includes the same IMS Common Cartridge</strong>{' '}
-        (import into Canvas, Moodle, or other LTI-capable LMS) in addition to the format-specific link—PDF samples, hosted
-        slides, Classroom, or docs.
+        Each line below is a <strong>separate licensable course</strong> (same AIN 2001 spine, different delivery). Same
+        syllabus core; pick Basic, AI Delivery, Classroom, Dialogic, SAMWISE, or BEATRICE—or combine add-ons for your
+        institution.
       </p>
 
-      <ul class="demo-list">
+      <p class="populi-demo__at-a-glance" id="ain2001-course-lines">
+        <span class="populi-demo__at-a-glance-label">At a glance</span>
+        {
+          program.deliverableDemos.map((demo) => (
+            <span class="populi-demo__course-chip">{demo.courseCode}</span>
+          ))
+        }
+      </p>
+
+      <ul class="demo-list" aria-labelledby="ain2001-course-lines">
         {
           program.deliverableDemos.map((demo) => (
             <li class="demo-list__item card">
-              <h3 class="demo-list__title">{demo.title}</h3>
+              <h3 class="demo-list__title">
+                <span class="course-variant__code">{demo.courseCode}</span>
+              </h3>
               <p class="demo-list__summary">{demo.summary}</p>
               <div class="demo-list__actions">
                 <a class="button button--primary" href={demo.primaryHref}>
