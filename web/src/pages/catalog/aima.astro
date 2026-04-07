@@ -10,14 +10,14 @@ if (!program || !program.deliverableDemos) {
 ---
 
 <BaseLayout
-  title="AIN 2001 — AIMA product demos"
-  description="AIN 2001 course products (Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE)—each with live demos, IMS Common Cartridge where applicable, and links into the AIMA repository."
+  title="AIMA 5001 — AIMA product demos"
+  description="AIMA 5001 graduate course products (Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE)—each with live demos, IMS Common Cartridge where applicable, and links into the AIMA repository."
 >
   <main class="programs-page" style="padding-top: 0.5rem;">
     <PopuliDemoShell
-      courseCode="AIN 2001"
+      courseCode="AIMA 5001"
       courseTitle="AIMA (Using AI to Make AI)"
-      pillLabel="AIN2001: Variants"
+      pillLabel="AIMA5001: Variants"
     >
       <section class="populi-demo__panel">
         <div class="populi-demo__panel-head">
@@ -59,14 +59,14 @@ if (!program || !program.deliverableDemos) {
         <a class="populi-demo__btn populi-demo__btn--ghost" href="/catalog">Programs catalog</a>
       </div>
 
-      <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Six AIN2001 course products</h2>
+      <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Six AIMA5001 course products</h2>
       <p class="populi-demo__intro">
-        Each line below is a <strong>separate licensable course</strong> (same AIN 2001 spine, different delivery). Same
+        Each line below is a <strong>separate licensable course</strong> (same AIMA 5001 graduate spine, different delivery). Same
         syllabus core; pick Basic, AI Delivery, Classroom, Dialogic, SAMWISE, or BEATRICE—or combine add-ons for your
         institution.
       </p>
 
-      <p class="populi-demo__at-a-glance" id="ain2001-course-lines">
+      <p class="populi-demo__at-a-glance" id="aima5001-course-lines">
         <span class="populi-demo__at-a-glance-label">At a glance</span>
         {
           program.deliverableDemos.map((demo) => (
@@ -75,7 +75,7 @@ if (!program || !program.deliverableDemos) {
         }
       </p>
 
-      <ul class="demo-list" aria-labelledby="ain2001-course-lines">
+      <ul class="demo-list" aria-labelledby="aima5001-course-lines">
         {
           program.deliverableDemos.map((demo) => (
             <li class="demo-list__item card">
@@ -104,7 +104,13 @@ if (!program || !program.deliverableDemos) {
       <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Implementation notes</h2>
       <ul class="list">
         <li>
-          Demos build: run <code>npm run build:demos</code> in <code>web/</code> before <code>astro build</code> so PDFs
+          MyST demos: all six products share one MyST project in <code>web/myst-sources/ain2001/</code> (
+          <code>myst.yml</code> + one <code>.md</code> file per variant). <code>npm run build:demos</code> runs{' '}
+          <code>myst build --html</code> once and copies to <code>public/demos/myst/ain2001/</code> (devDependency{' '}
+          <code>mystmd</code>).
+        </li>
+        <li>
+          PDFs and IMS CC: run <code>npm run build:demos</code> in <code>web/</code> before <code>astro build</code> so PDFs
           from <code>demos/aima-demo-content/</code> land in <code>public/demos/</code>, the IMS CC zip is written to{' '}
           <code>public/demos/aima-lms-demo.imscc</code>, and the same tree is unpacked to{' '}
           <code>public/demos/imscc-unpacked/aima-lms-demo/</code> for the <a href={IMSCC_VIEWER_PATH}>IMS CC viewer</a>.

@@ -1,6 +1,6 @@
-/** One licensable product line for AIN 2001, named like a course (e.g. AIN2001: Basic). */
+/** One licensable product line for AIMA 5001, named like a course (e.g. AIMA5001: Basic). */
 export interface DeliverableDemo {
-  /** Display name, e.g. `AIN2001: Basic` or `AIN2001: AI Delivery`. */
+  /** Display name, e.g. `AIMA5001: Basic` or `AIMA5001: AI Delivery`. */
   courseCode: string
   summary: string
   primaryLabel: string
@@ -39,6 +39,9 @@ export const AIMA_IMSCC_DEMO = '/demos/aima-lms-demo.imscc' as const
 
 /** Static viewer for unpacked cartridge content (PDF / markdown) on GitHub Pages. */
 export const IMSCC_VIEWER_PATH = '/catalog/imscc-viewer' as const
+
+/** MyST-built AIMA 5001 demo site (`npm run build:demos` → public/demos/myst/ain2001/). */
+export const MYST_AIMA5001_BASE = '/demos/myst/ain2001' as const
 
 export const programOfferings: ProgramOffering[] = [
   {
@@ -125,10 +128,11 @@ export const programOfferings: ProgramOffering[] = [
   },
   {
     slug: 'aima',
-    title: 'AIN 2001 — AIMA (Using AI to Make AI)',
-    format: 'Graduate AI course (AIMA textbook sequence)',
+    title: 'AIMA 5001 — AIMA (Using AI to Make AI)',
+    format:
+      'Graduate-level AI foundations (5000-level); AIMA textbook sequence emphasizing AI methods for problem solving—search, planning, knowledge, learning, and intelligent agents',
     audience:
-      'Computer science and AI programs adopting Russell & Norvig with modern GitHub, Classroom, and AI-assisted workflows',
+      'Graduate CS and AI programs adopting Russell & Norvig with modern GitHub, Classroom, and AI-assisted workflows',
     duration: '8 weeks sample · 24 Reveal lectures (expandable)',
     credits: 'Institution-defined (typically 3–4 graduate credits)',
     modality:
@@ -136,7 +140,7 @@ export const programOfferings: ProgramOffering[] = [
     implementation:
       'Full course repo with Reveal slides, sample PDF slide packs, IMSCC-ready bundles for Canvas/Moodle-style import, GitHub Pages, SAMWISE curriculum tooling, and BEATRICE (AI TA) integration',
     summary:
-      'A complete, licensable deployment of Artificial Intelligence: A Modern Approach with AI-generated slide decks, assignments, autograding hooks, and optional teaching-assistant stack. Each row below is a distinct AIN2001 course product (Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE)—same syllabus spine, different delivery and tooling. Every variant includes the same IMS Common Cartridge for LMS import where applicable.',
+      'A complete, licensable deployment of Artificial Intelligence: A Modern Approach at graduate rigor (AIMA 5001): AI-generated slide decks, assignments, autograding hooks, and optional teaching-assistant stack. Each row below is a distinct AIMA5001 course product—demo pages are generated from MyST Markdown in web/myst-sources/ain2001/ (one file per variant, one shared myst build). Same syllabus spine, different delivery and tooling; every variant includes the same IMS Common Cartridge for LMS import where applicable.',
     outcomes: [
       'Ship a turnkey AIMA-aligned course with slides, readings, and assignments in one repository.',
       'Offer students GitHub Classroom assignments with Codespaces and automated feedback.',
@@ -148,7 +152,7 @@ export const programOfferings: ProgramOffering[] = [
       'Teams that want buyer-visible demos for each delivery format before licensing',
     ],
     curriculumHighlights: [
-      'Six licensable course products: AIN2001 Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE',
+      'Six licensable course products for AIMA 5001 (MyST sources in myst-sources/ain2001/*.md): Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE',
       '24 lecture tracks mapped to AIMA 4e with Reveal.js delivery',
       '556+ indexed exercises with autograding and AI-rubric pathways (see course analysis docs)',
       'GitHub Classroom templates with devcontainer / Codespaces for assignments',
@@ -157,58 +161,58 @@ export const programOfferings: ProgramOffering[] = [
     detailHref: '/catalog/aima',
     deliverableDemos: [
       {
-        courseCode: 'AIN2001: Basic',
+        courseCode: 'AIMA5001: Basic',
         summary:
-          'LMS-first delivery: IMS Common Cartridge import plus PDF slide samples so committees and instructors can adopt the AIMA-aligned sequence without GitHub on day one. Best for institutions that standardize on Canvas, Moodle, or similar.',
-        primaryLabel: 'Download sample slides (PDF)',
-        primaryHref: '/demos/week1-search-slides.pdf',
+          'LMS-first delivery: IMS Common Cartridge import plus PDF slide samples so committees and instructors can adopt the AIMA-aligned sequence without GitHub on day one. MyST source: myst-sources/ain2001/basic.md.',
+        primaryLabel: 'Open MyST-built demo',
+        primaryHref: `${MYST_AIMA5001_BASE}/basic/`,
         secondaryLabel: 'AIMA course repository',
         secondaryHref: AIMA_REPO,
       },
       {
-        courseCode: 'AIN2001: AI Delivery',
+        courseCode: 'AIMA5001: AI Delivery',
         summary:
-          'Hosted slide experience: Reveal.js lectures built from markdown and deployed by GitHub Actions to GitHub Pages—the default AI-delivered slide path for students who browse the web syllabus.',
-        primaryLabel: 'Open hosted slide index',
-        primaryHref: 'https://inquiryinstitute.github.io/aima/lectures/reveal/lectures.html',
-        secondaryLabel: 'Publish workflow (source)',
-        secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/.github/workflows/publish-lectures.yml',
+          'Hosted slide experience: Reveal.js lectures deployed to GitHub Pages. MyST source: myst-sources/ain2001/ai-delivery.md.',
+        primaryLabel: 'Open MyST-built demo',
+        primaryHref: `${MYST_AIMA5001_BASE}/ai-delivery/`,
+        secondaryLabel: 'Hosted slide index (AIMA repo)',
+        secondaryHref: 'https://inquiryinstitute.github.io/aima/lectures/reveal/lectures.html',
       },
       {
-        courseCode: 'AIN2001: Classroom',
+        courseCode: 'AIMA5001: Classroom',
         summary:
-          'GitHub-native cohorts: Classroom assignment templates with devcontainer definitions so students open Codespaces (or local devcontainers), run tests, and push for autograding—mirroring production engineering workflows.',
-        primaryLabel: 'Exercise starter template',
-        primaryHref: 'https://github.com/InquiryInstitute/aima/tree/main/classroom-templates/aima-exercise-starter',
-        secondaryLabel: 'Classroom setup guide',
-        secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/docs/CLASSROOM_SETUP.md',
+          'GitHub Classroom + Codespaces. MyST source: myst-sources/ain2001/classroom.md.',
+        primaryLabel: 'Open MyST-built demo',
+        primaryHref: `${MYST_AIMA5001_BASE}/classroom/`,
+        secondaryLabel: 'Exercise starter template',
+        secondaryHref: 'https://github.com/InquiryInstitute/aima/tree/main/classroom-templates/aima-exercise-starter',
       },
       {
-        courseCode: 'AIN2001: Dialogic',
+        courseCode: 'AIMA5001: Dialogic',
         summary:
-          'Co-teaching delivery: SCRIPT blocks with speaker tags for dialogic lectures—you pose questions, AI lecturers answer on slide + narration—aligned with the Q&A co-teaching model.',
-        primaryLabel: 'Sample lecture (Search)',
-        primaryHref: 'https://inquiryinstitute.github.io/aima/lectures/reveal/lecture-03.html',
-        secondaryLabel: 'Co-teaching Q&A guide',
-        secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/docs/AI-COTEACHING-QA.md',
+          'Co-teaching / dialogic slide delivery. MyST source: myst-sources/ain2001/dialogic.md.',
+        primaryLabel: 'Open MyST-built demo',
+        primaryHref: `${MYST_AIMA5001_BASE}/dialogic/`,
+        secondaryLabel: 'Sample lecture (Search)',
+        secondaryHref: 'https://inquiryinstitute.github.io/aima/lectures/reveal/lecture-03.html',
       },
       {
-        courseCode: 'AIN2001: SAMWISE',
+        courseCode: 'AIMA5001: SAMWISE',
         summary:
-          'Authoring and curriculum server tier: SAMWISE tooling (npm scripts, traces, local curriculum server) for teams building exercises, demos, and custom flows alongside the static Pages site.',
-        primaryLabel: 'Documentation index (SAMWISE section)',
-        primaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/docs/DOCUMENTATION_INDEX.md',
-        secondaryLabel: 'Package scripts',
-        secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/package.json',
+          'SAMWISE curriculum tooling. MyST source: myst-sources/ain2001/samwise.md.',
+        primaryLabel: 'Open MyST-built demo',
+        primaryHref: `${MYST_AIMA5001_BASE}/samwise/`,
+        secondaryLabel: 'Documentation index',
+        secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/docs/DOCUMENTATION_INDEX.md',
       },
       {
-        courseCode: 'AIN2001: BEATRICE',
+        courseCode: 'AIMA5001: BEATRICE',
         summary:
-          'AI teaching assistant tier: BEATRICE uses structured instructor notes, escalation patterns, and (with your Supabase project) server-side Q&A—paired with human facilitation.',
-        primaryLabel: 'BEATRICE instructions',
-        primaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/BEATRICE-INSTRUCTIONS.md',
-        secondaryLabel: 'Instructor notes + Supabase',
-        secondaryHref: 'https://github.com/InquiryInstitute/aima/tree/main/instructor-notes',
+          'BEATRICE AI teaching assistant tier. MyST source: myst-sources/ain2001/beatrice.md.',
+        primaryLabel: 'Open MyST-built demo',
+        primaryHref: `${MYST_AIMA5001_BASE}/beatrice/`,
+        secondaryLabel: 'BEATRICE instructions',
+        secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/BEATRICE-INSTRUCTIONS.md',
       },
     ],
   },

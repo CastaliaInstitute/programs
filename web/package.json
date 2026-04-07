@@ -9,13 +9,14 @@
   "scripts": {
     "predev": "npm run build:demos",
     "dev": "astro dev",
-    "build:demos": "node scripts/copy-aima-demo-pdfs.mjs && node scripts/zip-aima-imscc.mjs && node scripts/imscc-unpack-to-public.mjs",
+    "build:demos": "node scripts/copy-aima-demo-pdfs.mjs && node scripts/zip-aima-imscc.mjs && node scripts/imscc-unpack-to-public.mjs && node scripts/build-myst-course-demos.mjs",
     "build": "npm run build:demos && astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "scaffold:aima-repos": "node scripts/create-aima-variant-repos.mjs"
   },
   "dependencies": {
-    "@castalia/platform": "file:./vendor/castalia-platform",
     "@astrojs/react": "^5.0.2",
+    "@castalia/platform": "file:./vendor/castalia-platform",
     "@tailwindcss/vite": "^4.2.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -25,5 +26,8 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "mystmd": "^1.8.3"
   }
 }
