@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { IMSCC_VIEWER_PATH } from '../../../lib/programs'
+import { AIMA_BASIC_IMSCC_PATH } from '../../../lib/site-links'
+---
+
+<BaseLayout
+  title="Thank you — AIMA5001 Basic"
+  description="Download your AIMA5001 Basic IMS Common Cartridge (.imscc) for Canvas, Moodle, or compatible LMS import."
+>
+  <main class="programs-page section">
+    <div class="section__intro purchase-success">
+      <span class="eyebrow">Order complete</span>
+      <h1>Your AIMA5001 Basic package is ready</h1>
+      <p class="purchase-lead">
+        Thank you for your purchase. Download the IMS Common Cartridge below and import it into your LMS (Canvas,
+        Moodle, etc.). Keep your Stripe receipt for your records—this page is safe to bookmark for re-download.
+      </p>
+      <p class="purchase-card__actions purchase-success__download">
+        <a
+          class="button button--primary"
+          href={AIMA_BASIC_IMSCC_PATH}
+          download="aima-basic-lms-demo.imscc"
+        >
+          Download IMS CC — aima-basic-lms-demo.imscc
+        </a>
+        <a class="button button--secondary" href={IMSCC_VIEWER_PATH}>
+          Preview files (IMS viewer)
+        </a>
+      </p>
+      <p class="purchase-success__fineprint">
+        Licensing and permitted use follow your order terms and institutional agreements. For questions, use the contact
+        path from your receipt or see <a href="/institutions">institution partnerships</a>.
+      </p>
+      <p class="purchase-success__back">
+        <a href="/catalog/aima">← AIMA product demos</a>
+        · <a href="/purchase">Other purchases</a>
+      </p>
+    </div>
+  </main>
+</BaseLayout>

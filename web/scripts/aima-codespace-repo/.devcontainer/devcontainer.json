@@ -1,0 +1,19 @@
+{
+  "name": "AIMA 5001 — student workspace",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
+  "features": {},
+  "postCreateCommand": "pip install --user -r requirements.txt",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.testing.pytestEnabled": true
+      },
+      "extensions": ["ms-python.python", "ms-python.debugpy"]
+    },
+    "codespaces": {
+      "openFiles": ["README.md", "exercises/README.md"]
+    }
+  },
+  "remoteUser": "vscode"
+}

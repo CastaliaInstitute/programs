@@ -1,7 +1,17 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import AimaVariantCatalogTable from '../../components/AimaVariantCatalogTable.astro'
 import PopuliDemoShell from '../../components/PopuliDemoShell.astro'
-import { AIMA_IMSCC_DEMO, AIMA_REPO, IMSCC_VIEWER_PATH, programOfferings } from '../../lib/programs'
+import { AIMA_REPO, IMSCC_VIEWER_PATH, programOfferings } from '../../lib/programs'
+import { aima5001SelfServePurchaseIsOpen, isPurchaseAvailableFrom } from '../../lib/purchase-gate'
+import {
+  AIMA_BASIC_PRICE_USD,
+  castaliaLmsAimaDemoUrl,
+  resolveStripePaymentLinkAimaBasic,
+} from '../../lib/site-links'
+
+const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
+const aimaSalesOpen = aima5001SelfServePurchaseIsOpen()
 
 const program = programOfferings.find((p) => p.slug === 'aima')
 if (!program || !program.deliverableDemos) {
@@ -54,7 +64,22 @@ if (!program || !program.deliverableDemos) {
       <p class="populi-demo__intro">{program.summary}</p>
 
       <div class="populi-demo__actions">
-        <a class="populi-demo__btn populi-demo__btn--primary" href={AIMA_REPO}>Open course repository</a>
+        {aimaSalesOpen ? (
+          <a
+            class="populi-demo__btn populi-demo__btn--primary"
+            href={aimaBasicStripe ?? '/purchase#aima-basic'}
+          >
+            {`Buy Basic — $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
+          </a>
+        ) : (
+          <span class="populi-demo__btn populi-demo__btn--ghost" style="cursor: default; opacity: 0.85;">
+            Not for sale yet ({program.deliverableDemos[0]?.statusExpected ?? 'see Status'})
+          </span>
+        )}
+        <a class="populi-demo__btn populi-demo__btn--ghost" href="/purchase">
+          Purchase hub
+        </a>
+        <a class="populi-demo__btn populi-demo__btn--ghost" href={AIMA_REPO}>Open course repository</a>
         <a class="populi-demo__btn populi-demo__btn--ghost" href={IMSCC_VIEWER_PATH}>IMS CC viewer</a>
         <a class="populi-demo__btn populi-demo__btn--ghost" href="/catalog">Programs catalog</a>
       </div>
@@ -75,6 +100,15 @@ if (!program || !program.deliverableDemos) {
         }
       </p>
 
+      <h2 class="populi-demo__section-title" style="margin-top: 1.5rem;">Feature matrix</h2>
+      <p class="populi-demo__intro">
+        ✓ means the variant ships that asset or workflow as part of the product line; — means it is not the focus of
+        that SKU. IMS CC cells link to the per-variant <code class="purchase-code">.imscc</code> when included.
+      </p>
+      <div class="aima-matrix-wrap">
+        <AimaVariantCatalogTable demos={program.deliverableDemos} aimaBasicStripe={aimaBasicStripe} />
+      </div>
+
       <ul class="demo-list" aria-labelledby="aima5001-course-lines">
         {
           program.deliverableDemos.map((demo) => (
@@ -83,8 +117,34 @@ if (!program || !program.deliverableDemos) {
                 <span class="course-variant__code">{demo.courseCode}</span>
               </h3>
               <p class="demo-list__summary">{demo.summary}</p>
+              <p class="demo-list__status">
+                <strong>Status</strong>
+                {' · '}
+                {demo.statusExpected}
+              </p>
               <div class="demo-list__actions">
-                <a class="button button--primary" href={demo.primaryHref}>
+                {isPurchaseAvailableFrom(demo.purchaseAvailableFrom) ? (
+                  demo.lmsVariant === 'basic' ? (
+                    <a
+                      class="button button--primary"
+                      href={aimaBasicStripe ?? '/purchase#aima-basic'}
+                    >
+                      {`Buy — $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
+                    </a>
+                  ) : (
+                    <a class="button button--primary" href="/purchase">
+                      Purchase
+                    </a>
+                  )
+                ) : (
+                  <span class="button button--secondary" style="pointer-events: none; opacity: 0.75;">
+                    Not for sale yet
+                  </span>
+                )}
+                <a
+                  class={`button ${isPurchaseAvailableFrom(demo.purchaseAvailableFrom) ? 'button--secondary' : 'button--primary'}`}
+                  href={demo.primaryHref}
+                >
                   {demo.primaryLabel}
                 </a>
                 {demo.secondaryHref && demo.secondaryLabel && (
@@ -92,8 +152,23 @@ if (!program || !program.deliverableDemos) {
                     {demo.secondaryLabel}
                   </a>
                 )}
-                <a class="button button--secondary" href={AIMA_IMSCC_DEMO}>
-                  Download IMS CC (.imscc)
+                {demo.tertiaryHref && demo.tertiaryLabel && (
+                  <a class="button button--secondary" href={demo.tertiaryHref}>
+                    {demo.tertiaryLabel}
+                  </a>
+                )}
+                {demo.imsccHref && (
+                  <a class="button button--secondary" href={demo.imsccHref}>
+                    Download IMS CC (.imscc)
+                  </a>
+                )}
+                <a
+                  class="button button--secondary"
+                  href={castaliaLmsAimaDemoUrl(demo.lmsVariant)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Castalia LMS (demo)
                 </a>
               </div>
             </li>
@@ -104,16 +179,28 @@ if (!program || !program.deliverableDemos) {
       <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Implementation notes</h2>
       <ul class="list">
         <li>
-          MyST demos: all six products share one MyST project in <code>web/myst-sources/ain2001/</code> (
-          <code>myst.yml</code> + one <code>.md</code> file per variant). <code>npm run build:demos</code> runs{' '}
-          <code>myst build --html</code> once and copies to <code>public/demos/myst/ain2001/</code> (devDependency{' '}
-          <code>mystmd</code>).
+          Course demos: all six products share one static site project in <code>web/demo-sources/ain2001/</code> (
+          project config + one <code>.md</code> file per variant). <code>npm run build:demos</code> runs the static build
+          once and copies output to <code>public/demos/course/ain2001/</code>.
+        </li>
+        <li>
+          Per-deliverable GitHub repos (Populi-style Pages): run{' '}
+          <code>npm run scaffold:aima-repos</code> in <code>web/</code> to generate <code>aima-basic</code>,{' '}
+          <code>aima-delivery</code>, etc.—each with the same LMS chrome as this page, built to <code>dist/</code> for
+          GitHub Actions → GitHub Pages (e.g. <code>https://inquiryinstitute.github.io/aima-basic/</code>).
+        </li>
+        <li>
+          Classroom / Codespaces: <code>npm run scaffold:aima-codespace</code> materializes the{' '}
+          <code>aima-codespace</code> template (devcontainer, pytest exercises, CI) under{' '}
+          <code>.aima-variant-repos/</code> for publishing as <code>InquiryInstitute/aima-codespace</code>. Students fork
+          and rename to <code>aima-&lt;username&gt;</code>.
         </li>
         <li>
           PDFs and IMS CC: run <code>npm run build:demos</code> in <code>web/</code> before <code>astro build</code> so PDFs
-          from <code>demos/aima-demo-content/</code> land in <code>public/demos/</code>, the IMS CC zip is written to{' '}
-          <code>public/demos/aima-lms-demo.imscc</code>, and the same tree is unpacked to{' '}
-          <code>public/demos/imscc-unpacked/aima-lms-demo/</code> for the <a href={IMSCC_VIEWER_PATH}>IMS CC viewer</a>.
+          from <code>demos/aima-demo-content/</code> land in <code>public/demos/</code>, the full-course MyST cartridge is
+          written to <code>public/demos/aima-lms-demo.imscc</code>, each variant gets its own{' '}
+          <code>aima-*-lms-demo.imscc</code> file, and unpacked trees under <code>public/demos/imscc-unpacked/</code> power
+          the <a href={IMSCC_VIEWER_PATH}>IMS CC viewer</a>.
         </li>
         <li>
           GitHub Pages: slides deploy from the main branch of the AIMA repo; demo URLs assume the InquiryInstitute org

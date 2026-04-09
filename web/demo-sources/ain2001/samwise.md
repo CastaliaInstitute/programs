@@ -5,14 +5,14 @@ description: Curriculum server and authoring tooling for exercises and traces.
 
 # AIMA5001: SAMWISE
 
-**Source:** `web/myst-sources/ain2001/samwise.md` → `/demos/myst/ain2001/samwise/`.
+**Source:** `web/demo-sources/ain2001/samwise.md` → `/demos/course/ain2001/samwise/`.
 
 ## Product
 
 **SAMWISE** covers local curriculum-server workflows, npm scripts, traces, and demos that sit alongside the static Pages site—used by teams extending the AIMA stack.
 
 ```{warning}
-SAMWISE is primarily **local** tooling; this MyST page documents the licensed product line and links to the repo. Runtime demos are run from a developer machine, not from this static site.
+SAMWISE is primarily **local** tooling; this page documents the licensed product line and links to the repo. Runtime demos are run from a developer machine, not from this static site.
 ```
 
 ## Documentation

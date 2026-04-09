@@ -61,6 +61,8 @@
 
 /* Top bar */
 .populi-demo__topbar {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -107,6 +109,8 @@
 
 /* Alert */
 .populi-demo__alert {
+  position: relative;
+  z-index: 2;
   padding: 0.55rem 1.25rem;
   background: var(--populi-alert);
   color: var(--populi-alert-text);
@@ -117,8 +121,10 @@
 /* Body: sidebar + main */
 .populi-demo__layout {
   display: grid;
-  grid-template-columns: 13rem 1fr;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  align-items: start;
   min-height: min(70vh, 900px);
+  min-width: 0;
 }
 
 @media (max-width: 768px) {
@@ -132,18 +138,24 @@
 }
 
 .populi-demo__sidebar {
+  min-width: 0;
+  max-width: 13rem;
   background: var(--populi-surface);
   border-right: 1px solid var(--populi-border);
   padding: 1rem 0.65rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow: hidden;
 }
 
+/* Fixed size: width:100% + aspect-ratio was resolving to viewport-scale boxes in some layouts */
 .populi-demo__course-tile {
-  width: 100%;
-  aspect-ratio: 1;
-  max-height: 5.5rem;
+  box-sizing: border-box;
+  width: 4.5rem;
+  height: 4.5rem;
+  max-width: 100%;
+  flex-shrink: 0;
   margin: 0 auto;
   border-radius: 0.35rem;
   background: linear-gradient(145deg, #2d2d32, #1f1f23);
@@ -154,8 +166,8 @@
 }
 
 .populi-demo__course-tile svg {
-  width: 42%;
-  height: auto;
+  width: 2.25rem;
+  height: 2.25rem;
   opacity: 0.85;
 }
 

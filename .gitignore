@@ -4,6 +4,6 @@ web/.astro/
 .DS_Store
 web/public/demos/*.imscc
 web/public/demos/imscc-unpacked/
-web/public/demos/myst/
-web/myst-sources/**/_build/
+web/public/demos/course/
+web/demo-sources/**/_build/
 .aima-variant-repos/

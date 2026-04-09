@@ -1,0 +1,127 @@
+---
+import type { DeliverableDemo } from '../lib/programs'
+import { firstSentence } from '../lib/catalog-render'
+import { isPurchaseAvailableFrom } from '../lib/purchase-gate'
+import {
+  AIMA_BASIC_PRICE_USD,
+  castaliaLmsAimaDemoUrl,
+} from '../lib/site-links'
+
+interface Props {
+  demos: DeliverableDemo[]
+  /** Resolved Stripe payment link URL when set (otherwise Basic buy falls back to /purchase). */
+  aimaBasicStripe?: string | null
+}
+
+const { demos, aimaBasicStripe } = Astro.props
+
+const simpleFeatureKeys = [
+  'slides',
+  'assignments',
+  'mp3',
+  'mp4',
+  'dialogic',
+  'githubClassroom',
+  'googleClassroom',
+] as const
+---
+
+<div class="catalog-table-scroll">
+  <table class="catalog-table catalog-table--aima-matrix">
+    <thead>
+      <tr>
+        <th scope="col">Variant</th>
+        <th scope="col">Summary</th>
+        <th scope="col">Status</th>
+        <th scope="col" title="IMS Common Cartridge">IMS CC</th>
+        <th scope="col">Slides</th>
+        <th scope="col">Assignments</th>
+        <th scope="col">MP3</th>
+        <th scope="col">MP4</th>
+        <th scope="col">Dialogic</th>
+        <th scope="col">GitHub Classroom</th>
+        <th scope="col">Google Classroom</th>
+        <th scope="col">Demo</th>
+        <th scope="col">LMS</th>
+        <th scope="col">Buy</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        demos.map((demo) => (
+          <tr>
+            <td>
+              <code class="catalog-code">{demo.courseCode}</code>
+            </td>
+            <td class="catalog-table__muted">{firstSentence(demo.summary)}</td>
+            <td class="catalog-table__status">{demo.statusExpected}</td>
+            <td class="catalog-table__feat catalog-table__feat--stacked">
+              {demo.catalogFeatures.imscc ? (
+                <>
+                  <span class="catalog-table__yes" aria-label="Included">
+                    ✓
+                  </span>
+                  {demo.imsccHref ? (
+                    <a class="catalog-table__imscc-link" href={demo.imsccHref}>
+                      .imscc
+                    </a>
+                  ) : null}
+                </>
+              ) : (
+                <span class="catalog-table__no" aria-label="Not included">
+                  —
+                </span>
+              )}
+            </td>
+            {simpleFeatureKeys.map((key) => (
+              <td class="catalog-table__feat">
+                {demo.catalogFeatures[key] ? (
+                  <span class="catalog-table__yes" aria-label="Included">
+                    ✓
+                  </span>
+                ) : (
+                  <span class="catalog-table__no" aria-label="Not included">
+                    —
+                  </span>
+                )}
+              </td>
+            ))}
+            <td>
+              <a class="button button--table" href={demo.primaryHref}>
+                {demo.primaryLabel}
+              </a>
+            </td>
+            <td>
+              <a
+                class="button button--table button--table-ghost"
+                href={castaliaLmsAimaDemoUrl(demo.lmsVariant)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LMS
+              </a>
+            </td>
+            <td>
+              {isPurchaseAvailableFrom(demo.purchaseAvailableFrom) ? (
+                demo.lmsVariant === 'basic' ? (
+                  <a
+                    class="button button--table button--table-buy"
+                    href={aimaBasicStripe ?? '/purchase#aima-basic'}
+                  >
+                    {`Buy $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
+                  </a>
+                ) : (
+                  <a class="button button--table button--table-ghost" href="/purchase">
+                    Purchase
+                  </a>
+                )
+              ) : (
+                <span class="catalog-table__na">Not for sale yet</span>
+              )}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

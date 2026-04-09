@@ -9,10 +9,11 @@
   "scripts": {
     "predev": "npm run build:demos",
     "dev": "astro dev",
-    "build:demos": "node scripts/copy-aima-demo-pdfs.mjs && node scripts/zip-aima-imscc.mjs && node scripts/imscc-unpack-to-public.mjs && node scripts/build-myst-course-demos.mjs",
+    "build:demos": "node scripts/copy-aima-demo-pdfs.mjs && node scripts/build-imscc-from-myst-sources.mjs && node scripts/build-course-demos.mjs",
     "build": "npm run build:demos && astro build",
     "preview": "astro preview",
-    "scaffold:aima-repos": "node scripts/create-aima-variant-repos.mjs"
+    "scaffold:aima-repos": "node scripts/create-aima-variant-repos.mjs",
+    "scaffold:aima-codespace": "node scripts/create-aima-codespace-repo.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.2",

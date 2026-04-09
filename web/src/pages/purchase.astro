@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { aima5001SelfServePurchaseIsOpen } from '../lib/purchase-gate'
+import {
+  AIMA_BASIC_PRICE_USD,
+  CASTALIA_LMS_URL,
+  resolveHostedCheckoutUrl,
+  resolveStripePaymentLinkAimaBasic,
+} from '../lib/site-links'
+
+const basicStripe = resolveStripePaymentLinkAimaBasic()
+const genericCheckout = resolveHostedCheckoutUrl()
+const aimaSalesOpen = aima5001SelfServePurchaseIsOpen()
+---
+
+<BaseLayout
+  title="Purchase · Castalia Programs"
+  description="Buy AIMA5001 Basic ($1,500) with instant IMS Common Cartridge download, or explore institutional licensing."
+>
+  <main class="programs-page section">
+    <div class="section__intro">
+      <span class="eyebrow">Licensing</span>
+      <h1>Purchase curriculum access</h1>
+      <p class="purchase-lead">
+        Programs is the commercial catalog; <a href={CASTALIA_LMS_URL}>Castalia LMS</a> (Moodle) is where you preview
+        imports and run cohorts. Self-serve checkout for course products opens only after each line is marked
+        complete—see the <a href="/catalog">catalog</a> Status column. Institutional quotes are always available below.
+      </p>
+    </div>
+
+    <article id="aima-basic" class="card purchase-card purchase-card--featured">
+      <div class="purchase-featured__head">
+        <div>
+          <h2 class="purchase-featured__title">AIMA5001: Basic</h2>
+          <p class="purchase-featured__subtitle">LMS-first delivery · IMS Common Cartridge + PDF samples</p>
+        </div>
+        <p class="purchase-price">
+          <span class="purchase-price__currency">$</span>
+          <span class="purchase-price__amount">{AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}</span>
+          <span class="purchase-price__term">one-time</span>
+        </p>
+      </div>
+      <ul class="list purchase-featured__list">
+        <li>Secure checkout with Stripe</li>
+        <li>
+          <strong>Digital download</strong> of the Basic IMS CC (<code class="purchase-code">.imscc</code>) as soon as
+          payment completes
+        </li>
+        <li>
+          After checkout, open your <a href="/purchase/aima-basic/success/">download page</a> (also set as the Stripe
+          confirmation redirect—see env notes below)
+        </li>
+      </ul>
+      {
+        !aimaSalesOpen ? (
+          <p class="purchase-inline-notice">
+            <strong>Checkout closed.</strong> AIMA5001 products are not for sale until delivery is complete (target{' '}
+            <strong>Apr 15, 2026</strong>). Revisit after that date or use <a href="/institutions">institution partnerships</a>{' '}
+            for early access conversations.
+          </p>
+        ) : basicStripe ? (
+          <p class="purchase-card__actions">
+            <a class="button button--primary" href={basicStripe}>
+              {`Buy Basic — $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
+            </a>
+            <a class="button button--ghost" href="/catalog/aima">
+              View product details
+            </a>
+          </p>
+        ) : (
+          <p class="purchase-inline-notice">
+            Set <code class="purchase-code">PUBLIC_STRIPE_PAYMENT_LINK_AIMA_BASIC</code> to your Stripe Payment Link
+            (one-time {'$'}
+            {AIMA_BASIC_PRICE_USD.toLocaleString('en-US')} USD), rebuild, and set the link’s confirmation page
+            to <code class="purchase-code">/purchase/aima-basic/success/</code> on this site so buyers get the download
+            immediately.
+          </p>
+        )
+      }
+    </article>
+
+    <div class="grid grid--cards purchase-grid">
+      {
+        aimaSalesOpen && genericCheckout && (
+          <article class="card purchase-card purchase-card--primary">
+            <h2>Other checkout</h2>
+            <p>
+              Additional Stripe Payment Link or Checkout URL configured for this deployment—use when directed by
+              Castalia for non-Basic SKUs.
+            </p>
+            <p class="purchase-card__actions">
+              <a
+                class="button button--primary"
+                href={genericCheckout}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Continue to payment
+              </a>
+            </p>
+          </article>
+        )
+      }
+
+      <article class="card purchase-card">
+        <h2>Institutional quote</h2>
+        <p>
+          Degree packages, pilots, and multi-cohort agreements usually start with fit, syllabus review, and a tailored
+          statement of work—use the institutions path.
+        </p>
+        <p class="purchase-card__actions">
+          <a class="button button--primary" href="/institutions">Institution partnerships</a>
+        </p>
+      </article>
+
+      <article class="card purchase-card">
+        <h2>Try the LMS first</h2>
+        <p>
+          Browse AIMA5001 variants on the catalog, then open the matching demo in Castalia Moodle to see how IMS
+          Common Cartridge content runs for instructors and students.
+        </p>
+        <p class="purchase-card__actions">
+          <a class="button button--secondary" href={CASTALIA_LMS_URL} target="_blank" rel="noopener noreferrer">
+            Open Castalia LMS
+          </a>
+          <a class="button button--ghost" href="/catalog/aima">AIMA product demos</a>
+        </p>
+      </article>
+    </div>
+  </main>
+</BaseLayout>

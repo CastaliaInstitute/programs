@@ -5,7 +5,7 @@ description: Co-teaching — instructor questions, AI lecturer answers on-slide.
 
 # AIMA5001: Dialogic
 
-**Source:** `web/myst-sources/ain2001/dialogic.md` → `/demos/myst/ain2001/dialogic/`.
+**Source:** `web/demo-sources/ain2001/dialogic.md` → `/demos/course/ain2001/dialogic/`.
 
 ## Product
 

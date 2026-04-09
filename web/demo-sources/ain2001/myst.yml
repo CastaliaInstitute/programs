@@ -1,9 +1,8 @@
-# See https://mystmd.org/guide/frontmatter
-# Single MyST project: all AIMA 5001 demo courses share one build and theme assets.
+# Book-style course demo project (shared build + theme for all variants).
 version: 1
 project:
   id: a0000000-0000-4000-8000-0000000000a1
-  title: AIMA 5001 — demo courses (MyST)
+  title: AIMA 5001 — demo courses
   toc:
     - file: index.md
     - file: basic.md

@@ -1,6 +1,6 @@
 /**
- * Builds one MyST site for all AIMA 5001 demo courses: web/myst-sources/ain2001/
- * Copies _build/html → public/demos/myst/ain2001/
+ * Builds one static course-demo site for all AIMA 5001 variants: web/demo-sources/ain2001/
+ * Copies _build/html → public/demos/course/ain2001/
  *
  * Per-variant sources: basic.md, ai-delivery.md, … → routes /basic/, /ai-delivery/, …
  */
@@ -11,26 +11,26 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const WEB_ROOT = path.join(__dirname, '..')
-const MYST_BIN = path.join(WEB_ROOT, 'node_modules', '.bin', 'myst')
+const BUILD_CLI = path.join(WEB_ROOT, 'node_modules', '.bin', 'myst')
 const PROJECT = 'ain2001'
-const BASE_PATH = `/demos/myst/${PROJECT}/`
+const BASE_PATH = `/demos/course/${PROJECT}/`
 
 function main() {
-  if (!existsSync(MYST_BIN)) {
-    console.warn('[build-myst-course-demos] myst CLI not found; skip (run npm install)')
+  if (!existsSync(BUILD_CLI)) {
+    console.warn('[build-course-demos] static site CLI not found; skip (run npm install)')
     process.exit(0)
   }
 
-  const cwd = path.join(WEB_ROOT, 'myst-sources', PROJECT)
+  const cwd = path.join(WEB_ROOT, 'demo-sources', PROJECT)
   if (!existsSync(path.join(cwd, 'myst.yml'))) {
-    throw new Error(`Missing myst project at ${cwd}`)
+    throw new Error(`Missing project config at ${cwd}`)
   }
 
   if (existsSync(path.join(cwd, '_build'))) {
     rmSync(path.join(cwd, '_build'), { recursive: true, force: true })
   }
 
-  execSync(`"${MYST_BIN}" build --html --ci`, {
+  execSync(`"${BUILD_CLI}" build --html --ci`, {
     cwd,
     env: {
       ...process.env,
@@ -42,15 +42,15 @@ function main() {
 
   const built = path.join(cwd, '_build', 'html', 'index.html')
   if (!existsSync(built)) {
-    throw new Error(`myst did not produce ${built}`)
+    throw new Error(`Build did not produce ${built}`)
   }
 
-  const outDir = path.join(WEB_ROOT, 'public', 'demos', 'myst', PROJECT)
+  const outDir = path.join(WEB_ROOT, 'public', 'demos', 'course', PROJECT)
   rmSync(outDir, { recursive: true, force: true })
   mkdirSync(path.dirname(outDir), { recursive: true })
   cpSync(path.join(cwd, '_build', 'html'), outDir, { recursive: true })
 
-  console.log(`[build-myst-course-demos] ${PROJECT} → public/demos/myst/${PROJECT}/`)
+  console.log(`[build-course-demos] ${PROJECT} → public/demos/course/${PROJECT}/`)
 }
 
 main()

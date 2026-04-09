@@ -1,11 +1,11 @@
 ---
 title: AIMA5001 Basic
-description: LMS-first delivery — IMS CC, PDF slides, and assignments from one MyST source.
+description: LMS-first delivery — IMS CC, PDF slides, and assignments from one Markdown source.
 ---
 
 # AIMA5001: Basic
 
-**AIMA 5001** (graduate): LMS-first path for the *AIMA* spine—emphasis on **AI problem solving** (search, planning, learning, agents). This demo page is built from MyST Markdown at `web/myst-sources/ain2001/basic.md` and published under `/demos/myst/ain2001/basic/` when you run `npm run build:demos`.
+**AIMA 5001** (graduate): LMS-first path for the *AIMA* spine—emphasis on **AI problem solving** (search, planning, learning, agents). This demo page is built from Markdown at `web/demo-sources/ain2001/basic.md` and published under `/demos/course/ain2001/basic/` when you run `npm run build:demos`.
 
 ## What institutions license
 

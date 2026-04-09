@@ -1,19 +1,26 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { buyingFaqs, salesProcess } from '../lib/programs'
+import { CASTALIA_LMS_URL } from '../lib/site-links'
 ---
 
 <BaseLayout
   title="For Institutions"
-  description="How institutions evaluate, license, and launch the MSAI curriculum."
+  description="How institutions evaluate, license, and launch Castalia graduate AI courses."
 >
   <main class="programs-page section">
     <div class="section__intro">
       <span class="eyebrow">Institution Partnerships</span>
       <h1>From curriculum review to program launch.</h1>
       <p>
-        The MSAI is designed for institutions that want a launch-ready graduate AI program
-        with enough flexibility to fit local faculty, accreditation, and delivery requirements.
+        Castalia’s graduate AI courseware is designed for institutions that want launch-ready syllabi and materials
+        while keeping program names, degrees, and credit rules entirely under local control.
+      </p>
+      <p class="catalog-path">
+        Prefer self-serve checkout? <a href="/purchase">Purchase</a>
+        ·{' '}
+        <a href={CASTALIA_LMS_URL} target="_blank" rel="noopener noreferrer">Castalia LMS</a>
+        {' '}(demos and delivery)
       </p>
     </div>
 
@@ -56,11 +63,11 @@ import { buyingFaqs, salesProcess } from '../lib/programs'
       <div class="grid grid--cards">
         <article class="card">
           <h3>Full degree package</h3>
-          <p>Adopt the complete 36-credit online MSAI structure with core, specialization, capstone, and certificate extension options.</p>
+          <p>Adopt the full reference stack—core, specialization clusters, capstone, and certificate course—as a mapped bundle your catalog committee can approve.</p>
         </article>
         <article class="card">
           <h3>Concentration-first rollout</h3>
-          <p>Lead with healthcare AI, business AI, or cybersecurity AI to validate market demand before scaling the full degree.</p>
+          <p>Lead with healthcare, business, cybersecurity, or robotics AI to validate market demand before scaling the full degree.</p>
         </article>
         <article class="card">
           <h3>Market-facing certificates</h3>

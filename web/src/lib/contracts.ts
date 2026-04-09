@@ -6,4 +6,6 @@ export const PROGRAMS_PUBLIC_PATHS = [
   '/catalog/imscc-viewer',
   '/faq',
   '/institutions',
+  '/purchase',
+  '/purchase/aima-basic/success',
 ] as const

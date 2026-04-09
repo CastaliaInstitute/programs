@@ -5,7 +5,7 @@ description: AI teaching assistant — instructor notes, escalation, optional Su
 
 # AIMA5001: BEATRICE
 
-**Source:** `web/myst-sources/ain2001/beatrice.md` → `/demos/myst/ain2001/beatrice/`.
+**Source:** `web/demo-sources/ain2001/beatrice.md` → `/demos/course/ain2001/beatrice/`.
 
 ## Product
 

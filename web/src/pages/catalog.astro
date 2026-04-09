@@ -1,122 +1,216 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import AimaVariantCatalogTable from '../components/AimaVariantCatalogTable.astro'
 import { programOfferings } from '../lib/programs'
+import { isAimaVariantBlockTitle, splitAinsCourseLine } from '../lib/catalog-render'
+import { isPurchaseAvailableFrom } from '../lib/purchase-gate'
+import { CASTALIA_LMS_URL, resolveStripePaymentLinkAimaBasic } from '../lib/site-links'
+
+const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
 ---
 
 <BaseLayout
   title="Programs Catalog"
-  description="Browse institution-ready Castalia programs available for licensing, pilots, and certificate deployment."
+  description="Browse Castalia graduate AI courses, certificates, and AIMA 5001 variants—collapsible tables with demos, IMS CC, and purchase links."
 >
-  <main class="programs-page section">
+  <main class="programs-page section catalog-page">
     <div class="section__intro">
       <span class="eyebrow">Programs Catalog</span>
-      <h1>Licensable offerings for institutional launch.</h1>
+      <h1>Licensable courses and products</h1>
       <p>
-        Review programs by audience, delivery format, and implementation load. Each listing is
-        designed to support a buyer conversation with enough detail for academic and operational
-        review.
+        Expand each section for course tables. AIMA 5001 includes a feature matrix (IMS CC, slides, assignments, MP3,
+        MP4, dialogic, GitHub Classroom, Google Classroom), status, demos, cartridge download, Castalia LMS, and purchase
+        actions per variant once each line is released for sale.
+      </p>
+      <p class="catalog-path">
+        <a class="button button--primary" href="/purchase">Purchase hub</a>
+        <a class="button button--secondary" href="/catalog/imscc-viewer">IMS CC viewer</a>
+        <a
+          class="button button--ghost"
+          href={CASTALIA_LMS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Castalia LMS
+        </a>
       </p>
     </div>
 
-    <section class="grid grid--cards">
+    <div class="catalog-disclosure-stack">
       {
-        programOfferings.map((program) => (
-          <article class="card card--program">
-            <div class="card__chips">
-              <span class="chip">{program.format}</span>
-              <span class="chip chip--muted">{program.modality}</span>
-            </div>
-            <h2>{program.title}</h2>
-            <p>{program.summary}</p>
+        programOfferings.map((program, programIndex) => (
+          <details class="catalog-disclosure" open={programIndex === 0}>
+            <summary class="catalog-disclosure__summary">
+              <span class="catalog-disclosure__title">{program.title}</span>
+              <span class="catalog-disclosure__chips">
+                <span class="chip">{program.format}</span>
+                <span class="chip chip--muted">{program.modality}</span>
+              </span>
+            </summary>
+            <div class="catalog-disclosure__body">
+              <p class="catalog-disclosure__lede">{program.summary}</p>
 
-            {program.detailHref && (
-              <p class="card__detail-link">
-                <a class="button button--secondary" href={program.detailHref}>
-                  {program.slug === 'aima' && program.deliverableDemos?.length
-                    ? `View ${program.deliverableDemos.length} AIMA5001 course variants`
-                    : program.deliverableDemos?.length
-                      ? `View ${program.deliverableDemos.length} delivery demos`
-                      : 'View details'}
-                </a>
-              </p>
-            )}
-
-            <dl class="meta-grid">
-              <div>
-                <dt>Audience</dt>
-                <dd>{program.audience}</dd>
-              </div>
-              {program.credits && (
+              <dl class="catalog-meta-grid">
                 <div>
-                  <dt>Credits</dt>
-                  <dd>{program.credits}</dd>
+                  <dt>Audience</dt>
+                  <dd>{program.audience}</dd>
+                </div>
+                {program.credits && (
+                  <div>
+                    <dt>Credits</dt>
+                    <dd>{program.credits}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt>Duration</dt>
+                  <dd>{program.duration}</dd>
+                </div>
+                <div>
+                  <dt>Implementation</dt>
+                  <dd>{program.implementation}</dd>
+                </div>
+              </dl>
+
+              {program.detailHref && (
+                <p class="catalog-disclosure__detail">
+                  <a class="button button--secondary" href={program.detailHref}>
+                    {program.slug === 'aima' && program.deliverableDemos?.length
+                      ? `Full ${program.deliverableDemos.length}-variant product page`
+                      : 'View details'}
+                  </a>
+                </p>
+              )}
+
+              {program.slug === 'aima' && program.deliverableDemos && program.deliverableDemos.length > 0 && (
+                <div class="catalog-table-section">
+                  <h3 class="catalog-table-section__title">AIMA 5001 variants</h3>
+                  <AimaVariantCatalogTable demos={program.deliverableDemos} aimaBasicStripe={aimaBasicStripe} />
                 </div>
               )}
-              <div>
-                <dt>Duration</dt>
-                <dd>{program.duration}</dd>
-              </div>
-              <div>
-                <dt>Implementation</dt>
-                <dd>{program.implementation}</dd>
-              </div>
-            </dl>
 
-            <div class="card__section">
-              <h3>What institutions get</h3>
-              <ul class="list">
-                {program.outcomes.map((outcome) => <li>{outcome}</li>)}
-              </ul>
-            </div>
-
-            {program.curriculumHighlights && (
-              <div class="card__section">
-                <h3>Curriculum highlights</h3>
-                <ul class="list">
-                  {program.curriculumHighlights.map((course) => <li>{course}</li>)}
-                </ul>
-              </div>
-            )}
-
-            {program.specializations && (
-              <div class="card__section">
-                <h3>Specialization tracks</h3>
-                <div class="track-grid">
-                  {program.specializations.map((track) => (
-                    <section class="track-card">
-                      <h4>{track.title}</h4>
-                      <ul class="list">
-                        {track.courses.map((course) => <li>{course}</li>)}
-                      </ul>
+              {program.curriculumColleges && program.curriculumColleges.length > 0 && (
+                <div class="catalog-college-wrap">
+                  {program.curriculumColleges.map((college) => (
+                    <section class="catalog-college">
+                      <h3 class="catalog-college__head">
+                        <span class="chip chip--college">{college.code}</span>
+                        {college.title}
+                      </h3>
+                      {college.blocks
+                        .filter(
+                          (block) => !(program.slug === 'aima' && isAimaVariantBlockTitle(block.title)),
+                        )
+                        .map((block, blockIndex) => {
+                        const isHighlightBlock =
+                          program.slug === 'aima' && block.title.includes('Curriculum & delivery')
+                        const subOpen =
+                          program.slug === 'aima'
+                            ? isHighlightBlock
+                            : blockIndex === 0
+                        return (
+                          <details class="catalog-subdisclosure" open={subOpen}>
+                            <summary class="catalog-subdisclosure__summary">{block.title}</summary>
+                            <div class="catalog-subdisclosure__body">
+                              {isHighlightBlock ? (
+                                <ul class="list catalog-highlight-list">
+                                  {block.courses.map((line) => (
+                                    <li>{line}</li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <div class="catalog-table-scroll">
+                                  <table class="catalog-table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Code</th>
+                                        <th scope="col">Course</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Buy</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {block.courses.map((line) => {
+                                        const { code, title } = splitAinsCourseLine(line)
+                                        return (
+                                          <tr>
+                                            <td>
+                                              <code class="catalog-code">{code}</code>
+                                            </td>
+                                            <td>{title}</td>
+                                            <td class="catalog-table__status">
+                                              {block.statusExpected ?? '—'}
+                                            </td>
+                                            <td>
+                                              {isPurchaseAvailableFrom(block.purchaseAvailableFrom) ? (
+                                                <a class="button button--table button--table-buy" href="/purchase">
+                                                  Purchase
+                                                </a>
+                                              ) : (
+                                                <span class="catalog-table__na">Not for sale yet</span>
+                                              )}
+                                            </td>
+                                          </tr>
+                                        )
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              )}
+                            </div>
+                          </details>
+                        )
+                      })}
                     </section>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
 
-            <div class="card__section">
-              <h3>Best fit</h3>
-              <ul class="list">
-                {program.institutionFit.map((fit) => <li>{fit}</li>)}
-              </ul>
+              {!program.curriculumColleges?.length && program.curriculumHighlights && (
+                <div class="catalog-table-section">
+                  <h3 class="catalog-table-section__title">Highlights</h3>
+                  <ul class="list">
+                    {program.curriculumHighlights.map((line) => (
+                      <li>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div class="catalog-outcomes">
+                <h3 class="catalog-table-section__title">What institutions get</h3>
+                <ul class="list">
+                  {program.outcomes.map((o) => (
+                    <li>{o}</li>
+                  ))}
+                </ul>
+                <h3 class="catalog-table-section__title">Best fit</h3>
+                <ul class="list">
+                  {program.institutionFit.map((f) => (
+                    <li>{f}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </article>
+          </details>
         ))
       }
-    </section>
+    </div>
 
     <section class="section section--tight">
       <div class="section__intro">
         <h2>Common buying structures</h2>
         <p>
-          The curriculum can be sold in multiple academic formats depending on your
-          institution's program strategy and launch timeline.
+          The same courseware can be licensed in different shapes depending on your catalog strategy and launch
+          timeline.
         </p>
       </div>
       <div class="grid grid--cards">
         <article class="card">
-          <h3>Full MSAI program launch</h3>
-          <p>Best for institutions that want a complete graduate AI degree with built-in specialization pathways.</p>
+          <h3>Full graduate AI stack</h3>
+          <p>
+            Best for institutions that want the complete reference core, capstone, and specialization clusters licensed
+            together.
+          </p>
         </article>
         <article class="card">
           <h3>Certificate portfolio</h3>
@@ -124,7 +218,10 @@ import { programOfferings } from '../lib/programs'
         </article>
         <article class="card">
           <h3>Specialization-first pilot</h3>
-          <p>Best for teams starting with a healthcare, business, or cybersecurity AI concentration before full rollout.</p>
+          <p>
+            Best for teams starting with a healthcare, business, cybersecurity, or robotics AI concentration before full
+            rollout.
+          </p>
         </article>
       </div>
     </section>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest
-  identifier="manifest_aima_programs_demo"
+  identifier="manifest_aima_myst_imscc"
   xmlns="http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1"
   xmlns:lom="http://ltsc.ieee.org/xsd/imsccv1p1/LOM/resource"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -10,13 +10,59 @@
     <schema>IMS Common Cartridge</schema>
     <schemaversion>1.1.0</schemaversion>
   </metadata>
-  <organizations />
+  <organizations>
+    <organization identifier="O_AIMA_MYST" structure="rooted-hierarchy">
+      <title>AIMA 5001 — from MyST demo sources</title>
+      <item identifier="ITEM_index" identifierref="R_index">
+        <title>AIMA 5001 — static course demos</title>
+      </item>
+      <item identifier="ITEM_basic" identifierref="R_basic">
+        <title>AIMA5001: Basic</title>
+      </item>
+      <item identifier="ITEM_ai-delivery" identifierref="R_ai-delivery">
+        <title>AIMA5001: AI Delivery</title>
+      </item>
+      <item identifier="ITEM_classroom" identifierref="R_classroom">
+        <title>AIMA5001: Classroom</title>
+      </item>
+      <item identifier="ITEM_dialogic" identifierref="R_dialogic">
+        <title>AIMA5001: Dialogic</title>
+      </item>
+      <item identifier="ITEM_samwise" identifierref="R_samwise">
+        <title>AIMA5001: SAMWISE</title>
+      </item>
+      <item identifier="ITEM_beatrice" identifierref="R_beatrice">
+        <title>AIMA5001: BEATRICE</title>
+      </item>
+      <item identifier="ITEM_week1_pdf" identifierref="R_week1_pdf">
+        <title>Week 1 search slides (PDF)</title>
+      </item>
+    </organization>
+  </organizations>
   <resources>
+    <resource identifier="R_index" type="webcontent" href="web_resources/index.md">
+      <file href="web_resources/index.md" />
+    </resource>
+    <resource identifier="R_basic" type="webcontent" href="web_resources/basic.md">
+      <file href="web_resources/basic.md" />
+    </resource>
+    <resource identifier="R_ai-delivery" type="webcontent" href="web_resources/ai-delivery.md">
+      <file href="web_resources/ai-delivery.md" />
+    </resource>
+    <resource identifier="R_classroom" type="webcontent" href="web_resources/classroom.md">
+      <file href="web_resources/classroom.md" />
+    </resource>
+    <resource identifier="R_dialogic" type="webcontent" href="web_resources/dialogic.md">
+      <file href="web_resources/dialogic.md" />
+    </resource>
+    <resource identifier="R_samwise" type="webcontent" href="web_resources/samwise.md">
+      <file href="web_resources/samwise.md" />
+    </resource>
+    <resource identifier="R_beatrice" type="webcontent" href="web_resources/beatrice.md">
+      <file href="web_resources/beatrice.md" />
+    </resource>
     <resource identifier="R_week1_pdf" type="webcontent" href="web_resources/week1-search-slides.pdf">
       <file href="web_resources/week1-search-slides.pdf" />
-    </resource>
-    <resource identifier="R_assignment_md" type="webcontent" href="web_resources/assignment-pathfinding.md">
-      <file href="web_resources/assignment-pathfinding.md" />
     </resource>
   </resources>
 </manifest>

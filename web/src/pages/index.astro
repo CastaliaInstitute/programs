@@ -1,26 +1,57 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import { aima5001SelfServePurchaseIsOpen } from '../lib/purchase-gate'
+import {
+  AIMA_BASIC_PRICE_USD,
+  CASTALIA_LMS_URL,
+  resolveStripePaymentLinkAimaBasic,
+} from '../lib/site-links'
+
+const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
+const aimaSalesOpen = aima5001SelfServePurchaseIsOpen()
 ---
 
 <BaseLayout
   title="Castalia Programs"
-  description="License the MSAI curriculum and related AI certificate offerings for institutional launch."
+  description="License Castalia graduate AI courses, certificates, and AIMA 5001 products for your institutional catalog."
   isHomePage={true}
 >
   <main class="programs-page">
     <section class="hero">
       <div class="hero__inner">
         <span class="eyebrow">AI Curriculum Available for Licensing</span>
-        <h1>Launch an AI master's program without building the curriculum from zero.</h1>
+        <h1>Graduate AI courses for your catalog—without writing everything from zero.</h1>
         <p>
-          The programs catalog now features the MSAI: a 36-credit online master's degree
-          with a nine-course core, capstone, specialization tracks in healthcare, business, and
-          cybersecurity AI, plus a Local AI certificate course for portfolio expansion.
-          AIMA 5001 (graduate AI foundations / AI problem solving) is also listed with sample PDF slides, an IMS Common Cartridge on every demo row, and live GitHub delivery demos.
+          The catalog centers on licensable <strong>AINS</strong> graduate courses: a reference core sequence,
+          specialization clusters in healthcare, business, cybersecurity, and robotics AI, a capstone, and a stackable
+          Local AI certificate course—your institution names the program and sets credentials. AIMA 5001 (graduate AI
+          foundations / AI problem solving) is listed separately with PDF samples, IMS Common Cartridges, and GitHub
+          delivery demos.
         </p>
         <div class="hero__actions">
-          <a class="button button--primary" href="/catalog">Explore the catalog</a>
-          <a class="button button--secondary" href="/institutions">Discuss program licensing</a>
+          {aimaSalesOpen ? (
+            <a
+              class="button button--primary"
+              href={aimaBasicStripe ?? '/purchase#aima-basic'}
+            >
+              {`Buy AIMA Basic — $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
+            </a>
+          ) : (
+            <span class="button button--secondary" style="cursor: default; opacity: 0.9;">
+              AIMA Basic — not for sale until release (Apr 15, 2026 target)
+            </span>
+          )}
+          <a class="button button--secondary" href="/catalog">Explore the catalog</a>
+          <a class="button button--ghost" href="/purchase">All purchase options</a>
+          <a class="button button--ghost" href="/institutions">Institution partnerships</a>
+          <a
+            class="button button--ghost"
+            href={CASTALIA_LMS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Castalia LMS
+          </a>
         </div>
       </div>
     </section>
@@ -54,18 +85,18 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       <div class="section__intro">
         <h2>What institutions can buy</h2>
         <p>
-          The curriculum can be packaged as a full master's degree, a specialization-first
-          launch, or stackable certificate offerings that extend an existing institutional catalog.
+          The same course set can support a full graduate degree your institution names, a specialization-first
+          pilot, or stackable certificates that extend an existing catalog.
         </p>
       </div>
       <div class="grid grid--cards">
         <article class="card">
-          <h3>Full MSAI launch</h3>
-          <p>Adopt the 36-credit master's structure with core sequence, capstone, and specialization tracks.</p>
+          <h3>Full course stack</h3>
+          <p>License the reference core, capstone, and specialization clusters as a coherent graduate AI sequence your registrar can map to local requirements.</p>
         </article>
         <article class="card">
           <h3>Specialization pathways</h3>
-          <p>Start with healthcare, business, or cybersecurity AI as a market-facing concentration or pilot pathway.</p>
+          <p>Start with healthcare, business, cybersecurity, or robotics AI as a market-facing concentration or pilot pathway.</p>
         </article>
         <article class="card">
           <h3>Certificate expansion</h3>
@@ -92,12 +123,26 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     </section>
 
     <section class="cta">
-      <h2>Ready to launch the MSAI?</h2>
+      <h2>Ready to add graduate AI courses?</h2>
       <p>
-        Browse the curriculum and start an institutional conversation about degree launch,
-        specialization rollout, certificate packaging, and implementation support.
+        Browse the catalog, purchase where self-serve is available, or start an institutional conversation about which
+        courses to license, how they stack, and implementation support.
       </p>
-      <a class="button button--secondary" href="/catalog">Browse the curriculum</a>
+      <div class="hero__actions" style="justify-content: center; margin-top: 1.25rem;">
+        {aimaSalesOpen ? (
+          <a
+            class="button button--primary"
+            href={aimaBasicStripe ?? '/purchase#aima-basic'}
+          >
+            {`Buy AIMA Basic — $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
+          </a>
+        ) : (
+          <span class="button button--secondary" style="cursor: default;">
+            Sales open after course release
+          </span>
+        )}
+        <a class="button button--secondary" href="/catalog">Browse the curriculum</a>
+      </div>
     </section>
   </main>
 </BaseLayout>

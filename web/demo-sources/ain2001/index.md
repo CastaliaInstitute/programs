@@ -1,13 +1,13 @@
 ---
-title: AIMA 5001 MyST demos
-description: Six licensable product lines — each page is its own MyST source file in this folder.
+title: AIMA 5001 course demos
+description: Six licensable product lines — each page is its own Markdown source file in this folder.
 ---
 
-# AIMA 5001 — MyST-built course demos
+# AIMA 5001 — static course demos
 
 Graduate-level AI foundations (catalog **AIMA 5001**): classical **AI problem solving**—search, planning, knowledge representation, learning, and agents—via Russell & Norvig (*AIMA*), with modern GitHub-native delivery.
 
-This site is generated from **MyST Markdown** in `web/myst-sources/ain2001/` (`myst build --html` with `BASE_URL=/demos/myst/ain2001/`).
+This site is generated from Markdown in `web/demo-sources/ain2001/` (`npm run build:demos` with `BASE_URL=/demos/course/ain2001/`).
 
 ## Course products
 

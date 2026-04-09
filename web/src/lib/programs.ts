@@ -1,12 +1,79 @@
+import { AIMA_BASIC_IMSCC_PATH, type AimaLmsVariantKey } from './site-links'
+
+/** AIMA5001: Basic — LMS-first line complete (catalog Status column). */
+export const AIMA_5001_BASIC_STATUS_EXPECTED = 'Complete Apr 15, 2026' as const
+
+/** Other AIMA5001 SKUs — narrated / packaged media (MP3, MP4). */
+export const AIMA_5001_MEDIA_STATUS_EXPECTED = 'MP3/MP4 ready Apr 30, 2026' as const
+
+/**
+ * First instant self-serve purchase for **Basic** (static builds compare at build time—redeploy after this date).
+ * @see AIMA_5001_MEDIA_PURCHASE_AVAILABLE_FROM_ISO for other AIMA5001 variants.
+ */
+export const AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO = '2026-04-16T00:00:00.000Z' as const
+
+/** Self-serve purchase for AIMA5001 slide lines that ship narrated MP3/MP4 (after media target). */
+export const AIMA_5001_MEDIA_PURCHASE_AVAILABLE_FROM_ISO = '2026-05-01T00:00:00.000Z' as const
+
+/**
+ * What each AIMA5001 variant includes (catalog comparison matrix).
+ * “Slides” means structured lecture materials (PDF, Reveal, or equivalent).
+ */
+export interface AimaCatalogFeatures {
+  imscc: boolean
+  slides: boolean
+  assignments: boolean
+  mp3: boolean
+  mp4: boolean
+  /** Co-teaching / dialogic slide delivery (the Dialogic product line). */
+  dialogic: boolean
+  githubClassroom: boolean
+  googleClassroom: boolean
+}
+
 /** One licensable product line for AIMA 5001, named like a course (e.g. AIMA5001: Basic). */
 export interface DeliverableDemo {
   /** Display name, e.g. `AIMA5001: Basic` or `AIMA5001: AI Delivery`. */
   courseCode: string
   summary: string
+  /** Checkmark matrix on the catalog / AIMA product table. */
+  catalogFeatures: AimaCatalogFeatures
+  /** Shown in catalog “Status” column (e.g. expected completion). */
+  statusExpected: string
+  /**
+   * Self-serve purchase allowed only when `Date.now() >= new Date(this)` at build time; omit on rows that are never self-serve.
+   * @see AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO (Basic) and AIMA_5001_MEDIA_PURCHASE_AVAILABLE_FROM_ISO
+   */
+  purchaseAvailableFrom?: string
   primaryLabel: string
   primaryHref: string
   secondaryLabel?: string
   secondaryHref?: string
+  tertiaryLabel?: string
+  tertiaryHref?: string
+  /** IMS Common Cartridge for this deliverable (variant page + shared PDF); built by `npm run build:demos`. */
+  imsccHref?: string
+  /** Maps to Castalia Moodle demo URL via `castaliaLmsAimaDemoUrl` (see `site-links.ts`). */
+  lmsVariant: AimaLmsVariantKey
+}
+
+/** One heading + course lines under a college on the catalog card. */
+export interface ProgramCurriculumCollegeBlock {
+  title: string
+  courses: string[]
+  /** Repeated in the catalog Status column for each course row in this block. */
+  statusExpected?: string
+  /** If set and current time ≥ this ISO instant at build, catalog shows Purchase; otherwise “Not for sale yet”. */
+  purchaseAvailableFrom?: string
+}
+
+/** LMS-aligned college bucket (e.g. all AINS courses under AINS). */
+export interface ProgramCurriculumCollege {
+  /** Short code shown as a chip; matches Moodle category idnumber in spirit (e.g. AINS). */
+  code: string
+  /** Full display name, e.g. `AINS — College of Artificial & Inquiring Systems`. */
+  title: string
+  blocks: ProgramCurriculumCollegeBlock[]
 }
 
 export interface ProgramOffering {
@@ -21,6 +88,11 @@ export interface ProgramOffering {
   summary: string
   outcomes: string[]
   institutionFit: string[]
+  /**
+   * When set, catalog shows curriculum grouped by college (preferred over flat highlights / specializations).
+   * All AINS-numbered graduate offerings live under the AINS college.
+   */
+  curriculumColleges?: ProgramCurriculumCollege[]
   curriculumHighlights?: string[]
   specializations?: {
     title: string
@@ -31,75 +103,98 @@ export interface ProgramOffering {
   deliverableDemos?: DeliverableDemo[]
 }
 
+/** Aligns with Castalia LMS category naming (`scripts/data/castalia-colleges.json` in the lms repo). */
+export const AINS_COLLEGE_TITLE = 'AINS — College of Artificial & Inquiring Systems' as const
+
 /** Canonical AIMA course repo (Russell & Norvig AIMA, GitHub-native delivery). */
 export const AIMA_REPO = 'https://github.com/InquiryInstitute/aima' as const
 
-/** Same thin IMS CC for every AIMA deliverable demo (LMS import). Built in `npm run build:demos`. */
+/** Full-course IMS CC from MyST TOC (all pages + PDF). Per-variant downloads use each deliverable’s `imsccHref`. Built in `npm run build:demos`. */
 export const AIMA_IMSCC_DEMO = '/demos/aima-lms-demo.imscc' as const
 
 /** Static viewer for unpacked cartridge content (PDF / markdown) on GitHub Pages. */
 export const IMSCC_VIEWER_PATH = '/catalog/imscc-viewer' as const
 
-/** MyST-built AIMA 5001 demo site (`npm run build:demos` → public/demos/myst/ain2001/). */
-export const MYST_AIMA5001_BASE = '/demos/myst/ain2001' as const
+/** AIMA 5001 static course demos (`npm run build:demos` → public/demos/course/ain2001/). */
+export const AIMA5001_COURSE_DEMO_BASE = '/demos/course/ain2001' as const
 
 export const programOfferings: ProgramOffering[] = [
   {
-    slug: 'msai',
-    title: 'MSAI',
-    format: "36-credit online master's degree",
+    slug: 'graduate-ai-courses',
+    title: 'Graduate AI courses (AINS)',
+    format: 'Modular graduate-level courses — core, specialization clusters, capstone, certificate',
     audience: 'Universities, graduate divisions, and adult-serving online programs',
-    duration: '36 credit hours across core plus specialization study',
-    credits: '36 total credits',
-    modality: '100% online',
-    implementation: 'Degree-ready curriculum with core, specializations, and capstone',
+    duration: 'Reference stack: 36 credit hours (27 core + 9 specialization); institutions set pacing',
+    credits: 'Per institution (reference stack: 36 credits)',
+    modality: '100% online (default design)',
+    implementation: 'Licensable course modules—your team assembles credentials and catalog copy locally',
     summary:
-      'A complete Master of Science in Artificial Intelligence curriculum designed for institutional launch, including a 27-credit core, 9-credit specialization tracks, and a culminating capstone.',
+      'Graduate AI courses under the AINS college: nine core courses, five specialization clusters (healthcare, business, cybersecurity, robotics), a capstone, and a stackable certificate course. Castalia licenses courses; partner institutions define program names, degrees, and how credits stack.',
     outcomes: [
-      'Launch a full graduate AI degree with an academically coherent core sequence.',
-      'Offer differentiated specialization pathways in healthcare, business, or cybersecurity AI.',
+      'License single courses or coherent stacks to match your graduate catalog and accreditation story.',
+      'Combine core, specialization clusters, and capstone the way your program committee requires.',
       'Support workforce-relevant outcomes with technical, ethical, and project-based training.',
     ],
     institutionFit: [
-      'Universities building new AI graduate offerings',
-      'Colleges expanding online and professional master’s portfolios',
-      'Institutions seeking fast program launch without writing curriculum from scratch',
+      'Universities expanding graduate AI without authoring every syllabus in-house',
+      'Colleges extending professional master’s or certificate portfolios',
+      'Teams that want launch-ready courseware without a vendor-branded degree package',
     ],
-    curriculumHighlights: [
-      'AINS6001 Foundations of Artificial Intelligence',
-      'AINS6002 Machine Learning & Predictive Modeling',
-      'AINS6003 Deep Learning & Neural Networks',
-      'AINS6004 Natural Language Processing',
-      'AINS6005 AI Ethics, Law & Policy',
-      'AINS6006 Big Data Management for AI Applications',
-      'AINS6007 Applied AI Programming with Python',
-      'AINS6008 AI Project Management & Deployment',
-      'AINS6009 Capstone Project',
-      'AINS6010 Local AI & Deployment to Hardware certificate course',
-    ],
-    specializations: [
+    curriculumColleges: [
       {
-        title: 'Healthcare AI',
-        courses: [
-          'AINS6100 AI in Medical Imaging',
-          'AINS6101 Predictive Analytics in Population Health',
-          'AINS6102 AI for Clinical Decision Support',
-        ],
-      },
-      {
-        title: 'Business AI',
-        courses: [
-          'AINS6200 AI for Marketing & Customer Insights',
-          'AINS6201 Automation & Process Optimization',
-          'AINS6202 AI Strategy for Executives',
-        ],
-      },
-      {
-        title: 'Cybersecurity AI',
-        courses: [
-          'AINS6300 AI in Threat Detection',
-          'AINS6301 Automated Response Systems',
-          'AINS6302 AI for Risk Assessment',
+        code: 'AINS',
+        title: AINS_COLLEGE_TITLE,
+        blocks: [
+          {
+            title: 'Core courses',
+            courses: [
+              'AINS6001 Foundations of Artificial Intelligence',
+              'AINS6002 Machine Learning & Predictive Modeling',
+              'AINS6003 Deep Learning & Neural Networks',
+              'AINS6004 Natural Language Processing',
+              'AINS6005 AI Ethics, Law & Policy',
+              'AINS6006 Big Data Management for AI Applications',
+              'AINS6007 Applied AI Programming with Python',
+              'AINS6008 AI Project Management & Deployment',
+              'AINS6009 Capstone Project',
+            ],
+          },
+          {
+            title: 'Stackable certificate course',
+            courses: ['AINS6010 Local AI & Deployment to Hardware'],
+          },
+          {
+            title: 'Healthcare AI specialization',
+            courses: [
+              'AINS6100 AI in Medical Imaging',
+              'AINS6101 Predictive Analytics in Population Health',
+              'AINS6102 AI for Clinical Decision Support',
+            ],
+          },
+          {
+            title: 'Business AI specialization',
+            courses: [
+              'AINS6200 AI for Marketing & Customer Insights',
+              'AINS6201 Automation & Process Optimization',
+              'AINS6202 AI Strategy for Executives',
+            ],
+          },
+          {
+            title: 'Cybersecurity AI specialization',
+            courses: [
+              'AINS6300 AI in Threat Detection',
+              'AINS6301 Automated Response Systems',
+              'AINS6302 AI for Risk Assessment',
+            ],
+          },
+          {
+            title: 'Robotics AI specialization',
+            courses: [
+              'AINS6400 Robot Perception & Spatial AI',
+              'AINS6401 Motion Planning, Control & Learning for Autonomous Systems',
+              'AINS6402 Multi-Robot Systems & Human-Robot Interaction',
+            ],
+          },
         ],
       },
     ],
@@ -125,6 +220,18 @@ export const programOfferings: ProgramOffering[] = [
       'Cyber-physical systems curricula',
       'Certificate portfolios for workforce and technical learners',
     ],
+    curriculumColleges: [
+      {
+        code: 'AINS',
+        title: AINS_COLLEGE_TITLE,
+        blocks: [
+          {
+            title: 'Certificate course',
+            courses: ['AINS6010 Local AI & Deployment to Hardware'],
+          },
+        ],
+      },
+    ],
   },
   {
     slug: 'aima',
@@ -140,7 +247,7 @@ export const programOfferings: ProgramOffering[] = [
     implementation:
       'Full course repo with Reveal slides, sample PDF slide packs, IMSCC-ready bundles for Canvas/Moodle-style import, GitHub Pages, SAMWISE curriculum tooling, and BEATRICE (AI TA) integration',
     summary:
-      'A complete, licensable deployment of Artificial Intelligence: A Modern Approach at graduate rigor (AIMA 5001): AI-generated slide decks, assignments, autograding hooks, and optional teaching-assistant stack. Each row below is a distinct AIMA5001 course product—demo pages are generated from MyST Markdown in web/myst-sources/ain2001/ (one file per variant, one shared myst build). Same syllabus spine, different delivery and tooling; every variant includes the same IMS Common Cartridge for LMS import where applicable.',
+      'A complete, licensable deployment of Artificial Intelligence: A Modern Approach at graduate rigor (AIMA 5001): AI-generated slide decks, assignments, autograding hooks, and optional teaching-assistant stack. Each row below is a distinct AIMA5001 course product—demo pages are built from Markdown in web/demo-sources/ain2001/ (one file per variant, one shared static build). Same syllabus spine, different delivery and tooling; each variant has its own IMS Common Cartridge (that variant’s page plus the shared week-1 PDF), and a full-course cartridge is also built from the MyST table of contents.',
     outcomes: [
       'Ship a turnkey AIMA-aligned course with slides, readings, and assignments in one repository.',
       'Offer students GitHub Classroom assignments with Codespaces and automated feedback.',
@@ -151,68 +258,176 @@ export const programOfferings: ProgramOffering[] = [
       'Institutions standardizing on Git + AI tools for programming-heavy courses',
       'Teams that want buyer-visible demos for each delivery format before licensing',
     ],
-    curriculumHighlights: [
-      'Six licensable course products for AIMA 5001 (MyST sources in myst-sources/ain2001/*.md): Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE',
-      '24 lecture tracks mapped to AIMA 4e with Reveal.js delivery',
-      '556+ indexed exercises with autograding and AI-rubric pathways (see course analysis docs)',
-      'GitHub Classroom templates with devcontainer / Codespaces for assignments',
-      'Instructor notes system for human and AI teaching assistants (BEATRICE)',
+    curriculumColleges: [
+      {
+        code: 'AINS',
+        title: AINS_COLLEGE_TITLE,
+        blocks: [
+          {
+            title: 'AIMA 5001 — graduate course products',
+            courses: [
+              'AIMA5001: Basic',
+              'AIMA5001: AI Delivery',
+              'AIMA5001: Classroom',
+              'AIMA5001: Dialogic',
+              'AIMA5001: SAMWISE',
+              'AIMA5001: BEATRICE',
+            ],
+          },
+          {
+            title: 'Curriculum & delivery highlights',
+            courses: [
+              '24 lecture tracks mapped to AIMA 4e with Reveal.js delivery',
+              '556+ indexed exercises with autograding and AI-rubric pathways (see course analysis docs)',
+              'GitHub Classroom templates with devcontainer / Codespaces for assignments',
+              'Instructor notes system for human and AI teaching assistants (BEATRICE)',
+            ],
+          },
+        ],
+      },
     ],
     detailHref: '/catalog/aima',
     deliverableDemos: [
       {
         courseCode: 'AIMA5001: Basic',
         summary:
-          'LMS-first delivery: IMS Common Cartridge import plus PDF slide samples so committees and instructors can adopt the AIMA-aligned sequence without GitHub on day one. MyST source: myst-sources/ain2001/basic.md.',
-        primaryLabel: 'Open MyST-built demo',
-        primaryHref: `${MYST_AIMA5001_BASE}/basic/`,
+          'LMS-first delivery: IMS Common Cartridge import plus PDF slide samples so committees and instructors can adopt the AIMA-aligned sequence without GitHub on day one. Source: demo-sources/ain2001/basic.md.',
+        statusExpected: AIMA_5001_BASIC_STATUS_EXPECTED,
+        purchaseAvailableFrom: AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO,
+        primaryLabel: 'Open course demo',
+        primaryHref: `${AIMA5001_COURSE_DEMO_BASE}/basic/`,
         secondaryLabel: 'AIMA course repository',
         secondaryHref: AIMA_REPO,
+        imsccHref: AIMA_BASIC_IMSCC_PATH,
+        lmsVariant: 'basic',
+        catalogFeatures: {
+          imscc: true,
+          slides: true,
+          assignments: true,
+          mp3: false,
+          mp4: false,
+          dialogic: false,
+          githubClassroom: false,
+          googleClassroom: false,
+        },
       },
       {
         courseCode: 'AIMA5001: AI Delivery',
         summary:
-          'Hosted slide experience: Reveal.js lectures deployed to GitHub Pages. MyST source: myst-sources/ain2001/ai-delivery.md.',
-        primaryLabel: 'Open MyST-built demo',
-        primaryHref: `${MYST_AIMA5001_BASE}/ai-delivery/`,
+          'Hosted slide experience: Reveal.js lectures deployed to GitHub Pages. Source: demo-sources/ain2001/ai-delivery.md.',
+        statusExpected: AIMA_5001_MEDIA_STATUS_EXPECTED,
+        purchaseAvailableFrom: AIMA_5001_MEDIA_PURCHASE_AVAILABLE_FROM_ISO,
+        primaryLabel: 'Open course demo',
+        primaryHref: `${AIMA5001_COURSE_DEMO_BASE}/ai-delivery/`,
         secondaryLabel: 'Hosted slide index (AIMA repo)',
         secondaryHref: 'https://inquiryinstitute.github.io/aima/lectures/reveal/lectures.html',
+        imsccHref: '/demos/aima-delivery-lms-demo.imscc',
+        lmsVariant: 'ai-delivery',
+        catalogFeatures: {
+          imscc: true,
+          slides: true,
+          assignments: true,
+          mp3: true,
+          mp4: true,
+          dialogic: false,
+          githubClassroom: false,
+          googleClassroom: false,
+        },
       },
       {
         courseCode: 'AIMA5001: Classroom',
         summary:
-          'GitHub Classroom + Codespaces. MyST source: myst-sources/ain2001/classroom.md.',
-        primaryLabel: 'Open MyST-built demo',
-        primaryHref: `${MYST_AIMA5001_BASE}/classroom/`,
-        secondaryLabel: 'Exercise starter template',
-        secondaryHref: 'https://github.com/InquiryInstitute/aima/tree/main/classroom-templates/aima-exercise-starter',
+          'GitHub Classroom + Codespaces: students fork the aima-codespace template and rename it aima-<username>, then work in a devcontainer with bundled Python exercises. Source: demo-sources/ain2001/classroom.md.',
+        statusExpected: AIMA_5001_BASIC_STATUS_EXPECTED,
+        purchaseAvailableFrom: AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO,
+        primaryLabel: 'Open course demo',
+        primaryHref: `${AIMA5001_COURSE_DEMO_BASE}/classroom/`,
+        secondaryLabel: 'Codespace template (fork as aima-you)',
+        secondaryHref: 'https://github.com/InquiryInstitute/aima-codespace',
+        tertiaryLabel: 'Exercise starter (AIMA repo)',
+        tertiaryHref:
+          'https://github.com/InquiryInstitute/aima/tree/main/classroom-templates/aima-exercise-starter',
+        imsccHref: '/demos/aima-classroom-lms-demo.imscc',
+        lmsVariant: 'classroom',
+        catalogFeatures: {
+          imscc: true,
+          slides: true,
+          assignments: true,
+          mp3: false,
+          mp4: false,
+          dialogic: false,
+          githubClassroom: true,
+          googleClassroom: false,
+        },
       },
       {
         courseCode: 'AIMA5001: Dialogic',
         summary:
-          'Co-teaching / dialogic slide delivery. MyST source: myst-sources/ain2001/dialogic.md.',
-        primaryLabel: 'Open MyST-built demo',
-        primaryHref: `${MYST_AIMA5001_BASE}/dialogic/`,
+          'Co-teaching / dialogic slide delivery. Source: demo-sources/ain2001/dialogic.md.',
+        statusExpected: AIMA_5001_MEDIA_STATUS_EXPECTED,
+        purchaseAvailableFrom: AIMA_5001_MEDIA_PURCHASE_AVAILABLE_FROM_ISO,
+        primaryLabel: 'Open course demo',
+        primaryHref: `${AIMA5001_COURSE_DEMO_BASE}/dialogic/`,
         secondaryLabel: 'Sample lecture (Search)',
         secondaryHref: 'https://inquiryinstitute.github.io/aima/lectures/reveal/lecture-03.html',
+        imsccHref: '/demos/aima-dialogic-lms-demo.imscc',
+        lmsVariant: 'dialogic',
+        catalogFeatures: {
+          imscc: true,
+          slides: true,
+          assignments: true,
+          mp3: true,
+          mp4: true,
+          dialogic: true,
+          githubClassroom: false,
+          googleClassroom: false,
+        },
       },
       {
         courseCode: 'AIMA5001: SAMWISE',
         summary:
-          'SAMWISE curriculum tooling. MyST source: myst-sources/ain2001/samwise.md.',
-        primaryLabel: 'Open MyST-built demo',
-        primaryHref: `${MYST_AIMA5001_BASE}/samwise/`,
+          'SAMWISE curriculum tooling. Source: demo-sources/ain2001/samwise.md.',
+        statusExpected: AIMA_5001_BASIC_STATUS_EXPECTED,
+        purchaseAvailableFrom: AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO,
+        primaryLabel: 'Open course demo',
+        primaryHref: `${AIMA5001_COURSE_DEMO_BASE}/samwise/`,
         secondaryLabel: 'Documentation index',
         secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/docs/DOCUMENTATION_INDEX.md',
+        imsccHref: '/demos/aima-samwise-lms-demo.imscc',
+        lmsVariant: 'samwise',
+        catalogFeatures: {
+          imscc: true,
+          slides: true,
+          assignments: true,
+          mp3: false,
+          mp4: false,
+          dialogic: false,
+          githubClassroom: false,
+          googleClassroom: false,
+        },
       },
       {
         courseCode: 'AIMA5001: BEATRICE',
         summary:
-          'BEATRICE AI teaching assistant tier. MyST source: myst-sources/ain2001/beatrice.md.',
-        primaryLabel: 'Open MyST-built demo',
-        primaryHref: `${MYST_AIMA5001_BASE}/beatrice/`,
+          'BEATRICE AI teaching assistant tier. Source: demo-sources/ain2001/beatrice.md.',
+        statusExpected: AIMA_5001_BASIC_STATUS_EXPECTED,
+        purchaseAvailableFrom: AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO,
+        primaryLabel: 'Open course demo',
+        primaryHref: `${AIMA5001_COURSE_DEMO_BASE}/beatrice/`,
         secondaryLabel: 'BEATRICE instructions',
         secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/BEATRICE-INSTRUCTIONS.md',
+        imsccHref: '/demos/aima-beatrice-lms-demo.imscc',
+        lmsVariant: 'beatrice',
+        catalogFeatures: {
+          imscc: true,
+          slides: true,
+          assignments: true,
+          mp3: false,
+          mp4: false,
+          dialogic: false,
+          githubClassroom: false,
+          googleClassroom: false,
+        },
       },
     ],
   },

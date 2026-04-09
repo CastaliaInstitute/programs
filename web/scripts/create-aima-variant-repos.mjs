@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Scaffold standalone Git repositories for each AIMA 5001 delivery variant from MyST sources
- * (web/myst-sources/ain2001/*.md). Each repo is a single-page MyST book-theme site with
- * GitHub Actions → GitHub Pages.
+ * Scaffold standalone Git repositories for each AIMA 5001 delivery variant from Markdown sources
+ * (web/demo-sources/ain2001/*.md). Each repo is a Populi-style static site (matching the programs
+ * catalog shell) deployed with GitHub Actions → GitHub Pages.
  *
  * Usage:
  *   node scripts/create-aima-variant-repos.mjs [--out DIR] [--org ORG] [--dry-run] [--push] [--only aima-basic]
@@ -14,15 +14,17 @@
  * Generated site URL pattern: https://ORG.github.io/REPO/
  */
 import { execSync } from 'node:child_process'
-import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync } from 'node:fs'
+import { mkdirSync, readFileSync, rmSync, writeFileSync, existsSync, copyFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { randomUUID } from 'node:crypto'
 import { AIMA_VARIANT_REPOS } from './aima-variant-repos.config.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const WEB_ROOT = path.join(__dirname, '..')
-const MYST_ROOT = path.join(WEB_ROOT, 'myst-sources', 'ain2001')
+const DEMO_SOURCES_ROOT = path.join(WEB_ROOT, 'demo-sources', 'ain2001')
+const VARIANT_BUILD_SCRIPT = path.join(WEB_ROOT, 'scripts', 'variant-repo', 'build-site.mjs')
+const POPULI_CSS = path.join(WEB_ROOT, 'src', 'styles', 'populi-demo.css')
+const POPULI_STANDALONE_CSS = path.join(WEB_ROOT, 'styles', 'populi-demo-standalone.css')
 
 function parseArgs(argv) {
   let outDir = path.join(WEB_ROOT, '..', '.aima-variant-repos')
@@ -44,7 +46,7 @@ function parseArgs(argv) {
 function adaptMarkdownForStandaloneRepo(body, { org, repo, pagesUrl }) {
   let s = body
   s = s.replace(
-    /`web\/myst-sources\/ain2001\/[^`]+`/g,
+    /`web\/demo-sources\/ain2001\/[^`]+`/g,
     '`index.md` in this repository',
   )
   s = s.replace(
@@ -56,11 +58,11 @@ function adaptMarkdownForStandaloneRepo(body, { org, repo, pagesUrl }) {
     'when you run `npm run build` in this repository',
   )
   s = s.replace(
-    /published under `\/demos\/myst\/ain2001\/[^`]+`/g,
+    /published under `\/demos\/course\/ain2001\/[^`]+`/g,
     `published at ${pagesUrl}`,
   )
   s = s.replace(
-    /→ `\/demos\/myst\/ain2001\/[^`]+`/g,
+    /→ `\/demos\/course\/ain2001\/[^`]+`/g,
     `→ ${pagesUrl}`,
   )
   return s
@@ -95,14 +97,11 @@ function writePagesWorkflow(repoRoot) {
     '          cache: npm',
     '      - name: Install',
     '        run: npm ci',
-    '      - name: Build MyST site',
-    '        env:',
-    "          CI: 'true'",
-    '          BASE_URL: /${{ github.event.repository.name }}/',
-    '        run: npx myst build --html --ci',
+    '      - name: Build Populi-style site',
+    '        run: npm run build',
     '      - uses: actions/upload-pages-artifact@v3',
     '        with:',
-    '          path: _build/html',
+    '          path: dist',
     '',
     '  deploy:',
     '    needs: build',
@@ -122,45 +121,68 @@ function writePagesWorkflow(repoRoot) {
 }
 
 function scaffoldOne(variant, { outDir, org, dryRun }) {
-  const { repo, sourceFile, packageName, projectTitle, description } = variant
+  const {
+    repo,
+    sourceFile,
+    packageName,
+    projectTitle,
+    description,
+    courseCode,
+    courseTitle,
+    pillLabel,
+  } = variant
   const repoRoot = path.join(outDir, repo)
   const pagesUrl = `https://${org}.github.io/${repo}/`
+
+  if (!existsSync(POPULI_CSS) || !existsSync(POPULI_STANDALONE_CSS)) {
+    throw new Error(`Missing Populi CSS (expected ${POPULI_CSS} and ${POPULI_STANDALONE_CSS})`)
+  }
+  if (!existsSync(VARIANT_BUILD_SCRIPT)) {
+    throw new Error(`Missing ${VARIANT_BUILD_SCRIPT}`)
+  }
 
   if (existsSync(repoRoot)) {
     rmSync(repoRoot, { recursive: true, force: true })
   }
   mkdirSync(repoRoot, { recursive: true })
 
-  const srcPath = path.join(MYST_ROOT, sourceFile)
+  const srcPath = path.join(DEMO_SOURCES_ROOT, sourceFile)
   if (!existsSync(srcPath)) {
-    throw new Error(`Missing MyST source: ${srcPath}`)
+    throw new Error(`Missing Markdown source: ${srcPath}`)
   }
   let md = readFileSync(srcPath, 'utf8')
   md = adaptMarkdownForStandaloneRepo(md, { org, repo, pagesUrl })
 
-  const mystYml = `# See https://mystmd.org/guide/frontmatter
-version: 1
-project:
-  id: ${randomUUID()}
-  title: ${JSON.stringify(projectTitle)}
-  toc:
-    - file: index.md
-site:
-  template: book-theme
-`
-  writeFileSync(path.join(repoRoot, 'myst.yml'), mystYml)
+  const variantJson = {
+    courseCode,
+    courseTitle,
+    pillLabel,
+    description,
+    programsCatalogUrl: 'https://programs.castalia.institute/catalog/aima',
+    alertText: 'This course opens on Aug 31, 2026',
+    termLabel: '2026-2027: Fall Semester 2026 A',
+  }
+  writeFileSync(path.join(repoRoot, 'variant.json'), JSON.stringify(variantJson, null, 2) + '\n')
   writeFileSync(path.join(repoRoot, 'index.md'), md)
+
+  mkdirSync(path.join(repoRoot, 'styles'), { recursive: true })
+  copyFileSync(POPULI_CSS, path.join(repoRoot, 'styles', 'populi-demo.css'))
+  copyFileSync(POPULI_STANDALONE_CSS, path.join(repoRoot, 'styles', 'populi-demo-standalone.css'))
+
+  mkdirSync(path.join(repoRoot, 'scripts'), { recursive: true })
+  copyFileSync(VARIANT_BUILD_SCRIPT, path.join(repoRoot, 'scripts', 'build-site.mjs'))
 
   const pkg = {
     name: packageName,
     version: '1.0.0',
     private: true,
-    description,
+    description: `${projectTitle} — Populi-style course demo (GitHub Pages)`,
+    type: 'module',
     scripts: {
-      build: 'myst build --html --ci',
+      build: 'node scripts/build-site.mjs',
     },
     devDependencies: {
-      mystmd: '^1.8.3',
+      marked: '^15.0.0',
     },
   }
   writeFileSync(path.join(repoRoot, 'package.json'), JSON.stringify(pkg, null, 2) + '\n')
@@ -168,7 +190,7 @@ site:
   writeFileSync(
     path.join(repoRoot, '.gitignore'),
     `node_modules/
-_build/
+dist/
 .DS_Store
 `,
   )
@@ -179,17 +201,18 @@ _build/
 
 ${description}
 
-- **MyST source:** \`index.md\` (generated from [programs](https://github.com/${org}/programs) \`myst-sources/ain2001/${sourceFile}\`).
+- **Source:** \`index.md\` (from [programs](https://github.com/${org}/programs) \`demo-sources/ain2001/${sourceFile}\`).
 - **Live site (after Pages):** ${pagesUrl}
+- **Layout:** Populi-style course shell (same visual language as the [AIMA catalog](https://programs.castalia.institute/catalog/aima)); built to static HTML with \`marked\`.
 
 ## Build locally
 
 \`\`\`bash
 npm install
-BASE_URL=/ npm run build
+npm run build
 \`\`\`
 
-Static output is in \`_build/html/\`. For GitHub Pages, \`BASE_URL\` is set to \`/<repo>/\` in Actions.
+Open \`dist/index.html\`. On GitHub Actions, \`dist/\` is published to Pages.
 
 ## License
 
@@ -199,6 +222,7 @@ Content policy matches the parent AIMA / Castalia programs licensing workflow.
 
   if (!dryRun) {
     execSync('npm install', { cwd: repoRoot, stdio: 'inherit' })
+    execSync('npm run build', { cwd: repoRoot, stdio: 'inherit' })
   }
 
   console.log(`[create-aima-variant-repos] wrote ${repoRoot}`)
@@ -213,7 +237,7 @@ function gitPushScaffold({ repoRoot, org, repo, dryRun }) {
   execSync('git init -b main', { cwd: repoRoot, stdio: 'inherit' })
   execSync('git add -A', { cwd: repoRoot, stdio: 'inherit' })
   execSync(
-    `git -c user.email="noreply@github.com" -c user.name="aima-variant-scaffold" commit -m "Scaffold MyST site for ${repo}"`,
+    `git -c user.email="noreply@github.com" -c user.name="aima-variant-scaffold" commit -m "Scaffold Populi-style course demo for ${repo}"`,
     { cwd: repoRoot, stdio: 'inherit' },
   )
   let exists = false
@@ -230,7 +254,7 @@ function gitPushScaffold({ repoRoot, org, repo, dryRun }) {
     return
   }
   execSync(
-    `gh repo create ${org}/${repo} --public --description "AIMA5001 ${repo} — MyST + GitHub Pages" --source=. --remote=origin --push`,
+    `gh repo create ${org}/${repo} --public --description "AIMA5001 ${repo} — Populi-style course demo + GitHub Pages" --source=. --remote=origin --push`,
     { cwd: repoRoot, stdio: 'inherit' },
   )
 }
