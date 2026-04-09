@@ -1,3 +1,13 @@
+import type { CatalogCourseDetail } from './catalog-courses'
+import {
+  ainsAimaCertificateCourses,
+  ainsBusinessCourses,
+  ainsCyberCourses,
+  ainsGraduateCoreCourses,
+  ainsHealthcareCourses,
+  ainsRoboticsCourses,
+  ainsStackableCertificateCourses,
+} from './catalog-courses'
 import { AIMA_BASIC_IMSCC_PATH, type AimaLmsVariantKey } from './site-links'
 
 /** AIMA5001: Basic — LMS-first line complete (catalog Status column). */
@@ -60,7 +70,8 @@ export interface DeliverableDemo {
 /** One heading + course lines under a college on the catalog card. */
 export interface ProgramCurriculumCollegeBlock {
   title: string
-  courses: string[]
+  /** Structured AINS rows link to `/catalog/courses/...`; freeform strings stay bullet lists (e.g. highlights). */
+  courses: CatalogCourseDetail[] | string[]
   /** Repeated in the catalog Status column for each course row in this block. */
   statusExpected?: string
   /** If set and current time ≥ this ISO instant at build, catalog shows Purchase; otherwise “Not for sale yet”. */
@@ -129,7 +140,7 @@ export const programOfferings: ProgramOffering[] = [
     modality: '100% online (default design)',
     implementation: 'Licensable course modules—your team assembles credentials and catalog copy locally',
     summary:
-      'Graduate AI courses under the AINS college: nine core courses, five specialization clusters (healthcare, business, cybersecurity, robotics), a capstone, and a stackable certificate course. Castalia licenses courses; partner institutions define program names, degrees, and how credits stack.',
+      'Graduate AI courses under the AINS college: the AIMA certificate pathway (AINS5001), nine core courses, five specialization clusters (healthcare, business, cybersecurity, robotics), a capstone, and a stackable certificate course. Castalia licenses courses; partner institutions define program names, degrees, and how credits stack.',
     outcomes: [
       'License single courses or coherent stacks to match your graduate catalog and accreditation story.',
       'Combine core, specialization clusters, and capstone the way your program committee requires.',
@@ -146,54 +157,32 @@ export const programOfferings: ProgramOffering[] = [
         title: AINS_COLLEGE_TITLE,
         blocks: [
           {
+            title: 'AIMA certificate',
+            courses: ainsAimaCertificateCourses,
+          },
+          {
             title: 'Core courses',
-            courses: [
-              'AINS6001 Foundations of Artificial Intelligence',
-              'AINS6002 Machine Learning & Predictive Modeling',
-              'AINS6003 Deep Learning & Neural Networks',
-              'AINS6004 Natural Language Processing',
-              'AINS6005 AI Ethics, Law & Policy',
-              'AINS6006 Big Data Management for AI Applications',
-              'AINS6007 Applied AI Programming with Python',
-              'AINS6008 AI Project Management & Deployment',
-              'AINS6009 Capstone Project',
-            ],
+            courses: ainsGraduateCoreCourses,
           },
           {
             title: 'Stackable certificate course',
-            courses: ['AINS6010 Local AI & Deployment to Hardware'],
+            courses: ainsStackableCertificateCourses,
           },
           {
             title: 'Healthcare AI specialization',
-            courses: [
-              'AINS6100 AI in Medical Imaging',
-              'AINS6101 Predictive Analytics in Population Health',
-              'AINS6102 AI for Clinical Decision Support',
-            ],
+            courses: ainsHealthcareCourses,
           },
           {
             title: 'Business AI specialization',
-            courses: [
-              'AINS6200 AI for Marketing & Customer Insights',
-              'AINS6201 Automation & Process Optimization',
-              'AINS6202 AI Strategy for Executives',
-            ],
+            courses: ainsBusinessCourses,
           },
           {
             title: 'Cybersecurity AI specialization',
-            courses: [
-              'AINS6300 AI in Threat Detection',
-              'AINS6301 Automated Response Systems',
-              'AINS6302 AI for Risk Assessment',
-            ],
+            courses: ainsCyberCourses,
           },
           {
             title: 'Robotics AI specialization',
-            courses: [
-              'AINS6400 Robot Perception & Spatial AI',
-              'AINS6401 Motion Planning, Control & Learning for Autonomous Systems',
-              'AINS6402 Multi-Robot Systems & Human-Robot Interaction',
-            ],
+            courses: ainsRoboticsCourses,
           },
         ],
       },
@@ -227,7 +216,7 @@ export const programOfferings: ProgramOffering[] = [
         blocks: [
           {
             title: 'Certificate course',
-            courses: ['AINS6010 Local AI & Deployment to Hardware'],
+            courses: ainsStackableCertificateCourses,
           },
         ],
       },
@@ -263,17 +252,6 @@ export const programOfferings: ProgramOffering[] = [
         code: 'AINS',
         title: AINS_COLLEGE_TITLE,
         blocks: [
-          {
-            title: 'AIMA 5001 — graduate course products',
-            courses: [
-              'AIMA5001: Basic',
-              'AIMA5001: AI Delivery',
-              'AIMA5001: Classroom',
-              'AIMA5001: Dialogic',
-              'AIMA5001: SAMWISE',
-              'AIMA5001: BEATRICE',
-            ],
-          },
           {
             title: 'Curriculum & delivery highlights',
             courses: [

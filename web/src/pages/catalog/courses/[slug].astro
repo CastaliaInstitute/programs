@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import {
+  aimaDemoToCatalogCourse,
+  allAinsCatalogCourses,
+  type CatalogCourseDetail,
+} from '../../../lib/catalog-courses'
+import { programOfferings } from '../../../lib/programs'
+import { castaliaLmsCatalogCourseUrl } from '../../../lib/site-links'
+
+export function getStaticPaths() {
+  const aima = programOfferings.find((p) => p.slug === 'aima')
+  const aimaCourses =
+    aima?.deliverableDemos?.map((d) =>
+      aimaDemoToCatalogCourse({
+        courseCode: d.courseCode,
+        summary: d.summary,
+        statusExpected: d.statusExpected,
+        lmsVariant: d.lmsVariant,
+      }),
+    ) ?? []
+  const all: CatalogCourseDetail[] = [...allAinsCatalogCourses(), ...aimaCourses]
+  return all.map((course) => ({
+    params: { slug: course.routeSlug },
+    props: { course },
+  }))
+}
+
+interface Props {
+  course: CatalogCourseDetail
+}
+
+const { course } = Astro.props
+const lmsUrl = castaliaLmsCatalogCourseUrl(course)
+const isAima = Boolean(course.aimaLmsVariant)
+---
+
+<BaseLayout
+  title={`${course.code} · ${course.title}`}
+  description={course.description}
+>
+  <main class="programs-page section course-detail-page">
+    <nav class="course-detail__crumb" aria-label="Breadcrumb">
+      <a href="/catalog">Catalog</a>
+      <span aria-hidden="true"> / </span>
+      <span>{course.code}</span>
+    </nav>
+
+    <header class="course-detail__head">
+      <p class="eyebrow">{isAima ? 'AIMA 5001 product line' : 'AINS graduate course'}</p>
+      <h1>
+        <span class="course-detail__code">{course.code}</span>
+        {' · '}
+        <span>{course.title}</span>
+      </h1>
+      <p class="course-detail__meta">
+        <span class="course-detail__pill">{course.dateLabel}</span>
+      </p>
+    </header>
+
+    <div class="course-detail__grid">
+      <section class="course-detail__panel" aria-labelledby="course-desc">
+        <h2 id="course-desc">Description</h2>
+        <p>{course.description}</p>
+      </section>
+
+      <section class="course-detail__panel course-detail__panel--actions" aria-labelledby="course-lms">
+        <h2 id="course-lms">Castalia LMS</h2>
+        <p>
+          {isAima
+            ? 'Open the guest-visible Moodle space for this AIMA5001 delivery variant (configure per-env URLs in deployment).'
+            : 'Course shells on the Castalia LMS are provisioned per license; this link opens the LMS to explore the guest demo or landing experience.'}
+        </p>
+        <p class="course-detail__actions">
+          <a class="button button--primary" href={lmsUrl} target="_blank" rel="noopener noreferrer">
+            Open Castalia LMS
+          </a>
+          <a class="button button--secondary" href="/catalog">Back to catalog</a>
+        </p>
+      </section>
+    </div>
+
+    <section class="course-detail__syllabus" aria-labelledby="syllabus-heading">
+      <h2 id="syllabus-heading">Syllabus outline</h2>
+      <ol class="course-detail__module-list">
+        {
+          course.syllabus.map((mod) => (
+            <li class="course-detail__module">
+              <h3 class="course-detail__module-title">{mod.title}</h3>
+              <ul class="list course-detail__topics">
+                {mod.topics.map((t) => (
+                  <li>{t}</li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+  </main>
+</BaseLayout>

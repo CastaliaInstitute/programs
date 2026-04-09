@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import AimaVariantCatalogTable from '../../components/AimaVariantCatalogTable.astro'
 import PopuliDemoShell from '../../components/PopuliDemoShell.astro'
+import { aimaProductRouteSlug } from '../../lib/catalog-courses'
 import { AIMA_REPO, IMSCC_VIEWER_PATH, programOfferings } from '../../lib/programs'
 import { aima5001SelfServePurchaseIsOpen, isPurchaseAvailableFrom } from '../../lib/purchase-gate'
 import {
@@ -169,6 +170,12 @@ if (!program || !program.deliverableDemos) {
                   rel="noopener noreferrer"
                 >
                   Castalia LMS (demo)
+                </a>
+                <a
+                  class="button button--secondary"
+                  href={`/catalog/courses/${aimaProductRouteSlug(demo.courseCode)}`}
+                >
+                  Syllabus & overview
                 </a>
               </div>
             </li>

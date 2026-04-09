@@ -3,6 +3,8 @@
  * LMS defaults to production; per-AIMA-variant URLs point at Moodle demo courses when configured.
  */
 
+import type { CatalogCourseDetail } from './catalog-courses'
+
 export const CASTALIA_LMS_URL = (
   import.meta.env.PUBLIC_CASTALIA_LMS_URL ?? 'https://lms.castalia.institute'
 ).replace(/\/$/, '')
@@ -41,6 +43,25 @@ export type AimaLmsVariantKey =
   | 'dialogic'
   | 'samwise'
   | 'beatrice'
+
+/**
+ * Resolved Castalia LMS URL for a catalog course page: explicit `lmsUrl`, AIMA variant override env, optional
+ * per-AINS `PUBLIC_CASTALIA_LMS_<CODE>`, then LMS home.
+ */
+export function castaliaLmsCatalogCourseUrl(course: CatalogCourseDetail): string {
+  const direct = course.lmsUrl?.trim()
+  if (direct) return direct.replace(/\/$/, '')
+  if (course.aimaLmsVariant) return castaliaLmsAimaDemoUrl(course.aimaLmsVariant)
+  const override = resolvePublicEnvString(`PUBLIC_CASTALIA_LMS_${course.code}`)
+  if (override) return override.replace(/\/$/, '')
+  return CASTALIA_LMS_URL
+}
+
+function resolvePublicEnvString(key: string): string | null {
+  const raw = (import.meta.env as Record<string, string | undefined>)[key]
+  const s = raw != null ? String(raw).trim() : ''
+  return s.length > 0 ? s : null
+}
 
 /** Moodle URL for this AIMA5001 demo variant (guest-visible demo course). Falls back to site home. */
 export function castaliaLmsAimaDemoUrl(variant: AimaLmsVariantKey): string {
