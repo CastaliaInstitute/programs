@@ -22,13 +22,13 @@ if (!program || !program.deliverableDemos) {
 
 <BaseLayout
   title="AIMA 5001 — AIMA product demos"
-  description="AIMA 5001 graduate course products (Basic, AI Delivery, Classroom, Dialogic, SAMWISE, BEATRICE)—each with live demos, IMS Common Cartridge where applicable, and links into the AIMA repository."
+  description="AIMA 5001 graduate course products—Simple (lectures + GitHub instructor/student repos) and Advanced (full AI stack, LTI, subscription)—with live demos, IMS Common Cartridge where applicable, and links into the AIMA repository."
 >
   <main class="programs-page" style="padding-top: 0.5rem;">
     <PopuliDemoShell
       courseCode="AIMA 5001"
       courseTitle="AIMA (Using AI to Make AI)"
-      pillLabel="AIMA5001: Variants"
+      pillLabel="AIMA5001: Simple & Advanced"
     >
       <section class="populi-demo__panel">
         <div class="populi-demo__panel-head">
@@ -70,7 +70,7 @@ if (!program || !program.deliverableDemos) {
             class="populi-demo__btn populi-demo__btn--primary"
             href={aimaBasicStripe ?? '/purchase#aima-basic'}
           >
-            {`Buy Basic — $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
+            {`Buy Simple — $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
           </a>
         ) : (
           <span class="populi-demo__btn populi-demo__btn--ghost" style="cursor: default; opacity: 0.85;">
@@ -85,11 +85,11 @@ if (!program || !program.deliverableDemos) {
         <a class="populi-demo__btn populi-demo__btn--ghost" href="/catalog">Programs catalog</a>
       </div>
 
-      <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Six AIMA5001 course products</h2>
+      <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Two AIMA5001 products</h2>
       <p class="populi-demo__intro">
-        Each line below is a <strong>separate licensable course</strong> (same AIMA 5001 graduate spine, different delivery). Same
-        syllabus core; pick Basic, AI Delivery, Classroom, Dialogic, SAMWISE, or BEATRICE—or combine add-ons for your
-        institution.
+        Each row is a <strong>separate licensable SKU</strong> on the same AIMA 5001 graduate spine. <strong>Simple</strong> is
+        lectures plus the creation and release of the GitHub course repository (instructor and student repos via Classroom).
+        <strong>Advanced</strong> adds the full AI stack, LTI integration, and a Castalia subscription.
       </p>
 
       <p class="populi-demo__at-a-glance" id="aima5001-course-lines">
@@ -125,7 +125,7 @@ if (!program || !program.deliverableDemos) {
               </p>
               <div class="demo-list__actions">
                 {isPurchaseAvailableFrom(demo.purchaseAvailableFrom) ? (
-                  demo.lmsVariant === 'basic' ? (
+                  demo.lmsVariant === 'simple' ? (
                     <a
                       class="button button--primary"
                       href={aimaBasicStripe ?? '/purchase#aima-basic'}
@@ -186,15 +186,14 @@ if (!program || !program.deliverableDemos) {
       <h2 class="populi-demo__section-title" style="margin-top: 2rem;">Implementation notes</h2>
       <ul class="list">
         <li>
-          Course demos: all six products share one static site project in <code>web/demo-sources/ain2001/</code> (
-          project config + one <code>.md</code> file per variant). <code>npm run build:demos</code> runs the static build
-          once and copies output to <code>public/demos/course/ain2001/</code>.
+          Course demos: engineering still builds variant pages from <code>web/demo-sources/ain2001/</code> (one{' '}
+          <code>.md</code> file per legacy demo name). <code>npm run build:demos</code> runs the static build once and copies
+          output to <code>public/demos/course/ain2001/</code>; the catalog exposes two buyer SKUs (Simple and Advanced).
         </li>
         <li>
-          Per-deliverable GitHub repos (Populi-style Pages): run{' '}
-          <code>npm run scaffold:aima-repos</code> in <code>web/</code> to generate <code>aima-basic</code>,{' '}
-          <code>aima-delivery</code>, etc.—each with the same LMS chrome as this page, built to <code>dist/</code> for
-          GitHub Actions → GitHub Pages (e.g. <code>https://inquiryinstitute.github.io/aima-basic/</code>).
+          Per-deliverable GitHub repos (Populi-style Pages): run <code>npm run scaffold:aima-repos</code> in{' '}
+          <code>web/</code> to generate e.g. <code>aima-basic</code>, <code>aima-delivery</code>—each with the same LMS chrome
+          as this page, built to <code>dist/</code> for GitHub Actions → GitHub Pages.
         </li>
         <li>
           Classroom / Codespaces: <code>npm run scaffold:aima-codespace</code> materializes the{' '}

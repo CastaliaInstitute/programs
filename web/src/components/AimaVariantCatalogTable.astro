@@ -10,7 +10,7 @@ import {
 
 interface Props {
   demos: DeliverableDemo[]
-  /** Resolved Stripe payment link URL when set (otherwise Basic buy falls back to /purchase). */
+  /** Resolved Stripe payment link URL when set (otherwise Simple buy falls back to /purchase). */
   aimaBasicStripe?: string | null
 }
 
@@ -24,6 +24,8 @@ const simpleFeatureKeys = [
   'dialogic',
   'githubClassroom',
   'googleClassroom',
+  'lti',
+  'subscription',
 ] as const
 ---
 
@@ -43,6 +45,8 @@ const simpleFeatureKeys = [
         <th scope="col">Dialogic</th>
         <th scope="col">GitHub Classroom</th>
         <th scope="col">Google Classroom</th>
+        <th scope="col" title="LTI 1.3 tool">LTI</th>
+        <th scope="col">Subscription</th>
         <th scope="col">Demo</th>
         <th scope="col">LMS</th>
         <th scope="col">Buy</th>
@@ -115,7 +119,7 @@ const simpleFeatureKeys = [
             </td>
             <td>
               {isPurchaseAvailableFrom(demo.purchaseAvailableFrom) ? (
-                demo.lmsVariant === 'basic' ? (
+                demo.lmsVariant === 'simple' ? (
                   <a
                     class="button button--table button--table-buy"
                     href={aimaBasicStripe ?? '/purchase#aima-basic'}

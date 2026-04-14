@@ -26,6 +26,11 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - name: Install and build
         working-directory: web
+        env:
+          # Optional repo/org Variables — embed Moodle course ids so catalog “LMS” links resolve on GitHub Pages.
+          # Set in GitHub → Settings → Secrets and variables → Actions → Variables (e.g. 9 / 10 on lms.castalia.institute).
+          PUBLIC_CASTALIA_MOODLE_COURSE_ID_AIMA_SIMPLE: ${{ vars.CASTALIA_MOODLE_COURSE_ID_AIMA_SIMPLE }}
+          PUBLIC_CASTALIA_MOODLE_COURSE_ID_AIMA_ADVANCED: ${{ vars.CASTALIA_MOODLE_COURSE_ID_AIMA_ADVANCED }}
         run: npm ci && npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -11,11 +11,15 @@ import {
 const basicStripe = resolveStripePaymentLinkAimaBasic()
 const genericCheckout = resolveHostedCheckoutUrl()
 const aimaSalesOpen = aima5001SelfServePurchaseIsOpen()
+const skuInterest = Astro.url.searchParams.get('sku')?.trim() ?? null
+const skuPaymentLinkEnvKey = skuInterest
+  ? `PUBLIC_STRIPE_PAYMENT_LINK_${skuInterest.replace(/[^A-Za-z0-9]/g, '')}`
+  : ''
 ---
 
 <BaseLayout
   title="Purchase · Castalia Programs"
-  description="Buy AIMA5001 Basic ($1,500) with instant IMS Common Cartridge download, or explore institutional licensing."
+  description="Buy AIMA5001 Simple ($1,500) with instant IMS Common Cartridge download, or explore institutional licensing and Advanced (LTI + subscription)."
 >
   <main class="programs-page section">
     <div class="section__intro">
@@ -26,13 +30,29 @@ const aimaSalesOpen = aima5001SelfServePurchaseIsOpen()
         imports and run cohorts. Self-serve checkout for course products opens only after each line is marked
         complete—see the <a href="/catalog">catalog</a> Status column. Institutional quotes are always available below.
       </p>
+      {skuInterest && (
+        <p class="purchase-sku-callout" role="status">
+          You opened this page for catalog SKU <strong>{skuInterest}</strong>. Configure a Stripe Payment Link for that
+          code (see <code class="purchase-code">{skuPaymentLinkEnvKey}</code> in env) for one-click checkout, or use{' '}
+          <a href="/institutions">institution partnerships</a> for quotes and bundles.
+        </p>
+      )}
+      <p class="purchase-cart-note">
+        <strong>Multiple courses:</strong> Stripe does not ship a hosted “shopping cart” like a storefront. For several
+        SKUs in one payment, use{' '}
+        <a href="https://stripe.com/docs/payments/checkout" target="_blank" rel="noopener noreferrer">
+          Stripe Checkout
+        </a>{' '}
+        with multiple line items (build cart state on your server or use Payment Links per SKU and separate checkouts).
+        Castalia typically handles bundles via institutional quotes.
+      </p>
     </div>
 
     <article id="aima-basic" class="card purchase-card purchase-card--featured">
       <div class="purchase-featured__head">
         <div>
-          <h2 class="purchase-featured__title">AIMA5001: Basic</h2>
-          <p class="purchase-featured__subtitle">LMS-first delivery · IMS Common Cartridge + PDF samples</p>
+          <h2 class="purchase-featured__title">AIMA5001: Simple</h2>
+          <p class="purchase-featured__subtitle">Lectures + GitHub instructor & student repos · IMS Common Cartridge</p>
         </div>
         <p class="purchase-price">
           <span class="purchase-price__currency">$</span>
@@ -43,7 +63,7 @@ const aimaSalesOpen = aima5001SelfServePurchaseIsOpen()
       <ul class="list purchase-featured__list">
         <li>Secure checkout with Stripe</li>
         <li>
-          <strong>Digital download</strong> of the Basic IMS CC (<code class="purchase-code">.imscc</code>) as soon as
+          <strong>Digital download</strong> of the Simple IMS CC (<code class="purchase-code">.imscc</code>) as soon as
           payment completes
         </li>
         <li>
@@ -61,7 +81,7 @@ const aimaSalesOpen = aima5001SelfServePurchaseIsOpen()
         ) : basicStripe ? (
           <p class="purchase-card__actions">
             <a class="button button--primary" href={basicStripe}>
-              {`Buy Basic — $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
+              {`Buy Simple — $${AIMA_BASIC_PRICE_USD.toLocaleString('en-US')}`}
             </a>
             <a class="button button--ghost" href="/catalog/aima">
               View product details
@@ -86,7 +106,7 @@ const aimaSalesOpen = aima5001SelfServePurchaseIsOpen()
             <h2>Other checkout</h2>
             <p>
               Additional Stripe Payment Link or Checkout URL configured for this deployment—use when directed by
-              Castalia for non-Basic SKUs.
+              Castalia for Advanced and other enterprise SKUs.
             </p>
             <p class="purchase-card__actions">
               <a
@@ -116,7 +136,7 @@ const aimaSalesOpen = aima5001SelfServePurchaseIsOpen()
       <article class="card purchase-card">
         <h2>Try the LMS first</h2>
         <p>
-          Browse AIMA5001 variants on the catalog, then open the matching demo in Castalia Moodle to see how IMS
+          Browse AIMA5001 Simple and Advanced on the catalog, then open the matching demo in Castalia Moodle to see how IMS
           Common Cartridge content runs for instructors and students.
         </p>
         <p class="purchase-card__actions">

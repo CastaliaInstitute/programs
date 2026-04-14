@@ -4,14 +4,20 @@ import AimaVariantCatalogTable from '../components/AimaVariantCatalogTable.astro
 import { programOfferings } from '../lib/programs'
 import type { CatalogCourseDetail } from '../lib/catalog-courses'
 import { isPurchaseAvailableFrom } from '../lib/purchase-gate'
-import { CASTALIA_LMS_URL, castaliaLmsCatalogCourseUrl, resolveStripePaymentLinkAimaBasic } from '../lib/site-links'
+import {
+  CASTALIA_LMS_URL,
+  castaliaLmsCatalogCourseUrl,
+  castaliaLmsUrlOpensMoodleCourse,
+  resolveCatalogCourseBuyHref,
+  resolveStripePaymentLinkAimaBasic,
+} from '../lib/site-links'
 
 const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
 ---
 
 <BaseLayout
   title="Programs Catalog"
-  description="Browse Castalia graduate AI courses, certificates, and AIMA 5001 variants—collapsible tables with demos, IMS CC, and purchase links."
+  description="Browse Castalia graduate AI courses, certificates, and AIMA 5001 (Simple vs Advanced)—collapsible tables with demos, IMS CC, and purchase links."
 >
   <main class="programs-page section catalog-page">
     <div class="section__intro">
@@ -19,8 +25,8 @@ const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
       <h1>Licensable courses and products</h1>
       <p>
         Expand each section for course tables. AINS rows include dates, links to a per-course overview (description +
-        syllabus), and Castalia LMS. AIMA 5001 adds a feature matrix (IMS CC, slides, assignments, MP3, MP4, dialogic,
-        GitHub Classroom, Google Classroom), demos, cartridge download, and purchase actions per variant when released.
+        syllabus), and outbound links (LMS or program hub). AIMA 5001 adds a feature matrix (IMS CC, slides, assignments, media, dialogic,
+        GitHub Classroom, LTI, subscription), demos, cartridge download, and purchase actions per SKU when released.
       </p>
       <p class="catalog-path">
         <a class="button button--primary" href="/purchase">Purchase hub</a>
@@ -83,7 +89,7 @@ const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
 
               {program.slug === 'aima' && program.deliverableDemos && program.deliverableDemos.length > 0 && (
                 <div class="catalog-table-section">
-                  <h3 class="catalog-table-section__title">AIMA 5001 variants</h3>
+                  <h3 class="catalog-table-section__title">AIMA 5001 products</h3>
                   <AimaVariantCatalogTable demos={program.deliverableDemos} aimaBasicStripe={aimaBasicStripe} />
                 </div>
               )}
@@ -91,10 +97,13 @@ const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
               {program.curriculumColleges && program.curriculumColleges.length > 0 && (
                 <div class="catalog-college-wrap">
                   {program.curriculumColleges.map((college) => (
-                    <section class="catalog-college">
+                    <section class:list={['catalog-college', college.placeholder && 'catalog-college--placeholder']}>
                       <h3 class="catalog-college__head">
                         <span class="chip chip--college">{college.code}</span>
                         {college.title}
+                        {college.placeholder ? (
+                          <span class="chip chip--muted catalog-college__soon">Coming soon</span>
+                        ) : null}
                       </h3>
                       {college.blocks.map((block, blockIndex) => {
                         const first = block.courses[0]
@@ -124,50 +133,66 @@ const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
                                         <th scope="col">Course</th>
                                         <th scope="col">Date</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">LMS</th>
+                                        <th scope="col">Link</th>
                                         <th scope="col">Overview</th>
                                         <th scope="col">Buy</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {(block.courses as CatalogCourseDetail[]).map((c) => (
-                                        <tr>
-                                          <td>
-                                            <code class="catalog-code">{c.code}</code>
-                                          </td>
-                                          <td>
-                                            <a class="catalog-table__course-link" href={`/catalog/courses/${c.routeSlug}`}>
-                                              {c.title}
-                                            </a>
-                                          </td>
-                                          <td class="catalog-table__date">{c.dateLabel}</td>
-                                          <td class="catalog-table__status">{block.statusExpected ?? '—'}</td>
-                                          <td>
-                                            <a
-                                              class="button button--table button--table-ghost"
-                                              href={castaliaLmsCatalogCourseUrl(c)}
-                                              target="_blank"
-                                              rel="noopener noreferrer"
-                                            >
-                                              LMS
-                                            </a>
-                                          </td>
-                                          <td>
-                                            <a class="button button--table" href={`/catalog/courses/${c.routeSlug}`}>
-                                              Details
-                                            </a>
-                                          </td>
-                                          <td>
-                                            {isPurchaseAvailableFrom(block.purchaseAvailableFrom) ? (
-                                              <a class="button button--table button--table-buy" href="/purchase">
-                                                Purchase
+                                      {(block.courses as CatalogCourseDetail[]).map((c) => {
+                                        const buy = resolveCatalogCourseBuyHref(c.code)
+                                        const canBuy = isPurchaseAvailableFrom(block.purchaseAvailableFrom)
+                                        const courseLmsUrl = castaliaLmsCatalogCourseUrl(c)
+                                        const lmsLinkLabel = castaliaLmsUrlOpensMoodleCourse(courseLmsUrl)
+                                          ? 'Open course'
+                                          : 'Open LMS'
+                                        return (
+                                          <tr>
+                                            <td>
+                                              <code class="catalog-code">{c.code}</code>
+                                            </td>
+                                            <td>
+                                              <a
+                                                class="catalog-table__course-link"
+                                                href={`/catalog/courses/${c.routeSlug}`}
+                                              >
+                                                {c.title}
                                               </a>
-                                            ) : (
-                                              <span class="catalog-table__na">Not for sale yet</span>
-                                            )}
-                                          </td>
-                                        </tr>
-                                      ))}
+                                            </td>
+                                            <td class="catalog-table__date">{c.dateLabel}</td>
+                                            <td class="catalog-table__status">{block.statusExpected ?? '—'}</td>
+                                            <td>
+                                              <a
+                                                class="button button--table button--table-ghost"
+                                                href={courseLmsUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                              >
+                                                {lmsLinkLabel}
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="button button--table" href={`/catalog/courses/${c.routeSlug}`}>
+                                                Details
+                                              </a>
+                                            </td>
+                                            <td>
+                                              {canBuy ? (
+                                                <a
+                                                  class="button button--table button--table-buy"
+                                                  href={buy.href}
+                                                  target={buy.external ? '_blank' : undefined}
+                                                  rel={buy.external ? 'noopener noreferrer' : undefined}
+                                                >
+                                                  {buy.label}
+                                                </a>
+                                              ) : (
+                                                <span class="catalog-table__na">Not for sale yet</span>
+                                              )}
+                                            </td>
+                                          </tr>
+                                        )
+                                      })}
                                     </tbody>
                                   </table>
                                 </div>
@@ -230,7 +255,7 @@ const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
         </article>
         <article class="card">
           <h3>Certificate portfolio</h3>
-          <p>Best for institutions that want stackable AI certificates drawn from the core and Local AI course set.</p>
+          <p>Best for institutions that want stackable AI certificates drawn from the core and Sovereign AI (AINS6010).</p>
         </article>
         <article class="card">
           <h3>Specialization-first pilot</h3>

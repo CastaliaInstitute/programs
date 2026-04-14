@@ -26,7 +26,7 @@ This file defines the proposed repository and Jupyter Book naming scheme for eac
 
 | Course | Title | Repository | Jupyter Book Title |
 | --- | --- | --- | --- |
-| `AINS6010` | Local AI & Deployment to Hardware | `ains-6010-local-ai-and-deployment-to-hardware` | `AINS6010 Local AI & Deployment to Hardware` |
+| `AINS6010` | Sovereign AI | `ains-6010-sovereign-ai` | `AINS6010 Sovereign AI` |
 
 ## Healthcare AI Specialization
 

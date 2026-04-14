@@ -6,7 +6,12 @@ import {
   type CatalogCourseDetail,
 } from '../../../lib/catalog-courses'
 import { programOfferings } from '../../../lib/programs'
-import { castaliaLmsCatalogCourseUrl } from '../../../lib/site-links'
+import { catalogCourseLicensePurchaseIsOpen } from '../../../lib/purchase-gate'
+import {
+  castaliaLmsCatalogCourseUrl,
+  castaliaLmsUrlOpensMoodleCourse,
+  resolveCatalogCourseBuyHref,
+} from '../../../lib/site-links'
 
 export function getStaticPaths() {
   const aima = programOfferings.find((p) => p.slug === 'aima')
@@ -33,6 +38,19 @@ interface Props {
 const { course } = Astro.props
 const lmsUrl = castaliaLmsCatalogCourseUrl(course)
 const isAima = Boolean(course.aimaLmsVariant)
+const panelTitle = course.linkPanelTitle ?? 'Castalia LMS'
+const panelBody =
+  course.linkPanelBody ??
+  (isAima
+    ? 'Open the guest-visible Moodle space for this AIMA5001 delivery variant (configure per-env URLs in deployment).'
+    : 'Course shells on the Castalia LMS are provisioned per license; this link opens the LMS to explore the guest demo or landing experience.')
+const buttonLabel =
+  course.linkButtonLabel ??
+  (castaliaLmsUrlOpensMoodleCourse(lmsUrl) ? 'Open course in LMS' : 'Open Castalia LMS')
+const eyebrow =
+  course.eyebrow ?? (isAima ? 'AIMA 5001 product line' : course.code.startsWith('MHH') ? 'Certificate program' : 'AINS graduate course')
+const licenseOpen = catalogCourseLicensePurchaseIsOpen()
+const buy = resolveCatalogCourseBuyHref(course.code)
 ---
 
 <BaseLayout
@@ -47,7 +65,7 @@ const isAima = Boolean(course.aimaLmsVariant)
     </nav>
 
     <header class="course-detail__head">
-      <p class="eyebrow">{isAima ? 'AIMA 5001 product line' : 'AINS graduate course'}</p>
+      <p class="eyebrow">{eyebrow}</p>
       <h1>
         <span class="course-detail__code">{course.code}</span>
         {' · '}
@@ -64,19 +82,36 @@ const isAima = Boolean(course.aimaLmsVariant)
         <p>{course.description}</p>
       </section>
 
-      <section class="course-detail__panel course-detail__panel--actions" aria-labelledby="course-lms">
-        <h2 id="course-lms">Castalia LMS</h2>
-        <p>
-          {isAima
-            ? 'Open the guest-visible Moodle space for this AIMA5001 delivery variant (configure per-env URLs in deployment).'
-            : 'Course shells on the Castalia LMS are provisioned per license; this link opens the LMS to explore the guest demo or landing experience.'}
-        </p>
+      <section class="course-detail__panel course-detail__panel--actions" aria-labelledby="course-link-panel">
+        <h2 id="course-link-panel">{panelTitle}</h2>
+        <p>{panelBody}</p>
         <p class="course-detail__actions">
           <a class="button button--primary" href={lmsUrl} target="_blank" rel="noopener noreferrer">
-            Open Castalia LMS
+            {buttonLabel}
           </a>
           <a class="button button--secondary" href="/catalog">Back to catalog</a>
         </p>
+        {licenseOpen ? (
+          <p class="course-detail__buy">
+            <a
+              class="button button--primary"
+              href={buy.href}
+              target={buy.external ? '_blank' : undefined}
+              rel={buy.external ? 'noopener noreferrer' : undefined}
+            >
+              {buy.label}
+            </a>
+            <span class="course-detail__buy-hint">
+              {buy.external
+                ? 'Opens Stripe checkout for this SKU when configured.'
+                : 'Continue on the purchase hub to request a license or institutional quote.'}
+            </span>
+          </p>
+        ) : (
+          <p class="course-detail__buy course-detail__buy--closed">
+            <span class="course-detail__buy-hint">License checkout opens when catalog sales go live—see the catalog Status column.</span>
+          </p>
+        )}
       </section>
     </div>
 

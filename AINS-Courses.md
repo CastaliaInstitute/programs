@@ -55,9 +55,9 @@ Students complete an industry-sponsored or student-designed AI project within th
 
 ## Certificate Course
 
-### AINS6010 - Local AI & Deployment to Hardware
+### AINS6010 - Sovereign AI
 
-Focuses on deploying AI models to actual hardware: edge devices, on-premises servers, and embedded systems. Covers running models locally, hardware-aware optimization, resource constraints, and deployment pipelines for non-cloud environments. Stackable certificate course.
+Stackable certificate on AI under institutional control: data sovereignty and residency, on-premises and edge deployment, governed operations, and secure lifecycles—so cohorts can deliver capable AI without defaulting to unrestricted public-cloud custody of models and data.
 
 ## Specialization: Healthcare AI
 

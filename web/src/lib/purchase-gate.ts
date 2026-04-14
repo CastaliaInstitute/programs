@@ -1,4 +1,7 @@
-import { AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO } from './programs'
+import {
+  AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO,
+  CATALOG_COURSE_LICENSE_PURCHASE_FROM_ISO,
+} from './programs'
 
 /** True when `fromIso` is set and static build time is on or after that instant. */
 export function isPurchaseAvailableFrom(fromIso: string | undefined): boolean {
@@ -11,4 +14,9 @@ export function aima5001SelfServePurchaseIsOpen(): boolean {
   return isPurchaseAvailableFrom(AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO)
 }
 
-export { AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO }
+/** Catalog course-row institutional license (aligned with Simple open date by default). */
+export function catalogCourseLicensePurchaseIsOpen(): boolean {
+  return isPurchaseAvailableFrom(CATALOG_COURSE_LICENSE_PURCHASE_FROM_ISO)
+}
+
+export { AIMA_5001_PURCHASE_AVAILABLE_FROM_ISO, CATALOG_COURSE_LICENSE_PURCHASE_FROM_ISO }

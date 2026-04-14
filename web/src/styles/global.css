@@ -912,6 +912,60 @@ a {
   color: #475569;
 }
 
+.course-detail__buy {
+  margin: 1rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.course-detail__buy--closed {
+  border-top-style: dashed;
+}
+
+.course-detail__buy-hint {
+  font-size: 0.82rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.purchase-sku-callout {
+  margin: 1rem 0 0;
+  padding: 1rem 1.15rem;
+  border-radius: 0.65rem;
+  background: #eff6ff;
+  border: 1px solid rgba(29, 78, 216, 0.22);
+  color: #1e293b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.purchase-cart-note {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.5;
+  max-width: 48rem;
+}
+
+.purchase-cart-note a {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.institutions-footnote {
+  margin: 1.25rem 0 0;
+  font-size: 0.88rem;
+  color: #64748b;
+  max-width: 42rem;
+}
+
+.institutions-footnote code {
+  font-size: 0.85rem;
+}
+
 .button--table {
   display: inline-flex;
   align-items: center;
@@ -946,6 +1000,19 @@ a {
 
 .catalog-college-wrap {
   margin-top: 1.25rem;
+}
+
+.catalog-college--placeholder {
+  opacity: 0.98;
+}
+
+.catalog-college--placeholder .catalog-subdisclosure__summary {
+  color: #64748b;
+}
+
+.catalog-college__soon {
+  margin-left: 0.35rem;
+  font-weight: 700;
 }
 
 .catalog-college__head {

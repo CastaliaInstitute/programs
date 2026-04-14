@@ -7,7 +7,7 @@ export interface SyllabusModule {
 }
 
 /**
- * Public catalog row + course detail page payload (AINS courses, AIMA certificate pathway, AIMA5001 variants).
+ * Public catalog row + course detail page payload (AINS courses, certificates, AIMA5001 variants).
  */
 export interface CatalogCourseDetail {
   code: string
@@ -20,19 +20,27 @@ export interface CatalogCourseDetail {
   description: string
   syllabus: SyllabusModule[]
   /**
-   * Explicit Castalia Moodle URL when known. If unset and `aimaLmsVariant` is unset, the site uses the LMS home.
-   * Optional env overrides: `PUBLIC_CASTALIA_LMS_AINS_<CODE>` (see site-links).
+   * Primary outbound link for the catalog “LMS” column and course page (Moodle course, program site, etc.).
+   * If unset and `aimaLmsVariant` is unset, the site uses the LMS home. Optional env: `PUBLIC_CASTALIA_LMS_<CODE>`.
    */
   lmsUrl?: string
   /** When set, the course page links via `castaliaLmsAimaDemoUrl` for this AIMA5001 product line. */
   aimaLmsVariant?: AimaLmsVariantKey
+  /** Course detail page eyebrow (e.g. "Certificate program"). */
+  eyebrow?: string
+  /** Override default “Castalia LMS” panel title on the course page. */
+  linkPanelTitle?: string
+  /** Override default “Open Castalia LMS” button label. */
+  linkButtonLabel?: string
+  /** Override default panel body copy under the link panel title. */
+  linkPanelBody?: string
 }
 
 export function courseRouteSlugFromCode(code: string): string {
   return code.replace(/\s+/g, '-').replace(/:/g, '').toLowerCase()
 }
 
-/** Map "AIMA5001: Basic" → aima5001-basic */
+/** Map "AIMA5001: Simple" → aima5001-simple */
 export function aimaProductRouteSlug(courseCode: string): string {
   const m = courseCode.match(/^AIMA5001:\s*(.+)$/i)
   if (!m) return courseRouteSlugFromCode(courseCode)
@@ -88,29 +96,72 @@ export const COURSE_AINS5001: CatalogCourseDetail = {
   lmsUrl: lmsUrlAimaCertificate(),
 }
 
-/** Shared AINS6010 row (graduate stack + certificate program). */
+/** Public program + certificate hub: https://mhth.castalia.institute */
+function mhthCertificateSiteUrl(): string {
+  const o =
+    import.meta.env.PUBLIC_MHTH_URL ??
+    import.meta.env.PUBLIC_MHH_URL ??
+    import.meta.env.PUBLIC_MHTH_CERTIFICATE_URL
+  const s = String(o ?? '').trim()
+  return s.length > 0 ? s.replace(/\/$/, '') : 'https://mhth.castalia.institute'
+}
+
+/** More Human Than Human — interdisciplinary certificate (program site at mhth.castalia.institute). */
+export const COURSE_MHH5001: CatalogCourseDetail = {
+  code: 'MHH5001',
+  title: 'More Human Than Human',
+  routeSlug: 'mhh5001',
+  dateLabel: 'Certificate · 2026–27',
+  description:
+    'A Castalia certificate for learners and cohorts exploring what “human” means alongside increasingly capable systems: narrative, embodiment, ethics, creativity, and civic consequence. Anchored to the public More Human Than Human program at mhth.castalia.institute with optional LMS delivery on lms.castalia.institute per institution.',
+  syllabus: [
+    m('Modules 1–2 · Frames', [
+      'Histories of the human and the posthuman (survey)',
+      'Agency, identity, and narrative',
+      'Introduction to critical lenses on AI hype',
+    ]),
+    m('Modules 3–4 · Practices', [
+      'Embodiment, perception, and mediated experience',
+      'Creativity, labor, and machine assistance',
+      'Community norms and consent',
+    ]),
+    m('Modules 5–6 · Futures', [
+      'Governance, dignity, and solidarity',
+      'Capstone: essay, artifact, or facilitation project',
+      'Paths to stackable credentials with AINS graduate courses',
+    ]),
+  ],
+  lmsUrl: mhthCertificateSiteUrl(),
+  eyebrow: 'Certificate program',
+  linkPanelTitle: 'More Human Than Human',
+  linkButtonLabel: 'Open mhth.castalia.institute',
+  linkPanelBody:
+    'Certificate details, cohort announcements, and enrollment pathways live on the program site. Partner institutions run cohorts on Castalia LMS when licensed.',
+}
+
+/** Shared AINS6010 row (graduate stack + certificate program) — Sovereign AI certificate. */
 export const COURSE_AINS6010: CatalogCourseDetail = {
   code: 'AINS6010',
-  title: 'Local AI & Deployment to Hardware',
+  title: 'Sovereign AI',
   routeSlug: 'ains6010',
   dateLabel: REF_CERT,
   description:
-    'Edge and on-premises inference: model packaging, quantization, device constraints, and secure local deployment for institutions that need practical, non-cloud AI pathways.',
+    'Stackable certificate on running capable AI under institutional control: data sovereignty and residency, on-premises and edge deployment, air-gapped or region-bound operation, and secure lifecycle practices—so teams can deliver AI without surrendering custody of models, telemetry, or policy to external clouds by default.',
   syllabus: [
-    m('Modules 1–2 · Local inference landscape', [
-      'When local deployment wins vs cloud APIs',
-      'Hardware classes: CPU, GPU, NPU, embedded',
-      'Measurement: latency, throughput, power budgets',
+    m('Modules 1–2 · Sovereignty & strategy', [
+      'What “sovereign AI” means for data, models, and infrastructure',
+      'Cloud vs on-prem vs edge tradeoffs; residency and compliance hooks',
+      'Risk framing: supply chain, vendor lock-in, and exit plans',
     ]),
-    m('Modules 3–4 · Packaging & optimization', [
-      'Containers and reproducible runtimes',
-      'Quantization and compression tradeoffs',
-      'Serving patterns and rollback safety',
+    m('Modules 3–4 · Engineering stack', [
+      'Hardware classes: CPU, GPU, NPU, embedded; power and latency budgets',
+      'Packaging: containers, reproducible runtimes, quantization where needed',
+      'Serving, rollback, and observability for controlled environments',
     ]),
-    m('Modules 5–6 · Security & operations', [
-      'Threat model for on-prem models and data',
-      'Updates, observability, and incident response',
-      'Hands-on labs with representative stacks',
+    m('Modules 5–6 · Governance & operations', [
+      'Threat modeling for on-prem models and sensitive data',
+      'Updates, patching, and incident response without public-cloud assumptions',
+      'Hands-on labs with representative sovereign/local stacks',
     ]),
   ],
 }
@@ -533,6 +584,9 @@ export const ainsGraduateCoreCourses: CatalogCourseDetail[] = [
 /** Castalia AIMA certificate (undergraduate-style / certificate pathway). */
 export const ainsAimaCertificateCourses: CatalogCourseDetail[] = [COURSE_AINS5001]
 
+/** More Human Than Human certificate (program hub mhth.castalia.institute). */
+export const mhthCertificateCourses: CatalogCourseDetail[] = [COURSE_MHH5001]
+
 export const ainsStackableCertificateCourses: CatalogCourseDetail[] = [COURSE_AINS6010]
 
 export const ainsHealthcareCourses: CatalogCourseDetail[] = [C6100, C6101, C6102]
@@ -546,6 +600,7 @@ export const ainsRoboticsCourses: CatalogCourseDetail[] = [C6400, C6401, C6402]
 const BY_CODE: Record<string, CatalogCourseDetail> = {}
 for (const c of [
   COURSE_AINS5001,
+  COURSE_MHH5001,
   ...ainsGraduateCoreCourses,
   COURSE_AINS6010,
   ...ainsHealthcareCourses,
