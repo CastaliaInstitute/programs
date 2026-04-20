@@ -17,5 +17,5 @@ See the AIMA repo’s co-teaching guide for SCRIPT conventions and classroom pac
 
 ## Try a built lecture
 
-- [Sample lecture — Search](https://inquiryinstitute.github.io/aima/lectures/reveal/lecture-03.html)
+- [Sample lecture — Search](https://inquiryinstitute.github.io/aima/lecture-03.html) — mirror: [aima.castalia.institute/lecture-03.html](https://aima.castalia.institute/lecture-03.html)
 - [Co-teaching Q&A guide](https://github.com/InquiryInstitute/aima/blob/main/docs/AI-COTEACHING-QA.md)
