@@ -11,6 +11,10 @@
  * --push      After scaffold: git init, commit, gh repo create ORG/REPO --public --push
  *             (requires gh auth; skips if repo exists)
  *
+ * Optional customer deploy (use with a single --only variant):
+ *   --repo-name=AINS5001     GitHub repo name (default: variant repo from config)
+ *   --institution=Aurnova    Sets catalog-style labels for variant.json (course AINS5001)
+ *
  * Generated site URL pattern: https://ORG.github.io/REPO/
  */
 import { execSync } from 'node:child_process'
@@ -32,14 +36,49 @@ function parseArgs(argv) {
   let dryRun = false
   let push = false
   let only = null
+  let repoNameOverride = null
+  let institution = null
   for (const a of argv) {
     if (a === '--dry-run') dryRun = true
     else if (a === '--push') push = true
     else if (a.startsWith('--out=')) outDir = path.resolve(a.slice('--out='.length))
     else if (a.startsWith('--org=')) org = a.slice('--org='.length)
     else if (a.startsWith('--only=')) only = a.slice('--only='.length)
+    else if (a.startsWith('--repo-name=')) repoNameOverride = a.slice('--repo-name='.length).trim()
+    else if (a.startsWith('--institution=')) institution = a.slice('--institution='.length).trim()
   }
-  return { outDir, org, dryRun, push, only }
+  return { outDir, org, dryRun, push, only, repoNameOverride, institution }
+}
+
+/** Lowercase alphanumerics + hyphens for package.json `name` */
+function npmSafeName(repo) {
+  const s = String(repo)
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+  return s.length > 0 ? s : 'course-site'
+}
+
+/**
+ * When --repo-name / --institution are set, clone the base variant with overrides for customer deploys.
+ */
+function applyCustomerOverrides(variant, { repoNameOverride, institution }) {
+  let v = { ...variant }
+  if (repoNameOverride) {
+    v = { ...v, repo: repoNameOverride, packageName: npmSafeName(repoNameOverride) }
+  }
+  if (institution) {
+    v = {
+      ...v,
+      courseCode: 'AINS5001',
+      courseTitle: 'A Modern Approach to AI',
+      pillLabel: `${institution} · AINS5001`,
+      projectTitle: `AINS5001 — ${institution}`,
+      description: `A Modern Approach to AI (AINS5001) — Castalia / Inquiry Institute AIMA delivery demo for ${institution}.`,
+    }
+  }
+  return v
 }
 
 /** Adjust copy that referenced the monorepo programs site paths for standalone GitHub Pages */
@@ -260,7 +299,7 @@ function gitPushScaffold({ repoRoot, org, repo, dryRun }) {
 }
 
 function main() {
-  const { outDir, org, dryRun, push, only } = parseArgs(process.argv.slice(2))
+  const { outDir, org, dryRun, push, only, repoNameOverride, institution } = parseArgs(process.argv.slice(2))
   mkdirSync(outDir, { recursive: true })
 
   const variants = only
@@ -272,12 +311,18 @@ function main() {
     process.exit(1)
   }
 
+  if ((repoNameOverride || institution) && variants.length !== 1) {
+    console.error('--repo-name and --institution apply to a single variant; pass exactly one --only=…')
+    process.exit(1)
+  }
+
   console.log(`Output directory: ${outDir}`)
   console.log(`Organization: ${org}`)
   console.log(`Variants: ${variants.map((v) => v.repo).join(', ')}`)
 
   for (const v of variants) {
-    const meta = scaffoldOne(v, { outDir, org, dryRun })
+    const vEff = applyCustomerOverrides(v, { repoNameOverride, institution })
+    const meta = scaffoldOne(vEff, { outDir, org, dryRun })
     if (push) {
       gitPushScaffold({ ...meta, org, dryRun })
     }
