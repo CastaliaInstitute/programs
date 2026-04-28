@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import type { SpecializationDetail } from '../../../lib/specializations'
+import { allSpecializations } from '../../../lib/specializations'
+import { isPurchaseAvailableFrom } from '../../../lib/purchase-gate'
+import {
+  castaliaLmsCatalogCourseUrl,
+  castaliaLmsUrlOpensMoodleCourse,
+  resolveCatalogCourseBuyHref,
+} from '../../../lib/site-links'
+import { CATALOG_COURSE_LICENSE_PURCHASE_FROM_ISO } from '../../../lib/programs'
+
+export function getStaticPaths() {
+  return allSpecializations().map((spec) => ({
+    params: { slug: spec.slug },
+    props: { spec },
+  }))
+}
+
+interface Props {
+  spec: SpecializationDetail
+}
+
+const { spec } = Astro.props
+const canPurchaseCourses = isPurchaseAvailableFrom(CATALOG_COURSE_LICENSE_PURCHASE_FROM_ISO)
+---
+
+<BaseLayout title={`${spec.title} · Castalia Programs`} description={spec.description}>
+  <main class="programs-page section course-detail-page specialization-detail-page">
+    <nav class="course-detail__crumb" aria-label="Breadcrumb">
+      <a href="/catalog">Catalog</a>
+      <span aria-hidden="true"> / </span>
+      <a href="/catalog/specializations">Specializations</a>
+      <span aria-hidden="true"> / </span>
+      <span>{spec.title}</span>
+    </nav>
+
+    <header class="course-detail__head">
+      <p class="eyebrow">AINS graduate specialization</p>
+      <h1>{spec.title}</h1>
+      <p class="course-detail__meta">
+        <span class="course-detail__pill">Three courses · reference 9 credits in a 36-credit stack</span>
+      </p>
+    </header>
+
+    <div class="specialization-detail__intro">
+      {spec.paragraphs.map((p) => (
+        <p>{p}</p>
+      ))}
+    </div>
+
+    <section class="specialization-detail__outcomes" aria-labelledby="spec-outcomes">
+      <h2 id="spec-outcomes">What institutions get</h2>
+      <ul class="list course-detail__topics">
+        {spec.outcomes.map((o) => (
+          <li>{o}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="specialization-detail__courses" aria-labelledby="spec-courses">
+      <h2 id="spec-courses">Courses in this cluster</h2>
+      <div class="catalog-table-scroll">
+        <table class="catalog-table catalog-table--course-list">
+          <thead>
+            <tr>
+              <th scope="col">Code</th>
+              <th scope="col">Course</th>
+              <th scope="col">Overview</th>
+              <th scope="col">LMS</th>
+              <th scope="col">Buy</th>
+            </tr>
+          </thead>
+          <tbody>
+            {spec.courses.map((c) => {
+              const buy = resolveCatalogCourseBuyHref(c.code)
+              const canBuy = canPurchaseCourses
+              const courseLmsUrl = castaliaLmsCatalogCourseUrl(c)
+              const lmsLinkLabel = castaliaLmsUrlOpensMoodleCourse(courseLmsUrl)
+                ? 'Open course'
+                : 'Open LMS'
+              return (
+                <tr>
+                  <td>
+                    <code class="catalog-code">{c.code}</code>
+                  </td>
+                  <td>
+                    <a class="catalog-table__course-link" href={`/catalog/courses/${c.routeSlug}`}>
+                      {c.title}
+                    </a>
+                  </td>
+                  <td>
+                    <a class="button button--table" href={`/catalog/courses/${c.routeSlug}`}>
+                      Details
+                    </a>
+                  </td>
+                  <td>
+                    <a
+                      class="button button--table button--table-ghost"
+                      href={courseLmsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {lmsLinkLabel}
+                    </a>
+                  </td>
+                  <td>
+                    {canBuy ? (
+                      <a
+                        class="button button--table button--table-buy"
+                        href={buy.href}
+                        target={buy.external ? '_blank' : undefined}
+                        rel={buy.external ? 'noopener noreferrer' : undefined}
+                      >
+                        {buy.label}
+                      </a>
+                    ) : (
+                      <span class="catalog-table__na">Not for sale yet</span>
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="specialization-detail__actions">
+      <a class="button button--primary" href="/catalog/specializations">
+        All specializations
+      </a>
+      <a class="button button--secondary" href="/catalog">Back to catalog</a>
+    </p>
+  </main>
+</BaseLayout>

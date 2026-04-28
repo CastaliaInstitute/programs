@@ -85,6 +85,11 @@ export interface ProgramCurriculumCollegeBlock {
   statusExpected?: string
   /** If set and current time ≥ this ISO instant at build, catalog shows Purchase; otherwise “Not for sale yet”. */
   purchaseAvailableFrom?: string
+  /**
+   * When set (typically for a three-course specialization cluster), the catalog shows a link to
+   * `/catalog/specializations/[slug]` with narrative positioning for procurement teams.
+   */
+  specializationPageSlug?: string
 }
 
 /** LMS-aligned college bucket (e.g. all AINS courses under AINS). */
@@ -191,21 +196,25 @@ export const programOfferings: ProgramOffering[] = [
             title: 'Healthcare AI specialization',
             courses: ainsHealthcareCourses,
             purchaseAvailableFrom: CATALOG_COURSE_LICENSE_PURCHASE_FROM_ISO,
+            specializationPageSlug: 'healthcare-ai',
           },
           {
             title: 'Business AI specialization',
             courses: ainsBusinessCourses,
             purchaseAvailableFrom: CATALOG_COURSE_LICENSE_PURCHASE_FROM_ISO,
+            specializationPageSlug: 'business-ai',
           },
           {
             title: 'Cybersecurity AI specialization',
             courses: ainsCyberCourses,
             purchaseAvailableFrom: CATALOG_COURSE_LICENSE_PURCHASE_FROM_ISO,
+            specializationPageSlug: 'cybersecurity-ai',
           },
           {
             title: 'Robotics AI specialization',
             courses: ainsRoboticsCourses,
             purchaseAvailableFrom: CATALOG_COURSE_LICENSE_PURCHASE_FROM_ISO,
+            specializationPageSlug: 'robotics-ai',
           },
         ],
       },

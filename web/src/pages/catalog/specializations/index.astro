@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { allSpecializations } from '../../../lib/specializations'
+
+const specs = allSpecializations()
+---
+
+<BaseLayout
+  title="AINS specializations · Castalia Programs"
+  description="Healthcare, business, cybersecurity, and robotics AI specialization clusters—three licensable graduate courses each, designed for institutional catalogs."
+>
+  <main class="programs-page section course-detail-page specialization-index-page">
+    <nav class="course-detail__crumb" aria-label="Breadcrumb">
+      <a href="/catalog">Catalog</a>
+      <span aria-hidden="true"> / </span>
+      <span>Specializations</span>
+    </nav>
+
+    <header class="course-detail__head">
+      <p class="eyebrow">Graduate AI · AINS college</p>
+      <h1>Specialization clusters</h1>
+      <p class="course-detail__meta">
+        <span class="course-detail__pill">Four tracks · three courses each (reference 9 credits)</span>
+      </p>
+    </header>
+
+    <div class="specialization-index__intro">
+      <p>
+        Each specialization is a coherent three-course cluster licensees map into degree concentrations, certificate extensions, or pilots.
+        Complete core AI foundations at your institution, then stack one cluster—or mix procurement across tracks as your catalog allows.
+      </p>
+    </div>
+
+    <ul class="specialization-index__list">
+      {specs.map((s) => (
+        <li class="specialization-index__card">
+          <h2>
+            <a href={`/catalog/specializations/${s.slug}`}>{s.title}</a>
+          </h2>
+          <p>{s.description}</p>
+          <p class="specialization-index__courses">
+            {s.courses.map((c) => c.code).join(' · ')}
+          </p>
+          <p>
+            <a class="button button--secondary" href={`/catalog/specializations/${s.slug}`}>
+              View specialization
+            </a>
+          </p>
+        </li>
+      ))}
+    </ul>
+
+    <p class="specialization-detail__actions">
+      <a class="button button--primary" href="/catalog">
+        Full programs catalog
+      </a>
+    </p>
+  </main>
+</BaseLayout>

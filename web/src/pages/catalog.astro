@@ -30,6 +30,9 @@ const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
       </p>
       <p class="catalog-path">
         <a class="button button--primary" href="/purchase">Purchase hub</a>
+        <a class="button button--secondary" href="/catalog/specializations">
+          Specializations
+        </a>
         <a class="button button--secondary" href="/catalog/imscc-viewer">IMS CC viewer</a>
         <a
           class="button button--ghost"
@@ -118,6 +121,16 @@ const aimaBasicStripe = resolveStripePaymentLinkAimaBasic()
                           <details class="catalog-subdisclosure" open={subOpen}>
                             <summary class="catalog-subdisclosure__summary">{block.title}</summary>
                             <div class="catalog-subdisclosure__body">
+                              {isStructured && block.specializationPageSlug && (
+                                <p class="catalog-specialization-lede">
+                                  <a
+                                    class="button button--secondary"
+                                    href={`/catalog/specializations/${block.specializationPageSlug}`}
+                                  >
+                                    Specialization overview
+                                  </a>
+                                </p>
+                              )}
                               {!isStructured ? (
                                 <ul class="list catalog-highlight-list">
                                   {(block.courses as string[]).map((line) => (
