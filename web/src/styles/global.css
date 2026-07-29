@@ -54,6 +54,8 @@ a {
 
 .hero {
   background:
+    linear-gradient(90deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.91) 46%, rgba(255,255,255,.25) 100%),
+    url('/assets/programs-reading-room.png') center right / cover,
     radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 30rem),
     linear-gradient(180deg, #ffffff, #eef4ff);
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
