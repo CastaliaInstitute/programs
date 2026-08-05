@@ -12,17 +12,28 @@ document is the recommended assembly, not a contractual constraint.
 - **9 specialization credits** — one three-course cluster: Healthcare, Business, Cybersecurity, or Robotics
 - **100% online** in the current course designs
 
-## Admission readiness policy
+## Audience & admission readiness
 
-The core sequence assumes working knowledge of probability, linear algebra, and basic
-programming. AurNova should adopt **one** of the following (in order of preference):
+The AurNova MSAI is designed to be completable by students **without a programming
+background**. Programming is taught inside the program, not assumed at admission:
 
-1. **Stated admissions prerequisite** — undergraduate coursework (or equivalent) in
-   statistics/probability, linear algebra, and one programming language, enforced at admission.
+- **No programming prerequisite.** `AINS6007` (Applied AI Programming with Python) is the
+  program's on-ramp, taught from zero in Term 1; every coding-dependent course sits after it
+  in the sequence.
+- **Scaffolded coding, not blank-editor coding.** Coding-heavy courses deliver assignments as
+  executable Jupyter Book pages (Thebe + `ipywidgets`, per `COURSE-REPOSITORIES.md`), so
+  students run, modify, and complete guided code inside the book rather than authoring
+  programs from scratch.
+
+**Quantitative readiness** is still needed for the ML/DL sequence. AurNova should adopt
+**one** of the following (in order of preference):
+
+1. **Stated admissions expectation** — college-level algebra and introductory statistics (no
+   programming), enforced at admission.
 2. **Bridge course** — admit conditionally and require `AINS5001` (A Modern Approach to AI,
    certificate line) before beginning the core sequence.
-3. **Embedded bootcamp** — a non-credit math and Python readiness module delivered alongside
-   Term 1 (inside the AINS6001/AINS6007 shells) for admits who miss the prerequisite bar.
+3. **Embedded bootcamp** — a non-credit quantitative readiness module delivered alongside
+   Term 1 (inside the AINS6001/AINS6007 shells) for admits who miss the expectation.
 
 Whichever option is chosen, publish it in the AurNova catalog; do not leave readiness implicit.
 
@@ -32,7 +43,7 @@ Course numbering does **not** imply sequence. The working dependencies are:
 
 | Course | Depends on |
 | --- | --- |
-| AINS6007 Applied AI Programming with Python | — (take first) |
+| AINS6007 Applied AI Programming with Python | — (take first; assumes no prior programming) |
 | AINS6001 Foundations of AI | — |
 | AINS6005 AI Ethics, Law & Policy | — |
 | AINS6002 Machine Learning & Predictive Modeling | AINS6007, AINS6001 |
@@ -84,6 +95,20 @@ Notes:
   demos and reproducibility package (Phase 2), final evaluation report + stakeholder
   presentation + handoff documentation (Phase 3).
 
+## Course repositories & delivery
+
+Every course in the program has an **individual course repository** published as a Jupyter
+Book, following the naming scheme in `COURSE-REPOSITORIES.md`:
+
+- Repository: `ains-<course-number>-<slug>` (e.g. `ains-6007-applied-ai-programming-with-python`)
+- Published book: `https://InquiryInstitute.github.io/<repo-name>/`
+
+Each book carries the five instructional layers (prose, Thebe-enabled assignments, RISE
+slides, narration, instructor notes), so a course is deliverable to AurNova as a
+self-contained artifact. The executable-assignment layer (Thebe + `ipywidgets`) is what makes
+the non-programmer design work: it is the mechanism by which students in AINS6002–6004 and
+the specializations do real work with code they did not have to write from a blank editor.
+
 ## Disclosures for AurNova program committee
 
 Items to surface before launch, so they are decisions rather than discoveries:
@@ -96,5 +121,9 @@ Items to surface before launch, so they are decisions rather than discoveries:
   course. Appropriate inside the Business cluster; position it accordingly in the catalog.
 - **Healthcare cluster (AINS6100–6102):** taught as education/simulation; not clinical training
   and not medical advice. Regulatory content is survey-level.
+- **Scaffolding is load-bearing for non-programmers:** the no-programming-prerequisite design
+  holds only if the Thebe assignment layer exists in each course repo before its term runs.
+  Sequence repo completion (see rollout order in `COURSE-REPOSITORIES.md`) so AINS6007 and the
+  Term 2 courses ship their executable assignments before the first cohort reaches them.
 - **Learning outcomes:** per-course measurable CLOs and an assessment plan are required for
   accreditation review and are authored separately from this map (in progress).
