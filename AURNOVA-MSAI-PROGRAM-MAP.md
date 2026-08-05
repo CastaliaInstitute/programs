@@ -103,9 +103,10 @@ Book, following the naming scheme in `COURSE-REPOSITORIES.md`:
 - Repository: `ains-<course-number>-<slug>` (e.g. `ains-6007-applied-ai-programming-with-python`)
 - Published book: `https://CastaliaInstitute.github.io/<repo-name>/`
 
-**Published status (verified 2026-08-05):** the full core sequence (AINS6001–6009) and the
-Healthcare, Business, and Cybersecurity clusters are live at the URL pattern above. The
-Robotics cluster (AINS6400–6402) and AINS6010 are not yet published.
+**Published status (verified 2026-08-05):** Phase 1 is fully live at the URL pattern above —
+the complete core sequence (AINS6001–6009) and the Healthcare, Business, and Cybersecurity
+clusters. The Robotics cluster (AINS6400–6402) and AINS6010 are Phase 2 courses, not yet
+published.
 
 Each book carries the five instructional layers (prose, Thebe-enabled assignments, RISE
 slides, narration, instructor notes), so a course is deliverable to AurNova as a
@@ -129,9 +130,11 @@ Items to surface before launch, so they are decisions rather than discoveries:
   holds only if the Thebe assignment layer in each published book is complete, not just
   present. Before the first cohort, audit the executable assignments in AINS6007 and the
   Term 2 courses specifically for from-zero students.
-- **Robotics track availability:** the Robotics cluster's course books (AINS6400–6402) are
-  not yet published, unlike the other three clusters. Either publish them before launch or
-  offer AurNova the Healthcare, Business, and Cybersecurity tracks at launch with Robotics
-  following.
+- **Robotics track is Phase 2:** the Robotics cluster (AINS6400–6402) is scheduled for
+  Phase 2 delivery. At launch, AurNova's specialization menu is Healthcare, Business, and
+  Cybersecurity; the AurNova catalog should list Robotics as a forthcoming track (or omit it)
+  until the Phase 2 books publish. Students entering in year one still reach their
+  specialization no earlier than Term 3, which is the window Phase 2 has to land in if
+  Robotics is offered to the first cohort.
 - **Learning outcomes:** per-course measurable CLOs and an assessment plan are required for
   accreditation review and are authored separately from this map (in progress).

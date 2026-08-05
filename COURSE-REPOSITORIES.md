@@ -10,12 +10,12 @@ This file defines the repository and Jupyter Book naming scheme for each `AINS` 
 
 ## Current status (verified 2026-08-05)
 
-18 of 22 course books resolve as published Jupyter Books at the Pages URL pattern above: the full core sequence (AINS6001–6009) and the Healthcare, Business, and Cybersecurity specialization clusters.
+**Phase 1 is published.** All 18 Phase 1 course books resolve as published Jupyter Books at the Pages URL pattern above: the full core sequence (AINS6001–6009) and the Healthcare, Business, and Cybersecurity specialization clusters.
 
-Not yet published at the expected URLs:
+**Phase 2** courses (not yet published):
 
 - `AINS6010` Sovereign AI (certificate course)
-- `AINS6400`–`AINS6402` (entire Robotics specialization cluster)
+- `AINS6400`–`AINS6402` (Robotics specialization cluster)
 
 ## Core Courses
 
@@ -152,9 +152,9 @@ The assignment example should demonstrate at least one `ipywidgets` interaction 
 
 That way every later course repo can be cloned from a production-grade instructional template rather than a bare publishing scaffold.
 
-## Remaining Rollout
+## Phase 2 Rollout
 
-The original rollout (core sequence, capstone, and three specialization clusters) is published. Remaining:
+Phase 1 (core sequence, capstone, and the Healthcare, Business, and Cybersecurity clusters) is published. Phase 2:
 
-1. `AINS6400`–`AINS6402` robotics cluster — required before any partner offers the Robotics AI track
-2. `AINS6010` Sovereign AI — required before the certificate line is sold as delivery-ready
+1. `AINS6400`–`AINS6402` robotics cluster — publish before any partner offers the Robotics AI track
+2. `AINS6010` Sovereign AI — publish before the certificate line is sold as delivery-ready
