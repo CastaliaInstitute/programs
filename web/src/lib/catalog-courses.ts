@@ -224,7 +224,7 @@ const C6003: CatalogCourseDetail = {
   routeSlug: 'ains6003',
   dateLabel: REF_CORE,
   description:
-    'Neural architectures, training at scale, and practical debugging for vision, sequence, and representation learning tasks.',
+    'Neural architectures from CNNs through transformers, pretraining and fine-tuning at scale, and practical debugging for vision, sequence, and generative modeling tasks.',
   syllabus: [
     m('Modules 1–2 · Networks & training', [
       'Backpropagation and autodiff mental models',
@@ -233,13 +233,13 @@ const C6003: CatalogCourseDetail = {
     ]),
     m('Modules 3–4 · Architectures', [
       'CNNs and spatial inductive bias',
-      'Sequence models and attention (intro)',
-      'Transfer learning workflows',
+      'Attention and transformer architectures in depth',
+      'Pretraining, transfer learning, and parameter-efficient fine-tuning',
     ]),
-    m('Modules 5–6 · Engineering', [
-      'Compute budgets and mixed precision',
+    m('Modules 5–6 · Scale & engineering', [
+      'Scaling behavior, compute budgets, and mixed precision',
       'Experiment tracking and reproducibility',
-      'Failure modes and robustness checks',
+      'Failure modes, robustness checks, and evaluating generative models',
     ]),
   ],
 }
@@ -250,22 +250,22 @@ const C6004: CatalogCourseDetail = {
   routeSlug: 'ains6004',
   dateLabel: REF_CORE,
   description:
-    'Text as data: tokenization through modern language models, evaluation, and guardrails for NLP systems in production.',
+    'Text as data: tokenization through large language models, retrieval-augmented generation, evaluation, and guardrails for NLP systems in production.',
   syllabus: [
     m('Modules 1–2 · Representations', [
       'Tokenization and embeddings',
       'Classification and sequence labeling',
-      'Retrieval and lexical resources',
+      'Retrieval, lexical resources, and vector search',
     ]),
-    m('Modules 3–4 · Modern LMs', [
-      'Encoder and decoder families (conceptual)',
-      'Prompting and instruction tuning (survey)',
-      'Evaluation beyond accuracy',
+    m('Modules 3–4 · Large language models', [
+      'LLM architectures, pretraining, and instruction tuning',
+      'Prompting, retrieval-augmented generation, and tool use',
+      'Agentic workflows and orchestration patterns',
     ]),
     m('Modules 5–6 · Deployment', [
-      'Safety filters and content policies',
-      'Latency/cost tradeoffs',
-      'Domain adaptation patterns',
+      'Evaluating generative systems: task evals, hallucination, and bias',
+      'Safety guardrails and content policies',
+      'Latency/cost tradeoffs and domain adaptation',
     ]),
   ],
 }

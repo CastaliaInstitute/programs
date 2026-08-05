@@ -156,7 +156,7 @@ export const programOfferings: ProgramOffering[] = [
     modality: '100% online (default design)',
     implementation: 'Licensable course modules—your team assembles credentials and catalog copy locally',
     summary:
-      'Graduate AI courses under the AINS college today—the AIMA certificate (AINS5001), the More Human Than Human certificate (MHH5001) with the program hub at mhth.castalia.institute, nine core courses, five specialization clusters (healthcare, business, cybersecurity, robotics), a capstone, and a stackable Sovereign AI certificate (AINS6010). Additional Castalia colleges below are placeholders until their course lines are listed; Castalia licenses courses; partner institutions define program names, degrees, and how credits stack.',
+      'Graduate AI courses under the AINS college today—the AIMA certificate (AINS5001), the More Human Than Human certificate (MHH5001) with the program hub at mhth.castalia.institute, nine core courses, four specialization clusters (healthcare, business, cybersecurity, robotics), a capstone, and a stackable Sovereign AI certificate (AINS6010). Additional Castalia colleges below are placeholders until their course lines are listed; Castalia licenses courses; partner institutions define program names, degrees, and how credits stack.',
     outcomes: [
       'License single courses or coherent stacks to match your graduate catalog and accreditation story.',
       'Combine core, specialization clusters, and capstone the way your program committee requires.',
