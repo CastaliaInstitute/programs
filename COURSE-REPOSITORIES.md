@@ -1,12 +1,21 @@
-# Course Repository Plan
+# Course Repositories
 
-This file defines the proposed repository and Jupyter Book naming scheme for each `AINS` graduate course in the Castalia catalog.
+This file defines the repository and Jupyter Book naming scheme for each `AINS` graduate course in the Castalia catalog. Most course books are built and published — see **Current status** below.
 
 ## Naming Convention
 
 - GitHub repository: `ains-<course-number>-<slug>`
 - Jupyter Book title: `<course-code> <course-title>`
-- GitHub Pages URL pattern: `https://InquiryInstitute.github.io/<repo-name>/`
+- GitHub Pages URL pattern: `https://CastaliaInstitute.github.io/<repo-name>/`
+
+## Current status (verified 2026-08-05)
+
+18 of 22 course books resolve as published Jupyter Books at the Pages URL pattern above: the full core sequence (AINS6001–6009) and the Healthcare, Business, and Cybersecurity specialization clusters.
+
+Not yet published at the expected URLs:
+
+- `AINS6010` Sovereign AI (certificate course)
+- `AINS6400`–`AINS6402` (entire Robotics specialization cluster)
 
 ## Core Courses
 
@@ -143,10 +152,9 @@ The assignment example should demonstrate at least one `ipywidgets` interaction 
 
 That way every later course repo can be cloned from a production-grade instructional template rather than a bare publishing scaffold.
 
-## Suggested Rollout Order
+## Remaining Rollout
 
-1. `AINS6001` as the template repository
-2. `AINS6002` through `AINS6008` as the main instructional sequence
-3. `AINS6010` as the certificate prototype
-4. `AINS6100`-`AINS6402` specialization repos
-5. `AINS6009` capstone after the supporting course template is stable
+The original rollout (core sequence, capstone, and three specialization clusters) is published. Remaining:
+
+1. `AINS6400`–`AINS6402` robotics cluster — required before any partner offers the Robotics AI track
+2. `AINS6010` Sovereign AI — required before the certificate line is sold as delivery-ready

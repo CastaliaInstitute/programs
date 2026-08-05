@@ -101,7 +101,11 @@ Every course in the program has an **individual course repository** published as
 Book, following the naming scheme in `COURSE-REPOSITORIES.md`:
 
 - Repository: `ains-<course-number>-<slug>` (e.g. `ains-6007-applied-ai-programming-with-python`)
-- Published book: `https://InquiryInstitute.github.io/<repo-name>/`
+- Published book: `https://CastaliaInstitute.github.io/<repo-name>/`
+
+**Published status (verified 2026-08-05):** the full core sequence (AINS6001–6009) and the
+Healthcare, Business, and Cybersecurity clusters are live at the URL pattern above. The
+Robotics cluster (AINS6400–6402) and AINS6010 are not yet published.
 
 Each book carries the five instructional layers (prose, Thebe-enabled assignments, RISE
 slides, narration, instructor notes), so a course is deliverable to AurNova as a
@@ -122,8 +126,12 @@ Items to surface before launch, so they are decisions rather than discoveries:
 - **Healthcare cluster (AINS6100–6102):** taught as education/simulation; not clinical training
   and not medical advice. Regulatory content is survey-level.
 - **Scaffolding is load-bearing for non-programmers:** the no-programming-prerequisite design
-  holds only if the Thebe assignment layer exists in each course repo before its term runs.
-  Sequence repo completion (see rollout order in `COURSE-REPOSITORIES.md`) so AINS6007 and the
-  Term 2 courses ship their executable assignments before the first cohort reaches them.
+  holds only if the Thebe assignment layer in each published book is complete, not just
+  present. Before the first cohort, audit the executable assignments in AINS6007 and the
+  Term 2 courses specifically for from-zero students.
+- **Robotics track availability:** the Robotics cluster's course books (AINS6400–6402) are
+  not yet published, unlike the other three clusters. Either publish them before launch or
+  offer AurNova the Healthcare, Business, and Cybersecurity tracks at launch with Robotics
+  following.
 - **Learning outcomes:** per-course measurable CLOs and an assessment plan are required for
   accreditation review and are authored separately from this map (in progress).
