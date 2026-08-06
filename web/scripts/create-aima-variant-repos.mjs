@@ -28,7 +28,7 @@ const POPULI_STANDALONE_CSS = path.join(WEB_ROOT, 'styles', 'populi-demo-standal
 
 function parseArgs(argv) {
   let outDir = path.join(WEB_ROOT, '..', '.aima-variant-repos')
-  let org = 'InquiryInstitute'
+  let org = 'CastaliaInstitute'
   let dryRun = false
   let push = false
   let only = null

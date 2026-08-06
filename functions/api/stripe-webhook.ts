@@ -7,9 +7,9 @@
  * Deploy: this file sits at functions/api/stripe-webhook.ts in the Cloudflare Pages project for
  * courses.castalia.institute. Secrets below are Pages environment secrets, never committed.
  */
-import { resolveCourse } from '../../lib/course-catalog'
-import { provisionCourseRepo, type GitHubAppEnv } from '../../lib/github-provision'
-import { launchInqspace, type InqspaceEnv } from '../../lib/inqspace'
+import { resolveCourse } from '../../fulfillment/lib/course-catalog'
+import { provisionCourseRepo, type GitHubAppEnv } from '../../fulfillment/lib/github-provision'
+import { launchInqspace, type InqspaceEnv } from '../../fulfillment/lib/inqspace'
 
 type Env = GitHubAppEnv &
   InqspaceEnv & {
@@ -71,31 +71,45 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   const session = event.data.object
   const sku: string | undefined = session.metadata?.sku ?? session.client_reference_id
-  // GitHub handle collected as a Stripe Checkout custom field.
-  const buyerHandle: string | undefined = session.metadata?.github_handle
+  // Buyer's GitHub login comes from the pre-purchase "connect" flow (see lib/github-oauth.ts),
+  // carried into the Stripe session metadata — not a free-text field.
+  const buyerLogin: string | undefined = session.metadata?.github_login
   const buyerEmail: string | undefined = session.customer_details?.email
+  // Individual (default) vs institutional. Institutional carries the buyer's own org.
+  const purchaseType: string = session.metadata?.purchase_type ?? 'individual'
+  const institutionalOrg: string | undefined = session.metadata?.target_org
 
   const course = sku ? resolveCourse(sku) : null
-  if (!course || !buyerHandle) {
+  const orgMissing = purchaseType === 'institutional' && !institutionalOrg
+  if (!course || !buyerLogin || orgMissing) {
     // Record for manual follow-up rather than dropping the sale.
     await env.FULFILLMENT.put(
       `unresolved:${event.id}`,
-      JSON.stringify({ sku, buyerHandle, buyerEmail }),
+      JSON.stringify({ sku, buyerLogin, buyerEmail, purchaseType, institutionalOrg }),
     )
     return new Response('unresolved purchase recorded', { status: 202 })
   }
 
+  // Individual → repo in CastaliaInstitute with the buyer as collaborator.
+  // Institutional → repo in the institution's own org (e.g. Aurnova); admins manage cohort access.
+  const target =
+    purchaseType === 'institutional'
+      ? { org: institutionalOrg as string }
+      : { org: env.GITHUB_STUDENTS_ORG, collaborator: buyerLogin }
+
   const now = Math.floor(Date.parse(request.headers.get('date') ?? '') / 1000) || 0
-  const provisioned = await provisionCourseRepo(course, buyerHandle, env, now)
+  const provisioned = await provisionCourseRepo(course, target, env, now)
   const inqspace = await launchInqspace(provisioned.repoFullName, env)
 
   // Record the entitlement for MagAI credit administration at magisterium.
   await env.FULFILLMENT.put(
-    `entitlement:${course.code}:${buyerHandle}`,
+    `entitlement:${course.code}:${buyerLogin}`,
     JSON.stringify({
       course: course.code,
-      buyerHandle,
+      buyerLogin,
       buyerEmail,
+      purchaseType,
+      org: target.org,
       repo: provisioned.repoFullName,
       inqspace: inqspace.launchUrl,
       purchasedEvent: event.id,

@@ -1,0 +1,16 @@
+# Cloudflare Pages project for programs.castalia.institute.
+#
+# The Astro site builds to web/dist; Pages Functions live in ./functions (repo root) and provide
+# the purchase-fulfillment API (Stripe webhook, GitHub connect/callback). Project root is the repo
+# root so the functions directory is picked up alongside the built static output.
+#
+# Bindings (KV namespace id, Supabase/GitHub secrets) are configured in the Cloudflare dashboard
+# or via `wrangler pages secret put`; see fulfillment/README.md for the full list.
+
+name = "programs-castalia"
+compatibility_date = "2026-08-06"
+pages_build_output_dir = "web/dist"
+
+[[kv_namespaces]]
+binding = "FULFILLMENT"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"

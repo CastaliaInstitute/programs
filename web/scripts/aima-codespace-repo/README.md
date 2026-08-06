@@ -25,7 +25,7 @@ pytest exercises -q
 
 ## Course context
 
-Maintained for **AIMA 5001 — Classroom** on the [programs catalog](https://programs.castalia.institute/catalog/aima). The main AIMA course repository is [InquiryInstitute/aima](https://github.com/InquiryInstitute/aima). For GitHub Classroom setup notes, see the [Classroom setup guide](https://github.com/InquiryInstitute/aima/blob/main/docs/CLASSROOM_SETUP.md).
+Maintained for **AIMA 5001 — Classroom** on the [programs catalog](https://programs.castalia.institute/catalog/aima). The main AIMA course repository is [CastaliaInstitute/aima](https://github.com/CastaliaInstitute/aima). For GitHub Classroom setup notes, see the [Classroom setup guide](https://github.com/CastaliaInstitute/aima/blob/main/docs/CLASSROOM_SETUP.md).
 
 ## License
 

@@ -17,5 +17,5 @@ Deployment of Supabase functions and OAuth is institution-specific; this page de
 
 ## Guides
 
-- [BEATRICE instructions](https://github.com/InquiryInstitute/aima/blob/main/BEATRICE-INSTRUCTIONS.md)
-- [Instructor notes](https://github.com/InquiryInstitute/aima/tree/main/instructor-notes)
+- [BEATRICE instructions](https://github.com/CastaliaInstitute/aima/blob/main/BEATRICE-INSTRUCTIONS.md)
+- [Instructor notes](https://github.com/CastaliaInstitute/aima/tree/main/instructor-notes)

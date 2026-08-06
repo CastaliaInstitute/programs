@@ -1,8 +1,10 @@
-name: Deploy Pages
+name: Deploy Pages (legacy — manual only)
+
+# Superseded by cloudflare-pages.yml as the primary deploy for programs.castalia.institute.
+# Kept as a manual fallback (workflow_dispatch) during the Cloudflare Pages cutover; the
+# push trigger is removed so the two deploys do not compete. Remove once Cloudflare is verified.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

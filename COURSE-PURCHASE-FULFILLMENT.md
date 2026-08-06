@@ -1,24 +1,45 @@
 # Course purchase → repo provisioning (design)
 
-How an individual buyer purchases a single Castalia course and automatically receives a
-ready-to-work GitHub repository, with **inqspace** (our Codespaces equivalent) and the
-**Dialogic**, **BEATRICE**, and **SAMWISE** teaching stack enabled.
+How a buyer purchases a Castalia course and automatically receives a ready-to-work GitHub
+repository, with **inqspace** (our Codespaces equivalent) and the **Dialogic**, **BEATRICE**,
+and **SAMWISE** teaching stack enabled. Covers **both** purchase types:
 
-Status: **design + scaffold.** The fulfillment Function and config seams live in `fulfillment/`.
-Two integrations are intentionally stubbed pending inputs — see [Open items](#open-items).
+- **Individual (self-serve):** repo created under `CastaliaInstitute`, buyer added as collaborator.
+- **Institutional (e.g. Aurnova):** repo created in the **institution's own GitHub org**.
+
+Status: **design + scaffold.** The Pages Functions live in [`functions/`](functions/) (repo root)
+and import shared logic from [`fulfillment/lib/`](fulfillment/lib/). Integrations stubbed pending
+inputs — see [Open items](#open-items).
 
 ## Subdomains
 
 | Subdomain | Role | Hosting |
 | --- | --- | --- |
-| `programs.castalia.institute` | Institution-facing catalog (existing) | GitHub Pages — unchanged |
-| `courses.castalia.institute` | **New.** Self-serve single-course purchase | **Cloudflare Pages + Pages Functions** |
+| `programs.castalia.institute` | Institution-facing catalog **+ the fulfillment API** | **Cloudflare Pages** (migrated from GitHub Pages) |
+| `courses.castalia.institute` | Self-serve single-course storefront | Cloudflare Pages (calls the same API) |
 | `magisterium.castalia.institute` | MagAI credit administration | Repo exists (`CastaliaInstitute/magisterium`, Astro — artifact-based credentialing) |
 
-Self-serve courses live on their **own subdomain**, separate from the institutional programs
-catalog. The existing GitHub Pages site does not move. Names follow
-[`NOMENCLATURE.md`](NOMENCLATURE.md) — note **MagAI** is the credential and **Magisterium** is
-the system that administers it.
+Names follow [`NOMENCLATURE.md`](NOMENCLATURE.md) — **MagAI** is the credential, **Magisterium**
+is the system that administers it.
+
+## GitHub connect (before purchase, and in onboarding)
+
+Buyers **connect GitHub** via the Castalia App's OAuth flow (`/api/github/connect` →
+`/api/github/callback`) during onboarding **and** again before purchase, so checkout always
+carries a *verified* GitHub identity rather than a typed-in handle. The callback records the
+login and the user's orgs in Supabase; the buyer's login is attached to the Stripe session
+metadata. For institutional buyers, connect also surfaces which org to provision into and lets
+onboarding confirm the **GitHub App is installed on that org** (the prerequisite for creating
+repos there).
+
+## Programs → Cloudflare Pages
+
+The institutional site must run the fulfillment backend, so `programs` moves from GitHub Pages
+to **Cloudflare Pages**: the Astro site still builds to `web/dist`, and the repo-root
+`functions/` directory provides the API in the same deployment. `wrangler.toml` and
+`.github/workflows/cloudflare-pages.yml` are added; the old `pages.yml` is demoted to manual and
+removed after cutover. One backend serves both individual and institutional purchases (Stripe
+posts to a single webhook).
 
 ## Pricing
 
@@ -36,22 +57,23 @@ No separate server to operate.
 ## Flow
 
 ```
-Buyer on courses.castalia.institute
-  │  picks a course, clicks Buy
+Buyer connects GitHub  (/api/github/connect → callback)  — onboarding + before purchase
+  │  verified login + orgs stored (Supabase); login carried to checkout
   ▼
-Stripe Checkout  (collects email + GitHub username as a custom field)
+Stripe Checkout  (metadata: sku, github_login, purchase_type, target_org for institutional)
   │  payment succeeds
   ▼
-POST /api/stripe-webhook   (Cloudflare Pages Function)
-  │  1. verify Stripe signature (Web Crypto / constructEventAsync)
+POST /api/stripe-webhook   (Cloudflare Pages Function on programs.castalia.institute)
+  │  1. verify Stripe signature (Web Crypto)
   │  2. idempotency check (Stripe retries) — KV keyed on event.id
   │  3. resolve SKU → course template + enabled features
-  │  4. authenticate as the Castalia GitHub App
-  │  5. create repo from the course template (generate)
-  │  6. add buyer as collaborator; write castalia-course.json feature flags
+  │  4. authenticate as the Castalia GitHub App; resolve installation for the TARGET ORG
+  │       individual → CastaliaInstitute   |   institutional → the buyer's own org
+  │  5. create repo from the course template (generate) in the target org
+  │  6. individual: add buyer as collaborator · both: write castalia-course.json flags
   │  7. record entitlement (Supabase) for MagAI credit at magisterium
   ▼
-Success page: links to the new repo + inqspace launch
+Success: links to the new repo + inqspace launch
   ▼
 (later) course completion evidence → MagAI credit administered at magisterium
 ```
@@ -110,10 +132,13 @@ Suggested tables: `entitlements` (buyer, course, repo, inqspace_url, stripe_even
 - **Verify** every webhook's Stripe signature before acting; reject unsigned/invalid.
 - **Idempotency**: Stripe retries webhooks — dedupe on `event.id` so a buyer never gets two
   repos.
-- **Least privilege**: the GitHub App is scoped to repo administration on the single target org
-  (Contents + Administration), nothing broader.
-- Buyer's GitHub identity is collected at checkout (Stripe custom field) so we invite the right
-  account rather than guessing from email.
+- **Least privilege**: the GitHub App is scoped to repo administration (Contents +
+  Administration). For institutional provisioning it acts through the **institution's own
+  installation** — the institution grants and can revoke that access.
+- Buyer's GitHub identity comes from the **connect (OAuth) flow before purchase**, so we act on a
+  verified account, not a typed handle or an email guess.
+- **Validate OAuth `state`** on callback against the value issued at connect (CSRF) — stubbed
+  `TODO` in the scaffold.
 
 ## Open items
 
@@ -124,12 +149,17 @@ These are stubbed in the scaffold and flagged with `TODO(owner)`:
 2. **MagAI credit issuance** — the `CastaliaInstitute/magisterium` credentialing system
    administers the credit. v1 writes the entitlement to Supabase; wiring magisterium to read it
    and grant MagAI credit is a follow-up against that existing repo.
-3. **Buyer repo org + naming** — buyer repos are created under **`CastaliaInstitute`** (matching
-   the `ains-*` course books; corrected from the earlier `InquiryInstitute` default). Naming:
-   `<course-code>-<github-handle>`. Confirm this is the desired org for per-buyer repos vs. a
-   dedicated students org.
-4. **Course template repo** — one template per course to `generate` from. The existing
+3. **Buyer repo org + naming** — individual → **`CastaliaInstitute`**, repo
+   `<course-code>-<login>`; institutional → the buyer's org, repo `<course-code>-cohort`. Confirm
+   individual repos belong in `CastaliaInstitute` vs. a dedicated students org.
+4. **Institutional onboarding: GitHub App install** — an institution must install the Castalia
+   App on its org before provisioning. Add this to the institutional onboarding checklist and to
+   the connect flow (detect + prompt install when the org lacks the installation).
+5. **Course template repo** — one template per course to `generate` from. The existing
    `CastaliaInstitute/ains-6001-…` repos are course **content** (Jupyter Books), not the student
    working template; extend `aima-codespace-repo/` into `CastaliaInstitute/ains-course-template`.
-5. **`InquiryInstitute` legacy references** — `AIMA_REPO` and the codespace scripts still point
-   at `InquiryInstitute`; reconcile per NOMENCLATURE.md.
+6. **Cloudflare cutover** — verify the Cloudflare Pages deploy (including `functions/` and the KV
+   binding) serves `programs.castalia.institute`, then remove the legacy `pages.yml`. Confirm the
+   `wrangler pages deploy` step packages the repo-root `functions/` directory (or use the Pages
+   Git integration).
+7. ✅ **`InquiryInstitute` → `CastaliaInstitute`** — migrated across source (NOMENCLATURE.md).

@@ -11,9 +11,18 @@ export interface GitHubAppEnv {
   GITHUB_APP_ID: string
   /** PEM private key for the GitHub App. Stored as a Cloudflare secret. */
   GITHUB_APP_PRIVATE_KEY: string
-  GITHUB_APP_INSTALLATION_ID: string
-  /** Org the buyer repos are created under, e.g. "InquiryInstitute". */
-  GITHUB_COURSE_ORG: string
+  /**
+   * Default org for individual self-serve buyer repos, e.g. "CastaliaInstitute".
+   * Institutional purchases override this with the institution's own org.
+   */
+  GITHUB_STUDENTS_ORG: string
+}
+
+export interface ProvisionTarget {
+  /** Org the repo is created in. Individual → GITHUB_STUDENTS_ORG; institutional → the buyer's org. */
+  org: string
+  /** GitHub login to add as a collaborator (the buyer). Optional for institutional (admin manages access). */
+  collaborator?: string
 }
 
 export interface ProvisionResult {
@@ -61,41 +70,59 @@ async function appJwt(env: GitHubAppEnv, now: number): Promise<string> {
 const GH = 'https://api.github.com'
 const UA = 'castalia-course-fulfillment'
 
-/** Exchange the App JWT for an installation access token. */
-async function installationToken(env: GitHubAppEnv, jwt: string): Promise<string> {
-  const res = await fetch(
-    `${GH}/app/installations/${env.GITHUB_APP_INSTALLATION_ID}/access_tokens`,
-    {
-      method: 'POST',
-      headers: { authorization: `Bearer ${jwt}`, accept: 'application/vnd.github+json', 'user-agent': UA },
-    },
-  )
+/**
+ * Resolve the App installation for an org. Every org that installs the Castalia GitHub App —
+ * CastaliaInstitute for individual buyers, or an institution's own org (e.g. Aurnova) — has its
+ * own installation. This is how one App provisions repos into a buyer's org: the institution
+ * installs the App, and we look its installation up by org name here.
+ */
+async function installationIdForOrg(org: string, jwt: string): Promise<number> {
+  const res = await fetch(`${GH}/orgs/${org}/installation`, {
+    headers: { authorization: `Bearer ${jwt}`, accept: 'application/vnd.github+json', 'user-agent': UA },
+  })
+  if (res.status === 404) {
+    throw new Error(`GitHub App is not installed on org "${org}" — the institution must install it before provisioning`)
+  }
+  if (!res.ok) throw new Error(`installation lookup failed: ${res.status} ${await res.text()}`)
+  return ((await res.json()) as { id: number }).id
+}
+
+/** Exchange the App JWT for an installation access token scoped to one org's installation. */
+async function installationToken(installationId: number, jwt: string): Promise<string> {
+  const res = await fetch(`${GH}/app/installations/${installationId}/access_tokens`, {
+    method: 'POST',
+    headers: { authorization: `Bearer ${jwt}`, accept: 'application/vnd.github+json', 'user-agent': UA },
+  })
   if (!res.ok) throw new Error(`installation token failed: ${res.status} ${await res.text()}`)
   return ((await res.json()) as { token: string }).token
 }
 
 /**
- * Provision the buyer's repo: generate from template, add them as a collaborator, and commit the
- * feature manifest. `now` is injected so the JWT timestamp is deterministic in tests.
+ * Provision a course repo into `target.org`, optionally add a collaborator, and commit the
+ * feature manifest. Works for both individual (org = CastaliaInstitute) and institutional
+ * (org = the buyer's own org) purchases. `now` is injected so the JWT timestamp is
+ * deterministic in tests.
  */
 export async function provisionCourseRepo(
   course: CourseProvisionConfig,
-  buyerGitHubHandle: string,
+  target: ProvisionTarget,
   env: GitHubAppEnv,
   now: number,
 ): Promise<ProvisionResult> {
   const jwt = await appJwt(env, now)
-  const token = await installationToken(env, jwt)
+  const installationId = await installationIdForOrg(target.org, jwt)
+  const token = await installationToken(installationId, jwt)
   const auth = { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json', 'user-agent': UA }
 
-  const repoName = `${course.code.toLowerCase()}-${buyerGitHubHandle.toLowerCase()}`
+  const suffix = target.collaborator ? target.collaborator.toLowerCase() : 'cohort'
+  const repoName = `${course.code.toLowerCase()}-${suffix}`
 
-  // 1. Generate the repo from the course template.
+  // 1. Generate the repo from the course template into the target org.
   const gen = await fetch(`${GH}/repos/${course.templateRepo}/generate`, {
     method: 'POST',
     headers: { ...auth, 'content-type': 'application/json' },
     body: JSON.stringify({
-      owner: env.GITHUB_COURSE_ORG,
+      owner: target.org,
       name: repoName,
       private: true,
       include_all_branches: false,
@@ -104,12 +131,14 @@ export async function provisionCourseRepo(
   if (!gen.ok) throw new Error(`generate failed: ${gen.status} ${await gen.text()}`)
   const repo = (await gen.json()) as { full_name: string; html_url: string }
 
-  // 2. Invite the buyer as a collaborator.
-  await fetch(`${GH}/repos/${repo.full_name}/collaborators/${buyerGitHubHandle}`, {
-    method: 'PUT',
-    headers: { ...auth, 'content-type': 'application/json' },
-    body: JSON.stringify({ permission: 'push' }),
-  })
+  // 2. Invite the buyer as a collaborator (individual purchase; institutional admins manage access).
+  if (target.collaborator) {
+    await fetch(`${GH}/repos/${repo.full_name}/collaborators/${target.collaborator}`, {
+      method: 'PUT',
+      headers: { ...auth, 'content-type': 'application/json' },
+      body: JSON.stringify({ permission: 'push' }),
+    })
+  }
 
   // 3. Commit the feature manifest that enables inqspace + Dialogic/BEATRICE/SAMWISE.
   const manifest = {

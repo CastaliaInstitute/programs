@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Scaffold the InquiryInstitute/aima-codespace template: devcontainer, pytest exercises, CI.
+ * Scaffold the CastaliaInstitute/aima-codespace template: devcontainer, pytest exercises, CI.
  * Students fork and rename to aima-<username>, then open in GitHub Codespaces.
  *
  * Usage:
@@ -20,7 +20,7 @@ const TEMPLATE_ROOT = path.join(__dirname, 'aima-codespace-repo')
 
 function parseArgs(argv) {
   let outDir = path.join(WEB_ROOT, '..', '.aima-variant-repos')
-  let org = 'InquiryInstitute'
+  let org = 'CastaliaInstitute'
   let dryRun = false
   let push = false
   for (const a of argv) {

@@ -17,5 +17,5 @@ SAMWISE is primarily **local** tooling; this page documents the licensed product
 
 ## Documentation
 
-- [Documentation index (SAMWISE section)](https://github.com/InquiryInstitute/aima/blob/main/docs/DOCUMENTATION_INDEX.md)
-- [Package scripts](https://github.com/InquiryInstitute/aima/blob/main/package.json)
+- [Documentation index (SAMWISE section)](https://github.com/CastaliaInstitute/aima/blob/main/docs/DOCUMENTATION_INDEX.md)
+- [Package scripts](https://github.com/CastaliaInstitute/aima/blob/main/package.json)

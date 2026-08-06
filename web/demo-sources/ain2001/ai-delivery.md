@@ -17,6 +17,6 @@ Production slides for the full course live in the AIMA repo; this page is the bu
 
 ## Live references
 
-- [Hosted slide index (InquiryInstitute)](https://inquiryinstitute.github.io/aima/lectures/reveal/lectures.html)
-- [Publish workflow (source)](https://github.com/InquiryInstitute/aima/blob/main/.github/workflows/publish-lectures.yml)
-- [AIMA repository](https://github.com/InquiryInstitute/aima)
+- [Hosted slide index (CastaliaInstitute)](https://castaliainstitute.github.io/aima/lectures/reveal/lectures.html)
+- [Publish workflow (source)](https://github.com/CastaliaInstitute/aima/blob/main/.github/workflows/publish-lectures.yml)
+- [AIMA repository](https://github.com/CastaliaInstitute/aima)

@@ -20,4 +20,4 @@ Basic is the lowest-friction path for curriculum committees that live in the LMS
 ## Links
 
 - [Sample slides PDF](/demos/week1-search-slides.pdf) (copied at build time from `demos/aima-demo-content/`)
-- [AIMA course repository](https://github.com/InquiryInstitute/aima)
+- [AIMA course repository](https://github.com/CastaliaInstitute/aima)

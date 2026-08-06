@@ -134,7 +134,7 @@ export interface ProgramOffering {
 export const AINS_COLLEGE_TITLE = 'AINS — College of Artificial & Inquiring Systems' as const
 
 /** Canonical AIMA course repo (Russell & Norvig AIMA, GitHub-native delivery). */
-export const AIMA_REPO = 'https://github.com/InquiryInstitute/aima' as const
+export const AIMA_REPO = 'https://github.com/CastaliaInstitute/aima' as const
 
 /** Full-course IMS CC from MyST TOC (all pages + PDF). Per-variant downloads use each deliverable’s `imsccHref`. Built in `npm run build:demos`. */
 export const AIMA_IMSCC_DEMO = '/demos/aima-lms-demo.imscc' as const
@@ -312,7 +312,7 @@ export const programOfferings: ProgramOffering[] = [
         secondaryLabel: 'AIMA course repository',
         secondaryHref: AIMA_REPO,
         tertiaryLabel: 'Codespace template (fork as aima-you)',
-        tertiaryHref: 'https://github.com/InquiryInstitute/aima-codespace',
+        tertiaryHref: 'https://github.com/CastaliaInstitute/aima-codespace',
         imsccHref: AIMA_BASIC_IMSCC_PATH,
         lmsVariant: 'simple',
         catalogFeatures: {
@@ -337,9 +337,9 @@ export const programOfferings: ProgramOffering[] = [
         primaryLabel: 'Open course demo',
         primaryHref: `${AIMA5001_COURSE_DEMO_BASE}/ai-delivery/`,
         secondaryLabel: 'BEATRICE instructions',
-        secondaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/BEATRICE-INSTRUCTIONS.md',
+        secondaryHref: 'https://github.com/CastaliaInstitute/aima/blob/main/BEATRICE-INSTRUCTIONS.md',
         tertiaryLabel: 'Documentation index (SAMWISE)',
-        tertiaryHref: 'https://github.com/InquiryInstitute/aima/blob/main/docs/DOCUMENTATION_INDEX.md',
+        tertiaryHref: 'https://github.com/CastaliaInstitute/aima/blob/main/docs/DOCUMENTATION_INDEX.md',
         imsccHref: '/demos/aima-delivery-lms-demo.imscc',
         lmsVariant: 'advanced',
         catalogFeatures: {

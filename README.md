@@ -6,8 +6,11 @@ This repository is the public catalog for Castalia programs sold to institutions
 
 - Astro site in `web/`
 - Shared Castalia shell via vendored `@castalia/platform`
-- GitHub Pages deployment from `.github/workflows/pages.yml`
-- Custom domain via `CNAME` set to `programs.castalia.institute`
+- **Cloudflare Pages** deployment from `.github/workflows/cloudflare-pages.yml` (`wrangler.toml`);
+  serves the static site plus the repo-root `functions/` purchase-fulfillment API. The legacy
+  GitHub Pages workflow (`pages.yml`) is manual-only during cutover.
+- Custom domain `programs.castalia.institute`
+- Purchase → repo provisioning: see `COURSE-PURCHASE-FULFILLMENT.md`, `functions/`, `fulfillment/`
 
 ## Local development
 

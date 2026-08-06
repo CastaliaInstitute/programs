@@ -9,7 +9,7 @@ catalog copy, and code. Where two names exist for one thing, the **canonical** c
 | Thing | Canonical | Notes |
 | --- | --- | --- |
 | GitHub org | **`CastaliaInstitute`** | Course books, platform, credentialing, and this `programs` repo all live here. |
-| Legacy GitHub org | `InquiryInstitute` | Referenced by older code (`AIMA_REPO`, `aima-codespace` scripts). Not in this session's scope. **Migrate references to `CastaliaInstitute`** or confirm it is a deliberately separate org. |
+| Former org | `InquiryInstitute` → **evolved to `CastaliaInstitute`** | Same organization, renamed. All references have been migrated in source; old GitHub URLs auto-redirect. Do not use `InquiryInstitute` in new work. |
 | Primary domain | **`castalia.institute`** | programs., mhth., anubis., magisterium., gazetteer., mynah. |
 | Legacy domain | `inquiry.institute` | Still live for some services (cal., commonplace., game.). |
 
@@ -30,7 +30,7 @@ These are four different things and have been conflated. They are not interchang
 | Name | What it is | Home |
 | --- | --- | --- |
 | **MSAI** | Aurnova University's *Master of Science in Artificial Intelligence* — the degree, 12 AIN courses (36 cr) | `aurnova.com/msai`; repo `CastaliaInstitute/MSAI` |
-| **AIMA 5001** | The *AI: A Modern Approach* (Russell & Norvig) course product, sold as Simple / Advanced SKUs | this `programs` catalog; `aima` repo (legacy `InquiryInstitute`) |
+| **AIMA 5001** | The *AI: A Modern Approach* (Russell & Norvig) course product, sold as Simple / Advanced SKUs | this `programs` catalog; `CastaliaInstitute/aima` |
 | **MagAI** | Castalia's own *Magister of AI* online **certificate** (non-accredited, no faculty) — the credential | `CastaliaInstitute/MagAI` (public landing) |
 | **Magisterium** | The artifact-based **credentialing system** that administers credits/certificates (incl. MagAI) | `CastaliaInstitute/magisterium` (Astro); `magisterium.castalia.institute` |
 
@@ -57,9 +57,11 @@ These are four different things and have been conflated. They are not interchang
 | `mhth.castalia.institute` | More Human Than Human certificate | Live |
 | `anubis.castalia.institute` | ANUBIS cyber lab (backs AINS6300–6302) | Live |
 
-## Open naming decisions
+## Resolved / open naming decisions
 
-1. **Org for buyer/course repos:** standardize on `CastaliaInstitute` (the scaffold has been
-   corrected from `InquiryInstitute`). Confirm whether `InquiryInstitute` is retired or kept.
-2. **AIMA line** still points at `InquiryInstitute/aima` in `programs.ts` — migrate or confirm.
+1. ✅ **`InquiryInstitute` → `CastaliaInstitute`** — the org evolved (renamed). All source
+   references migrated (`AIMA_REPO`, codespace/variant scripts, demo sources, catalog page).
+2. **Buyer-repo org depends on purchase type** (see COURSE-PURCHASE-FULFILLMENT.md):
+   individual self-serve → under `CastaliaInstitute`; **institutional → under the institution's
+   own org** (e.g. Aurnova buys → repo created in Aurnova's org).
 3. **Self-serve SKU:** use `AINS####` as the Stripe SKU internally, display `AIN####` to buyers.
