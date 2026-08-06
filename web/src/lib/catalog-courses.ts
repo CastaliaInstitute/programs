@@ -174,20 +174,21 @@ const C6001: CatalogCourseDetail = {
   description:
     'Graduate introduction to AI as rigorous problem solving: search, knowledge, learning, and agents—aligned with modern practice and responsible use.',
   syllabus: [
-    m('Modules 1–2 · Problems & agents', [
-      'Problem formulations and evaluation functions',
-      'Uninformed and informed search',
-      'Constraint satisfaction patterns',
+    m('Weeks 1–2 · Framing & search', [
+      'AI paradigms and system boundaries',
+      'Search, planning, and problem formulation',
     ]),
-    m('Modules 3–4 · Knowledge & reasoning', [
-      'Logic, inference, and knowledge graphs (intro)',
-      'Planning representations',
-      'Uncertainty basics bridging to ML',
+    m('Weeks 3–4 · Knowledge & learning', [
+      'Knowledge representation and reasoning',
+      'Machine learning as empirical inference',
     ]),
-    m('Modules 5–6 · Learning & ethics', [
-      'Supervised learning framing',
-      'Generalization and evaluation hygiene',
-      'Fairness, safety, and policy hooks',
+    m('Weeks 5–6 · Evaluation & interaction', [
+      'Evaluation, uncertainty, and error analysis',
+      'Human-AI interaction and workflow design',
+    ]),
+    m('Weeks 7–8 · Responsibility & synthesis', [
+      'Responsible AI and governance basics',
+      'Integrated AI system proposal',
     ]),
   ],
 }
@@ -200,20 +201,21 @@ const C6002: CatalogCourseDetail = {
   description:
     'Core graduate ML: supervised and unsupervised methods, validation design, and responsible deployment patterns for prediction tasks.',
   syllabus: [
-    m('Modules 1–2 · Foundations', [
-      'Losses, optimization, regularization',
-      'Cross-validation and leakage',
-      'Baselines and error analysis',
+    m('Weeks 1–2 · Framing & data', [
+      'Prediction tasks and data framing',
+      'Data preparation and feature pipelines',
     ]),
-    m('Modules 3–4 · Methods', [
-      'Tree ensembles and calibration',
-      'Clustering and dimensionality reduction',
-      'Feature engineering discipline',
+    m('Weeks 3–4 · Models & validation', [
+      'Linear and tree-based baselines',
+      'Model selection and validation',
     ]),
-    m('Modules 5–6 · Practice', [
-      'Imbalanced data and cost-sensitive learning',
-      'Monitoring drift and maintenance',
-      'Case studies from partner domains',
+    m('Weeks 5–6 · Structure & drift', [
+      'Unsupervised learning and structure discovery',
+      'Time, drift, and monitoring',
+    ]),
+    m('Weeks 7–8 · Explanation & portfolio', [
+      'Interpretability and stakeholder explanation',
+      'Predictive modeling portfolio',
     ]),
   ],
 }
@@ -226,20 +228,21 @@ const C6003: CatalogCourseDetail = {
   description:
     'Neural architectures from CNNs through transformers, pretraining and fine-tuning at scale, and practical debugging for vision, sequence, and generative modeling tasks.',
   syllabus: [
-    m('Modules 1–2 · Networks & training', [
-      'Backpropagation and autodiff mental models',
-      'Optimization and learning-rate strategies',
-      'Initialization and normalization',
+    m('Weeks 1–2 · Networks & training', [
+      'From neurons to multilayer networks',
+      'Backpropagation and automatic differentiation',
     ]),
-    m('Modules 3–4 · Architectures', [
-      'CNNs and spatial inductive bias',
-      'Attention and transformer architectures in depth',
-      'Pretraining, transfer learning, and parameter-efficient fine-tuning',
+    m('Weeks 3–4 · Optimization & vision', [
+      'Optimization, loss, and regularization',
+      'Convolutional neural networks for vision',
     ]),
-    m('Modules 5–6 · Scale & engineering', [
-      'Scaling behavior, compute budgets, and mixed precision',
-      'Experiment tracking and reproducibility',
-      'Failure modes, robustness checks, and evaluating generative models',
+    m('Weeks 5–6 · Sequences & transformers', [
+      'Sequence models: RNNs and LSTMs',
+      'Attention and transformers',
+    ]),
+    m('Weeks 7–8 · Generative & scale', [
+      'Generative models and applications',
+      'GPU workflows, scale, and deployment',
     ]),
   ],
 }
@@ -252,20 +255,21 @@ const C6004: CatalogCourseDetail = {
   description:
     'Text as data: tokenization through large language models, retrieval-augmented generation, evaluation, and guardrails for NLP systems in production.',
   syllabus: [
-    m('Modules 1–2 · Representations', [
-      'Tokenization and embeddings',
-      'Classification and sequence labeling',
-      'Retrieval, lexical resources, and vector search',
+    m('Weeks 1–2 · Text & embeddings', [
+      'Text preprocessing and linguistic signals',
+      'Embeddings and semantic similarity',
     ]),
-    m('Modules 3–4 · Large language models', [
-      'LLM architectures, pretraining, and instruction tuning',
-      'Prompting, retrieval-augmented generation, and tool use',
-      'Agentic workflows and orchestration patterns',
+    m('Weeks 3–4 · Language models', [
+      'Language modeling foundations',
+      'Transformers for NLP tasks',
     ]),
-    m('Modules 5–6 · Deployment', [
-      'Evaluating generative systems: task evals, hallucination, and bias',
-      'Safety guardrails and content policies',
-      'Latency/cost tradeoffs and domain adaptation',
+    m('Weeks 5–6 · RAG & tool use', [
+      'Retrieval-augmented generation',
+      'Conversation design and tool use',
+    ]),
+    m('Weeks 7–8 · Evaluation & deployment', [
+      'Evaluation for NLP systems',
+      'NLP system deployment review',
     ]),
   ],
 }
@@ -278,20 +282,21 @@ const C6005: CatalogCourseDetail = {
   description:
     'Normative frameworks, emerging regulation, and operational governance for AI systems in educational and enterprise contexts.',
   syllabus: [
-    m('Modules 1–2 · Frameworks', [
-      'Harm, justice, and accountability',
-      'Professional codes and institutional review',
-      'Risk tiers and documentation',
+    m('Weeks 1–2 · Foundations', [
+      'Ethical theories for AI decisions',
+      'Bias, fairness, and representational harm',
     ]),
-    m('Modules 3–4 · Law & standards', [
-      'Privacy and IP touchpoints',
-      'Sector-specific obligations (survey)',
-      'Procurement and vendor diligence',
+    m('Weeks 3–4 · Rights & accountability', [
+      'Privacy, consent, and data rights',
+      'Transparency, explainability, and accountability',
     ]),
-    m('Modules 5–6 · Practice', [
-      'Incident response for model failures',
-      'Stakeholder communication',
-      'Capstone ethics case study',
+    m('Weeks 5–6 · Law & governance', [
+      'AI law and emerging regulation',
+      'Governance programs and controls',
+    ]),
+    m('Weeks 7–8 · Practice', [
+      'Incident response and redress',
+      'Responsible AI policy portfolio',
     ]),
   ],
 }
@@ -304,20 +309,21 @@ const C6006: CatalogCourseDetail = {
   description:
     'Data platforms, governance, and pipelines that feed reliable training and evaluation datasets for AI workloads.',
   syllabus: [
-    m('Modules 1–2 · Platforms', [
-      'Lakehouse concepts and query engines',
-      'Batch vs streaming (intro)',
-      'Schema evolution and contracts',
+    m('Weeks 1–2 · Architectures & pipelines', [
+      'Data architectures for AI',
+      'Pipelines, orchestration, and quality',
     ]),
-    m('Modules 3–4 · Quality', [
-      'Data validation and anomaly detection',
-      'Labeling operations and inter-rater reliability',
-      'Lineage and reproducibility',
+    m('Weeks 3–4 · Storage & scale', [
+      'Storage, indexing, and retrieval',
+      'Distributed processing and scale',
     ]),
-    m('Modules 5–6 · Scale', [
-      'Partitioning and cost controls',
-      'Access control patterns',
-      'Lab: end-to-end pipeline slice',
+    m('Weeks 5–6 · Lineage & cloud', [
+      'Metadata, lineage, and provenance',
+      'Cloud integration and cost control',
+    ]),
+    m('Weeks 7–8 · Governance & readiness', [
+      'Security and access governance',
+      'AI data platform readiness review',
     ]),
   ],
 }
@@ -330,20 +336,21 @@ const C6007: CatalogCourseDetail = {
   description:
     'Hands-on Python for data wrangling, modeling, and packaging AI components suitable for team engineering standards.',
   syllabus: [
-    m('Modules 1–2 · Stack', [
-      'Environment and dependency hygiene',
-      'Vectorized numerics and profiling',
-      'Testing ML-adjacent code',
+    m('Weeks 1–2 · Structure & data', [
+      'Python project structure for AI',
+      'Data handling with Python libraries',
     ]),
-    m('Modules 3–4 · Modeling in code', [
-      'Frameworks for training loops',
-      'Experiment configs and seeds',
-      'Serialization and model artifacts',
+    m('Weeks 3–4 · Interfaces & testing', [
+      'Model APIs and reusable components',
+      'Testing and continuous integration',
     ]),
-    m('Modules 5–6 · Integration', [
-      'APIs and batch jobs',
-      'Containers (intro)',
-      'Peer review capstone',
+    m('Weeks 5–6 · Services & interfaces', [
+      'Application backends and model services',
+      'User interfaces and workflow integration',
+    ]),
+    m('Weeks 7–8 · Deployment', [
+      'Packaging, environments, and deployment',
+      'End-to-end AI application',
     ]),
   ],
 }
@@ -356,20 +363,21 @@ const C6008: CatalogCourseDetail = {
   description:
     'Delivery practices for AI initiatives: scoping, milestones, MLOps handoffs, and operating models across academic and industry partners.',
   syllabus: [
-    m('Modules 1–2 · Scoping', [
-      'Problem framing and success metrics',
-      'Data readiness assessments',
-      'Stakeholder maps',
+    m('Weeks 1–2 · Discovery', [
+      'AI product discovery and scoping',
+      'Stakeholders, requirements, and risk',
     ]),
-    m('Modules 3–4 · Delivery', [
-      'Roadmaps and milestone gates',
-      'Model risk tiers',
-      'Documentation packages',
+    m('Weeks 3–4 · Delivery', [
+      'Agile delivery for AI uncertainty',
+      'Evaluation plans and acceptance criteria',
     ]),
-    m('Modules 5–6 · Operations', [
-      'Release and rollback',
-      'Monitoring and SLAs',
-      'Team rituals and retrospectives',
+    m('Weeks 5–6 · Release & adoption', [
+      'MLOps and release management',
+      'Change management and adoption',
+    ]),
+    m('Weeks 7–8 · Operations', [
+      'Operations, monitoring, and governance',
+      'Deployment business case',
     ]),
   ],
 }
@@ -382,20 +390,21 @@ const C6009: CatalogCourseDetail = {
   description:
     'Integrative project with faculty mentor: students ship an end-to-end artifact with evaluation, ethics review, and presentation.',
   syllabus: [
-    m('Phase 1 · Proposal', [
-      'Team formation and advisor alignment',
-      'Problem statement and dataset plan',
-      'Ethics checklist',
+    m('Weeks 1–2 · Charter & review', [
+      'Problem definition and project charter',
+      'Literature, market, and domain review',
     ]),
-    m('Phase 2 · Execution', [
-      'Milestones and weekly demos',
-      'Risk tracking',
-      'Reproducibility artifacts',
+    m('Weeks 3–4 · Design & build', [
+      'Architecture and data plan',
+      'Prototype implementation',
     ]),
-    m('Phase 3 · Delivery', [
-      'Final evaluation report',
-      'Stakeholder presentation',
-      'Handoff documentation',
+    m('Weeks 5–6 · Evaluate & harden', [
+      'Evaluation and iteration',
+      'Deployment and operational readiness',
+    ]),
+    m('Weeks 7–8 · Defend & deliver', [
+      'Thesis, documentation, and defense',
+      'Final demonstration and handoff',
     ]),
   ],
 }
@@ -408,9 +417,10 @@ const C6100: CatalogCourseDetail = {
   description:
     'Imaging modalities, annotation quality, and model evaluation under clinical constraints—without offering medical advice.',
   syllabus: [
-    m('Modules 1–2 · Imaging stack', ['DICOM basics', 'Preprocessing and augmentation', 'Reader studies']),
-    m('Modules 3–4 · Models', ['Segmentation/detection framing', 'Uncertainty and calibration', 'External validation']),
-    m('Modules 5–6 · Translation', ['Workflow fit', 'Regulatory touchpoints (survey)', 'Deployment guardrails']),
+    m('Weeks 1–2 · Imaging & data', ['Clinical imaging workflows', 'Image data, labels, and annotation']),
+    m('Weeks 3–4 · Models', ['Preprocessing and augmentation', 'Classification and detection']),
+    m('Weeks 5–6 · Measurement & safety', ['Segmentation and measurement', 'Validation, bias, and safety']),
+    m('Weeks 7–8 · Translation', ['Regulatory and operational integration', 'Medical imaging AI case review']),
   ],
 }
 
@@ -422,9 +432,10 @@ const C6101: CatalogCourseDetail = {
   description:
     'Cohort analytics, survival and risk models, and fairness considerations for population-level decision support contexts.',
   syllabus: [
-    m('Modules 1–2 · Data', ['Claims and EHR feature stores (intro)', 'Temporal splits', 'Missingness strategies']),
-    m('Modules 3–4 · Methods', ['Risk scoring', 'Calibration in the wild', 'Clustering cohorts']),
-    m('Modules 5–6 · Ethics', ['Bias auditing', 'Transparency to clinicians', 'Evaluation ethics']),
+    m('Weeks 1–2 · Data & risk', ['Population health data ecosystems', 'Risk stratification and prediction']),
+    m('Weeks 3–4 · Inference & forecasting', ['Causal inference and confounding', 'Forecasting and surveillance']),
+    m('Weeks 5–6 · Equity & intervention', ['Equity and social determinants', 'Intervention targeting and evaluation']),
+    m('Weeks 7–8 · Governance', ['Privacy and public-health governance', 'Population analytics portfolio']),
   ],
 }
 
@@ -436,9 +447,10 @@ const C6102: CatalogCourseDetail = {
   description:
     'Human–AI collaboration patterns, alert fatigue, and evaluation protocols for CDS tools in educational simulations.',
   syllabus: [
-    m('Modules 1–2 · UX of AI', ['Cognitive load', 'Explainability tradeoffs', 'Simulation scenarios']),
-    m('Modules 3–4 · Evaluation', ['Task-based metrics', 'Human-in-the-loop studies', 'Safety monitoring']),
-    m('Modules 5–6 · Governance', ['Change management', 'Policy alignment', 'Case debriefs']),
+    m('Weeks 1–2 · Foundations', ['Clinical decision support foundations', 'Clinical knowledge and guideline modeling']),
+    m('Weeks 3–4 · Assistance', ['Diagnostic assistance and triage', 'Treatment planning and personalization']),
+    m('Weeks 5–6 · Human factors & safety', ['Human factors and alert fatigue', 'Validation and clinical safety cases']),
+    m('Weeks 7–8 · Oversight', ['Regulation, liability, and monitoring', 'Clinical decision support review']),
   ],
 }
 
@@ -450,9 +462,10 @@ const C6200: CatalogCourseDetail = {
   description:
     'Measurement, experimentation, and responsible personalization for customer analytics in digital channels.',
   syllabus: [
-    m('Modules 1–2 · Measurement', ['Attribution basics', 'Lift testing', 'Cohort KPIs']),
-    m('Modules 3–4 · Modeling', ['Recommendation patterns', 'Content ranking (survey)', 'Privacy-preserving techniques (intro)']),
-    m('Modules 5–6 · Practice', ['Campaign simulation', 'Ethical targeting', 'Executive readouts']),
+    m('Weeks 1–2 · Customers & models', ['Customer data and segmentation', 'Recommendation systems']),
+    m('Weeks 3–4 · Campaigns & journeys', ['Campaign optimization', 'Customer journey analytics']),
+    m('Weeks 5–6 · Generative & measurement', ['Generative AI for marketing operations', 'Measurement, attribution, and incrementality']),
+    m('Weeks 7–8 · Trust & portfolio', ['Privacy, consent, and trust', 'AI customer insights portfolio']),
   ],
 }
 
@@ -464,9 +477,10 @@ const C6201: CatalogCourseDetail = {
   description:
     'Process mining, RPA + ML hybrids, and ROI framing for operations teams adopting intelligent automation.',
   syllabus: [
-    m('Modules 1–2 · Discovery', ['Process maps', 'Bottleneck analysis', 'Data capture for processes']),
-    m('Modules 3–4 · Automation', ['Rules vs learned policies', 'Exception handling', 'Human oversight']),
-    m('Modules 5–6 · Value', ['Cost models', 'Change management', 'Controls and audit']),
+    m('Weeks 1–2 · Discovery', ['Process discovery and workflow mapping', 'Robotic process automation basics']),
+    m('Weeks 3–4 · Extraction & optimization', ['Document and data extraction', 'Optimization and scheduling']),
+    m('Weeks 5–6 · Orchestration & controls', ['Agentic workflow orchestration', 'Controls, auditability, and failure handling']),
+    m('Weeks 7–8 · Value', ['Change management and workforce impact', 'Automation business case']),
   ],
 }
 
@@ -478,9 +492,10 @@ const C6202: CatalogCourseDetail = {
   description:
     'Portfolio framing, vendor selection, and talent models for leaders sponsoring AI initiatives.',
   syllabus: [
-    m('Modules 1–2 · Strategy', ['Use-case portfolios', 'Build vs buy', 'Risk appetite']),
-    m('Modules 3–4 · Execution', ['Operating cadence', 'Data foundations investment', 'Partnerships']),
-    m('Modules 5–6 · Governance', ['Board reporting', 'Crisis scenarios', 'Roadmap synthesis']),
+    m('Weeks 1–2 · Positioning & investment', ['AI strategy and competitive positioning', 'Investment thesis and portfolio design']),
+    m('Weeks 3–4 · Operating model', ['Capability maturity and operating model', 'Build, buy, partner, or wait']),
+    m('Weeks 5–6 · Risk & value', ['Risk appetite and governance', 'Metrics, value realization, and accountability']),
+    m('Weeks 7–8 · Talent & synthesis', ['Talent, culture, and change', 'Executive AI strategy brief']),
   ],
 }
 
@@ -492,9 +507,10 @@ const C6300: CatalogCourseDetail = {
   description:
     'Supervised and unsupervised patterns for security telemetry, with emphasis on false positives and analyst workflows.',
   syllabus: [
-    m('Modules 1–2 · Data', ['Log sources and featureization', 'Label challenges', 'Adversarial blind spots']),
-    m('Modules 3–4 · Detection', ['Anomaly frameworks', 'Graph signals (intro)', 'Alert prioritization']),
-    m('Modules 5–6 · Ops', ['Playbooks', 'Purple-team exercises', 'Privacy/compliance constraints']),
+    m('Weeks 1–2 · Telemetry & anomalies', ['Security telemetry and threat models', 'Anomaly detection foundations']),
+    m('Weeks 3–4 · Analysis & intel', ['Malware and network behavior analysis', 'Threat intelligence and enrichment']),
+    m('Weeks 5–6 · Detection & evasion', ['Detection engineering and evaluation', 'Adversarial behavior and evasion']),
+    m('Weeks 7–8 · Operations', ['Security operations integration', 'Threat detection portfolio']),
   ],
 }
 
@@ -506,9 +522,10 @@ const C6301: CatalogCourseDetail = {
   description:
     'Policy-driven automation, human approvals, and safe rollback for orchestrated response actions.',
   syllabus: [
-    m('Modules 1–2 · Orchestration', ['SOAR concepts', 'Policy languages', 'Simulation sandboxes']),
-    m('Modules 3–4 · ML hooks', ['Ranking actions', 'Confidence thresholds', 'Feedback loops']),
-    m('Modules 5–6 · Safety', ['Kill switches', 'Audit trails', 'Tabletop exercises']),
+    m('Weeks 1–2 · Lifecycle & playbooks', ['Incident response lifecycle', 'Playbooks and decision trees']),
+    m('Weeks 3–4 · Orchestration', ['SOAR and tool orchestration', 'Containment and remediation automation']),
+    m('Weeks 5–6 · Oversight & testing', ['Human approval and escalation', 'Testing response automation']),
+    m('Weeks 7–8 · Learning', ['Post-incident learning', 'Automated response readiness review']),
   ],
 }
 
@@ -520,9 +537,10 @@ const C6302: CatalogCourseDetail = {
   description:
     'Quantitative risk scoring, scenario analysis, and governance metrics for cyber and operational risk programs.',
   syllabus: [
-    m('Modules 1–2 · Fundamentals', ['Risk matrices', 'Bayesian touches for priors', 'Data limitations']),
-    m('Modules 3–4 · Models', ['Scoring architectures', 'Calibration for decision thresholds', 'Stress tests']),
-    m('Modules 5–6 · Reporting', ['Board-ready narratives', 'Controls mapping', 'Continuous improvement']),
+    m('Weeks 1–2 · Concepts & modeling', ['Cyber risk concepts and assets', 'Threat likelihood and impact modeling']),
+    m('Weeks 3–4 · Prioritization & scenarios', ['Vulnerability prioritization', 'Scenario analysis and stress testing']),
+    m('Weeks 5–6 · Controls & reporting', ['Controls and residual risk', 'Executive reporting and risk communication']),
+    m('Weeks 7–8 · Governance', ['Governance, compliance, and audit', 'Cyber risk assessment portfolio']),
   ],
 }
 

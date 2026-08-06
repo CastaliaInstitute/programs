@@ -57,20 +57,33 @@ Whichever option is chosen, publish it in the Aurnova catalog; do not leave read
 
 ## Prerequisite graph
 
-Course numbering does **not** imply sequence. The working dependencies are:
+Course numbering does **not** imply sequence. The dependencies below are as-designed
+recommendations; note that the **published course books gate on ML concepts, not on
+programming** — every syllabus scaffolds Python through guided Colab notebooks and states
+that prior Python "is helpful but not assumed as a gate."
 
 | Course | Depends on |
 | --- | --- |
-| AINS6007 Applied AI Programming with Python | — (take first; assumes no prior programming) |
 | AINS6001 Foundations of AI | — |
 | AINS6005 AI Ethics, Law & Policy | — |
-| AINS6002 Machine Learning & Predictive Modeling | AINS6007, AINS6001 |
-| AINS6006 Big Data Management | AINS6007 |
-| AINS6008 AI Project Management & Deployment | AINS6001 |
-| AINS6003 Deep Learning & Neural Networks | AINS6002 |
-| AINS6004 Natural Language Processing | AINS6002 (AINS6003 recommended prior or concurrent) |
+| AINS6002 Machine Learning & Predictive Modeling | AINS6001 recommended |
+| AINS6006 Big Data Management | AINS6001 recommended |
+| AINS6008 AI Project Management & Deployment | AINS6001 recommended |
+| AINS6003 Deep Learning & Neural Networks | AINS6002 recommended |
+| AINS6004 Natural Language Processing | AINS6002 recommended (AINS6003 prior or concurrent) |
+| AINS6007 Applied AI Programming with Python | earlier core sequence recommended (per its own syllabus) |
 | Specialization courses (61xx/62xx/63xx/64xx) | AINS6002; AINS6003 for Healthcare and Robotics clusters |
 | AINS6009 Capstone Project | Core complete or concurrent-final-term; taken within the chosen specialization |
+
+> **⚠️ AINS6007 is not a programming on-ramp.** Despite its title and low number, the published
+> AINS6007 book opens with *refactoring notebook logic into a package* and covers testing/CI,
+> model services, packaging, and deployment — software-engineering literacy, positioned late by
+> its own prerequisite note. Under the non-programming-audience design, **no course teaches
+> Python from zero**; every course instead scaffolds run-and-modify notebook work. If Aurnova
+> wants a genuine from-zero on-ramp, add a Python-basics Module 0 to AINS6007 (and move it to
+> Term 1 in that form) or a required non-credit primer before AINS6002. The term maps below
+> keep AINS6007 in Term 1 on that assumption; if it stays in its current form, it belongs
+> later and the maps should shift a specialization course forward.
 
 ## Recommended term map — full-time (4 terms, 9 credits/term)
 
@@ -131,6 +144,35 @@ slides, narration, instructor notes), so a course is deliverable to Aurnova as a
 self-contained artifact. The executable-assignment layer (Thebe + `ipywidgets`) is what makes
 the non-programmer design work: it is the mechanism by which students in AINS6002–6004 and
 the specializations do real work with code they did not have to write from a blank editor.
+
+The published books are the **source of truth for course content**, and they are more current
+than this repo's catalog data was: every book is an 8-week / 8-module design with real CLOs, a
+credit-hour rationale (~135 hours), and rubrics. The `web/src/lib/catalog-courses.ts` syllabi
+have been synced to the published 8-module structures (2026-08-06); the earlier catalog copy
+described a stale 6-module design.
+
+## Course-design review (against the non-programming-audience goal)
+
+The published books are uniformly built for non-programmers — every syllabus states *"Students
+are not expected to be computer science majors"* and scaffolds technical work to *"run a
+notebook, observe output, change one controlled variable, and explain the evidence."* That
+design is coherent and is the program's real strength. Four gaps should be resolved before
+launch:
+
+1. **No from-zero programming on-ramp.** See the AINS6007 warning above. This is the single
+   most important fix under the non-programming-audience goal.
+2. **The capstone breaks the run-and-modify contract.** AINS6009's published weeks include
+   "Architecture and data plan," "Prototype implementation," and "Deployment and operational
+   readiness" — build-level work the rest of the program does not train. Recalibrate the
+   AINS6009 rubric to explicitly accept AI-assisted, low-code, and orchestration-level builds,
+   or the final course fails the students the program was designed for.
+3. **Uniform ("mail-merged") CLOs.** CO1–CO6 are identical across courses with the course name
+   substituted in. Accreditation review will flag this; differentiate two or three outcomes per
+   course. The 8-module infrastructure to hang them on already exists.
+4. **Career-outcome copy oversells.** aurnova.com lists "AI Engineer" and "Machine Learning
+   Specialist" — code-writing roles. This program produces strong AI *evaluators, translators,
+   and leaders*; align the outcome copy so the first employer interview does not damage the
+   brand.
 
 ## Disclosures for Aurnova program committee
 
