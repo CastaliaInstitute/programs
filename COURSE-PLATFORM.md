@@ -79,26 +79,70 @@ POST /api/stripe-webhook  = ENROLL
   ▼
 … learner does the work in the repo (inqspace, BEATRICE, Dialogic, SAMWISE) …
   ▼
-POST /api/completion  (signalled by CI/autograder, instructor, or AI facilitator)
-  │  capture evidence pinned to a commit SHA →
-  │  write artifact + course_completion INTO magisterium's schema
+Socratic defense: three AI faculty question the learner, judge fluency
+  │  App writes the transcript to exam/ (learner can't push there), pinned to a commit SHA
   ▼
-magisterium evaluates evidence → may award a credential (e.g. Mag.AI). Not this platform's call.
+POST /api/completion  → capture repository + transcript artifacts (each hashed) →
+  │  write artifacts + course_completion INTO magisterium's schema
+  ▼
+magisterium panel (3 evaluations, phase=defense) → on pass, issue credential (Mag.AI) with a
+verification_id bound to the transcript hash. Credentialing is magisterium's, not this platform's.
 ```
 
-## Evidence & completion (the credential substrate)
+## Completion — Socratic review & unforgeable credential
 
-An evidence-based credential is only as good as its evidence. `/api/completion` records, into
-magisterium:
+Completion is not a checkbox. It is an oral **Socratic defense**: three independent AI faculty
+question the learner about the material and judge **fluency**. This maps directly onto
+magisterium's model — no new credential machinery needed:
 
-- an **artifact** of type `repository` (the learner's repo), pinned to a **commit SHA** and an
-  optional content digest for tamper-evidence;
-- a **course_completion** (individual, course, completed_at, artifact ids) — magisterium's
-  "learning lineage."
+| Socratic review | magisterium |
+| --- | --- |
+| Three faculty | a `review_panel` with three `panel_members` (reviewer role) |
+| Each faculty's fluency judgment | an `evaluation` row, phase `defense`, with `score` + `passed` |
+| Pass | a `credential` with a unique `verification_id` |
+| The conversation + the work | `artifacts` (repository + transcript), pinned and hashed |
 
-Because learners have write access to their own repos, the trustworthy evidence is the pinned
-commit + CI attestations, not the mutable repo head. Hardening (signed commits / CI-produced
-attestations recorded server-side) is called out in Open items.
+The faculty are **independent** AI reviewers (distinct perspectives), and each verdict is its own
+`evaluation` row, so the panel's judgment is itself part of the tamper-evident record.
+
+### The exam lives in the learner's repo — which Castalia owns
+
+The fluency exam (the work + the Socratic transcript) resides in the course repo. That repo stays
+in **`CastaliaInstitute`**, with the learner as **collaborator, not owner**. That one ownership
+fact makes both access and integrity work:
+
+- **Access — via the GitHub App, not a collaborator invite or PAT.** We provision the repo through
+  the Castalia App, which already holds read/write on `CastaliaInstitute`. The AI faculty and the
+  transcript-writer authenticate as the App. The learner cannot revoke it and needn't act to grant
+  it. (A collaborator grant is per-user and revocable; a PAT is a shared secret. The App is the
+  right primitive and we already use it.)
+- **Integrity — collaborator ≠ owner.** The learner pushes their work but cannot delete the repo,
+  rewrite protected history, or edit the transcript. Branch/path protection splits it: the learner
+  owns `work/`; the **App owns `exam/`** and the learner cannot push there.
+- **Custody — keep it in `CastaliaInstitute` during *and after* passing.** An evidence-based
+  credential must resolve to work that persists under the issuer's control; if the learner owned
+  the repo they could delete it and break verification. The learner gets a **fork they own** for
+  portfolio use; the canonical evidence stays under Castalia, pinned by commit SHA.
+
+(Institutional/Aurnova repos live in the institution's org and follow the institution's own
+credentialing — the Socratic/MagAI path is the direct context, where the repo is in
+`CastaliaInstitute`.)
+
+### Unforgeable certification id
+
+The conversation is the evidence, so it is pinned and hashed, and bound to the credential id:
+
+1. The **App** (not the learner) writes the full transcript into `exam/` in the Castalia-owned
+   repo, committed by the App and pinned to a **commit SHA**.
+2. A **SHA-256 of the transcript** is recorded in magisterium against the credential's
+   `verification_id` — server-side, outside learner control.
+3. `magisterium.castalia.institute/verify/<verification_id>` renders the transcript and its hash;
+   anyone recomputes the hash to verify.
+
+Forgery would require altering **both** the Castalia-owned repo (no learner write to `exam/`) **and**
+the magisterium record (no learner access) — infeasible. `/api/completion` captures the repository
+and transcript artifacts (each pinned + hashed); magisterium's panel evaluation issues the
+`verification_id` and binds it to the transcript hash.
 
 ## Enabling the teaching stack in a provisioned repo
 
@@ -170,8 +214,10 @@ to manual, removed after cutover).
    `AI-###`) so a single identity flows through enrollment, provisioning, and completion.
 3. **Shared Supabase assumption** — confirm `programs` and `magisterium` share one Supabase
    project. If not, `/api/completion` posts to a magisterium ingest API instead of writing tables.
-4. **Evidence tamper-evidence** — record CI-produced attestations / signed-commit digests
-   server-side, not just the commit SHA, so credentials rest on trustworthy evidence.
+4. **Exam-path protection** — enforce that only the App can write `exam/` (branch/ruleset or a
+   protected transcript branch), so the learner-collaborator cannot alter the Socratic transcript.
+   `github-provision.ts` invites the learner as collaborator; the protection rule is the remaining
+   `TODO(exam-integrity)`.
 5. **Course template repo** — build `CastaliaInstitute/ains-course-template` to `generate` from;
    the `ains-6001-…` repos are content, not the student working template.
 6. **Cloudflare cutover** — verify the deploy packages `functions/` and the KV binding, then

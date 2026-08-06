@@ -145,7 +145,11 @@ export async function provisionCourseRepo(
   if (!gen.ok) throw new Error(`generate failed: ${gen.status} ${await gen.text()}`)
   const repo = (await gen.json()) as { full_name: string; html_url: string }
 
-  // 2. Invite the buyer as a collaborator (individual purchase; institutional admins manage access).
+  // 2. Invite the learner as a COLLABORATOR (not owner). For direct/MagAI the repo stays in
+  //    CastaliaInstitute so Castalia keeps App access + evidence custody and the learner cannot
+  //    delete the repo or edit the exam record. `push` lets them do their work.
+  //    TODO(exam-integrity): protect the `exam/` path so only the App can write the Socratic
+  //    transcript — e.g. a branch/ruleset or a protected transcript branch the learner can't push.
   if (target.collaborator) {
     await fetch(`${GH}/repos/${repo.full_name}/collaborators/${target.collaborator}`, {
       method: 'PUT',

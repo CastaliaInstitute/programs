@@ -16,6 +16,7 @@ import {
   upsertIndividual,
   courseIdByCode,
   recordRepositoryArtifact,
+  recordTranscriptArtifact,
   recordCourseCompletion,
   type MagisteriumEnv,
 } from '../../fulfillment/lib/magisterium'
@@ -35,6 +36,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     repo_url?: string
     commit_sha?: string
     evidence_digest?: string
+    // Socratic-defense transcript (written by the App to exam/), pinned + hashed.
+    transcript_url?: string
+    transcript_sha256?: string
     grade?: string
   }
   if (!body.course_code || !body.github_login || !body.repo_url || !body.commit_sha) {
@@ -45,13 +49,27 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!courseId) return new Response(`unknown course ${body.course_code}`, { status: 404 })
 
   const individualId = await upsertIndividual(env, { githubLogin: body.github_login })
-  const artifactId = await recordRepositoryArtifact(env, individualId, body.course_code, {
-    repoUrl: body.repo_url,
-    commitSha: body.commit_sha,
-    evidenceDigest: body.evidence_digest,
-  })
-  await recordCourseCompletion(env, { individualId, courseId, artifactIds: [artifactId], grade: body.grade })
+  const artifactIds: string[] = []
+  artifactIds.push(
+    await recordRepositoryArtifact(env, individualId, body.course_code, {
+      repoUrl: body.repo_url,
+      commitSha: body.commit_sha,
+      evidenceDigest: body.evidence_digest,
+    }),
+  )
+  // The Socratic transcript is the credential's tamper-evident core; its SHA-256 is what
+  // magisterium binds to the verification_id.
+  if (body.transcript_url && body.transcript_sha256) {
+    artifactIds.push(
+      await recordTranscriptArtifact(env, individualId, body.course_code, {
+        transcriptUrl: body.transcript_url,
+        commitSha: body.commit_sha,
+        transcriptSha256: body.transcript_sha256,
+      }),
+    )
+  }
+  await recordCourseCompletion(env, { individualId, courseId, artifactIds, grade: body.grade })
 
-  // Completion + evidence recorded. Credential issuance is magisterium's, not ours.
-  return Response.json({ ok: true, recorded: { course: body.course_code, artifact: artifactId } })
+  // Evidence recorded. The magisterium panel evaluates it and issues the verification_id.
+  return Response.json({ ok: true, recorded: { course: body.course_code, artifacts: artifactIds } })
 }

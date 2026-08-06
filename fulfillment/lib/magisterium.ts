@@ -89,6 +89,40 @@ export async function recordRepositoryArtifact(
   return ((await res.json()) as Array<{ id: string }>)[0].id
 }
 
+export interface TranscriptEvidence {
+  /** Location of the Socratic transcript (exam/ path in the Castalia-owned repo). */
+  transcriptUrl: string
+  /** Commit the App pinned the transcript at. */
+  commitSha: string
+  /** SHA-256 of the transcript content — the anti-forgery digest bound to the credential. */
+  transcriptSha256: string
+}
+
+/**
+ * Record the Socratic-defense transcript as an artifact. The digest is what magisterium binds to
+ * the credential's verification_id so the conversation can't be forged. Returns the artifact id.
+ */
+export async function recordTranscriptArtifact(
+  env: MagisteriumEnv,
+  individualId: string,
+  courseCode: string,
+  ev: TranscriptEvidence,
+): Promise<string> {
+  const res = await fetch(sb(env, 'artifacts'), {
+    method: 'POST',
+    headers: headers(env, { prefer: 'return=representation' }),
+    body: JSON.stringify({
+      individual_id: individualId,
+      type: 'other',
+      title: `${courseCode} — Socratic defense transcript`,
+      url: ev.transcriptUrl,
+      metadata: { course_code: courseCode, kind: 'socratic_transcript', commit_sha: ev.commitSha, transcript_sha256: ev.transcriptSha256 },
+    }),
+  })
+  if (!res.ok) throw new Error(`recordTranscriptArtifact failed: ${res.status} ${await res.text()}`)
+  return ((await res.json()) as Array<{ id: string }>)[0].id
+}
+
 /**
  * Record a course completion (learning lineage) with its evidence artifacts. This is the
  * evidence hand-off; magisterium's evaluation → credential process takes over from here. Does
