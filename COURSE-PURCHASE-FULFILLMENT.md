@@ -2,12 +2,15 @@
 
 How a buyer purchases a Castalia course and automatically receives a ready-to-work GitHub
 repository, with **inqspace** (our Codespaces equivalent) and the **Dialogic**, **BEATRICE**,
-and **SAMWISE** teaching stack enabled. Covers **both** purchase types (see NOMENCLATURE.md for the MagAI vs MSAI split):
+and **SAMWISE** teaching stack enabled. Two separate contexts share this backend but **do not share branding** (see NOMENCLATURE.md):
 
-- **Individual (self-serve → Castalia MagAI):** repo under `CastaliaInstitute`, buyer added as
-  collaborator; AI faculty (BEATRICE/Dialogic/SAMWISE).
-- **Institutional (e.g. Aurnova → their MSAI):** repo created in the **institution's own GitHub
-  org**; the institution brings its own human faculty and students.
+- **Institutional (via `programs`):** Castalia offers **content** to institutions. A purchase
+  provisions the course into the **institution's own GitHub org** (e.g. Aurnova). The institution
+  brings its own human faculty and students and owns its own credential (its degree, e.g. the
+  MSAI). **MagAI is not mentioned in the institutional context** — it is Castalia's own thing.
+- **Direct (Castalia MagAI):** Castalia's self-serve learners. A purchase provisions the course
+  under `CastaliaInstitute` with the buyer as collaborator, AI faculty (BEATRICE/Dialogic/SAMWISE),
+  and records a **MagAI credit** entitlement read by magisterium.
 
 Status: **design + scaffold.** The Pages Functions live in [`functions/`](functions/) (repo root)
 and import shared logic from [`fulfillment/lib/`](fulfillment/lib/). Integrations stubbed pending
@@ -17,12 +20,13 @@ inputs — see [Open items](#open-items).
 
 | Subdomain | Role | Hosting |
 | --- | --- | --- |
-| `programs.castalia.institute` | Institution-facing catalog **+ the fulfillment API** | **Cloudflare Pages** (migrated from GitHub Pages) |
-| `courses.castalia.institute` | Self-serve single-course storefront | Cloudflare Pages (calls the same API) |
-| `magisterium.castalia.institute` | MagAI credit administration | Repo exists (`CastaliaInstitute/magisterium`, Astro — artifact-based credentialing) |
+| `programs.castalia.institute` | **Institutional** content channel **+ the fulfillment API**. No MagAI branding. | **Cloudflare Pages** (migrated from GitHub Pages) |
+| MagAI surface (`CastaliaInstitute/MagAI`) | Castalia's **direct** self-serve MagAI storefront | Separate surface; reuses the same fulfillment API |
+| `magisterium.castalia.institute` | MagAI credit administration (direct context only) | Repo exists (`CastaliaInstitute/magisterium`, Astro) |
 
-Names follow [`NOMENCLATURE.md`](NOMENCLATURE.md) — **MagAI** is the credential, **Magisterium**
-is the system that administers it.
+`programs` is the **institutional** channel — content licensing for institutions, no mention of
+MagAI. MagAI is Castalia's **direct** offering and lives on its own surface. The backend is
+shared, but the two contexts are branded separately per [`NOMENCLATURE.md`](NOMENCLATURE.md).
 
 ## GitHub connect (before purchase, and in onboarding)
 
@@ -76,12 +80,14 @@ POST /api/stripe-webhook   (Cloudflare Pages Function on programs.castalia.insti
   │  4. authenticate as the Castalia GitHub App; resolve installation for the TARGET ORG
   │       individual → CastaliaInstitute   |   institutional → the buyer's own org
   │  5. create repo from the course template (generate) in the target org
-  │  6. individual: add buyer as collaborator · both: write castalia-course.json flags
-  │  7. record entitlement (Supabase) for MagAI credit at magisterium
+  │  6. direct: add buyer as collaborator · both: write castalia-course.json flags
+  │  7. record result (Supabase):
+  │       direct        → MagAI credit entitlement (read by magisterium)
+  │       institutional → provisioning record only; NO MagAI (institution owns its credential)
   ▼
 Success: links to the new repo + inqspace launch
   ▼
-(later) course completion evidence → MagAI credit administered at magisterium
+(direct only) course completion → MagAI credit administered at magisterium
 ```
 
 ## Enabling the teaching stack in the created repo
@@ -120,16 +126,16 @@ path per the "inqspace rather than codespace" decision.
 
 ## Data store — Supabase
 
-Entitlement and credit records (who bought/completed what) go in **Supabase** (Postgres),
-already part of the Castalia stack. Preferred over Cloudflare KV here because the records are
-relational and are **read by magisterium** to administer MagAI credit — a shared Postgres table
-is the natural hand-off, and Supabase Row Level Security scopes buyer access. KV is still fine
-for the pure webhook-idempotency key (`evt:<id>`), which is ephemeral; the scaffold uses a KV
-binding for that and can move to a Supabase `processed_events` table if a single store is
-preferred.
+Provisioning records go in **Supabase** (Postgres), already part of the Castalia stack. The two
+contexts write to different tables so MagAI never leaks into the institutional side:
 
-Suggested tables: `entitlements` (buyer, course, repo, inqspace_url, stripe_event) and
-`credits` (buyer, course, status) that magisterium owns.
+- **direct** → `magai_entitlements` (buyer, course, repo, inqspace_url, stripe_event) — **read by
+  magisterium** to administer MagAI credit. Supabase Row Level Security scopes buyer access.
+- **institutional** → `institutional_provisions` (org, course, repo, stripe_event) — an audit
+  record for the institution's own use; **no MagAI credit**, since the institution owns its
+  credential.
+
+KV still holds the ephemeral webhook-idempotency key (`evt:<id>`).
 
 ## Security
 

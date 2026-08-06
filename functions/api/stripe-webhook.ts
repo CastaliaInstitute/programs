@@ -101,20 +101,24 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const provisioned = await provisionCourseRepo(course, target, env, now)
   const inqspace = await launchInqspace(provisioned.repoFullName, env)
 
-  // Record the entitlement for MagAI credit administration at magisterium.
-  await env.FULFILLMENT.put(
-    `entitlement:${course.code}:${buyerLogin}`,
-    JSON.stringify({
-      course: course.code,
-      buyerLogin,
-      buyerEmail,
-      purchaseType,
-      org: target.org,
-      repo: provisioned.repoFullName,
-      inqspace: inqspace.launchUrl,
-      purchasedEvent: event.id,
-    }),
-  )
+  // Record the provisioning result.
+  //   Individual (Castalia direct) → MagAI credit entitlement, read by magisterium.
+  //   Institutional (e.g. Aurnova)  → provisioning record only; the institution owns its own
+  //   credentialing (its degree). MagAI is NOT part of the institutional context.
+  const record = {
+    course: course.code,
+    buyerLogin,
+    buyerEmail,
+    org: target.org,
+    repo: provisioned.repoFullName,
+    inqspace: inqspace.launchUrl,
+    purchasedEvent: event.id,
+  }
+  const key =
+    purchaseType === 'institutional'
+      ? `institutional_provision:${target.org}:${course.code}`
+      : `magai_entitlement:${course.code}:${buyerLogin}`
+  await env.FULFILLMENT.put(key, JSON.stringify(record))
   await env.FULFILLMENT.put(`evt:${event.id}`, '1', { expirationTtl: 60 * 60 * 24 * 30 })
 
   return Response.json({

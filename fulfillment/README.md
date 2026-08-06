@@ -33,7 +33,7 @@ lib/inqspace.ts                       the ONLY inqspace-specific code (stubbed p
 | `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY` | Provision repos as the Castalia GitHub App (installation resolved per org) |
 | `GITHUB_STUDENTS_ORG` | Default org for individual buyer repos (**`CastaliaInstitute`**) |
 | `GITHUB_APP_CLIENT_ID`, `GITHUB_APP_CLIENT_SECRET`, `GITHUB_OAUTH_REDIRECT_URI` | GitHub connect (OAuth) |
-| `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` | Entitlement + connection records (read by magisterium) |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` | Provisioning + connection records (direct-context MagAI entitlements read by magisterium; institutional records are audit-only) |
 | `INQSPACE_API_BASE`, `INQSPACE_API_TOKEN` | inqspace provisioning (optional until wired) |
 | `FULFILLMENT` (KV binding) | Webhook idempotency + OAuth state |
 

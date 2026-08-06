@@ -68,11 +68,15 @@ degree.
 
 | Subdomain | Role | Status |
 | --- | --- | --- |
-| `programs.castalia.institute` | Institution-facing catalog (this repo) | Live (GitHub Pages) |
-| `courses.castalia.institute` | Self-serve single-course purchase | Planned (Cloudflare Pages) |
-| `magisterium.castalia.institute` | MagAI / credit administration | Repo exists |
+| `programs.castalia.institute` | **Institutional** content channel (this repo) — content for institutions; **no MagAI branding** | Cloudflare Pages (migrating) |
+| MagAI surface (`CastaliaInstitute/MagAI`) | Castalia's **direct** self-serve MagAI storefront | Repo exists |
+| `magisterium.castalia.institute` | MagAI credit administration (direct context only) | Repo exists |
 | `mhth.castalia.institute` | More Human Than Human certificate | Live |
 | `anubis.castalia.institute` | ANUBIS cyber lab (backs AINS6300–6302) | Live |
+
+**Channel rule:** `programs` = institutional (we license content to institutions; they brand
+their own degree). **MagAI** = Castalia's direct offering, its own surface. Do not put MagAI in
+institutional-facing material.
 
 ## Resolved / open naming decisions
 
