@@ -34,8 +34,14 @@ create-only) plus a single App-creation click. It reduces to:
 2. **Provide two operator credentials** (created once, by Castalia): a scoped
    **Cloudflare API token** (`CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID`) and the
    **`GITHUB_APP_*`** values from step 1.
-3. **Run `node automation/bootstrap.mjs`** — creates the Cloudflare Pages project + KV namespace
-   and the `ains-course-template` repo. Idempotent; skips any section whose creds are absent.
+3. **Run bootstrap locally, where your operator `.env` lives** (it can't be read from a cloud
+   session — that filesystem is isolated):
+   ```
+   node --env-file=.env automation/bootstrap.mjs --dry-run   # preview what it would create
+   node --env-file=.env automation/bootstrap.mjs             # create for real
+   ```
+   Creates the Cloudflare Pages project + KV namespace and the `ains-course-template` repo.
+   Idempotent; skips any section whose creds are absent. (A `./.env` is also auto-loaded.)
 4. **Set secrets + Access policy** — the Stripe/GitHub/Supabase secrets on the Pages project, the
    KV binding, and the Cloudflare Access policy that gates books to enrolled learners. Documented
    here; kept out of bootstrap so the script stays create-only and safe.

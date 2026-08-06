@@ -13,9 +13,23 @@
  * Each section no-ops with a clear message when its credentials are absent, so you can run the
  * parts you have. Nothing here is destructive — it creates-if-missing and reports.
  *
- * Usage:  node automation/bootstrap.mjs [--dry-run]
+ * Usage (run locally, where your operator .env lives):
+ *   node --env-file=.env automation/bootstrap.mjs --dry-run   # preview
+ *   node --env-file=.env automation/bootstrap.mjs             # create
+ * (--env-file is native in Node 20.6+/22. A ./.env is also auto-loaded below as a fallback.)
  */
 import crypto from 'node:crypto'
+import { readFileSync } from 'node:fs'
+
+// Fallback .env loader (no dependency): load ./.env if present and --env-file wasn't used.
+try {
+  for (const line of readFileSync(new URL('../.env', import.meta.url), 'utf8').split('\n')) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/)
+    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '')
+  }
+} catch {
+  /* no local .env — rely on --env-file or the ambient environment */
+}
 
 const DRY = process.argv.includes('--dry-run')
 const PAGES_PROJECT = 'programs-castalia'
