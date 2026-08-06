@@ -54,8 +54,27 @@ export const PROVISIONING_PROFILES: Record<string, ProvisioningProfile> = {
   'AI-402': { code: 'AI-402', title: 'Large Language Models', delivery: 'github-repo', templateRepo: AI_TEMPLATE, features: FULL_AI_STACK, listPriceCents: LIST_PRICE_CENTS },
 }
 
+/**
+ * Aurnova course code → magisterium canonical code, for the exact matches (see COURSE-CODE-MAP.md).
+ * Lets the platform accept an Aurnova SKU and resolve it to the magisterium-keyed profile. Codes
+ * without an exact magisterium course (AINS6007/6009/6010, most specialization courses) are
+ * intentionally absent — they resolve to no profile until reconciled.
+ */
+export const COURSE_CODE_ALIASES: Record<string, string> = {
+  AINS6002: 'AI-102', AIN6002: 'AI-102',
+  AINS6003: 'AI-103', AIN6003: 'AI-103',
+  AINS6004: 'AI-104', AIN6004: 'AI-104',
+  AINS6005: 'AI-109', AIN6005: 'AI-109',
+  AINS6006: 'AI-108', AIN6006: 'AI-108',
+}
+
+/** Normalize any accepted course code to its magisterium canonical code. */
+export function canonicalCode(courseCode: string): string {
+  return COURSE_CODE_ALIASES[courseCode] ?? courseCode
+}
+
 export function resolveProfile(courseCode: string): ProvisioningProfile | null {
-  return PROVISIONING_PROFILES[courseCode] ?? null
+  return PROVISIONING_PROFILES[canonicalCode(courseCode)] ?? null
 }
 
 /** True when a course needs an environment provisioned on enrollment. */

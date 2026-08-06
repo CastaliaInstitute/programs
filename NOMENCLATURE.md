@@ -22,10 +22,12 @@ catalog copy, and code. Where two names exist for one thing, the **canonical** c
   `ains-<number>-<slug>`, Jupyter Book titles).
 - **`AIN####`** — the same Aurnova course as **published** on aurnova.com (drops the `S`).
   `AINS6003` ≡ `AIN6003`.
-- **Open reconciliation:** the Aurnova `AINS####` courses map to magisterium `AI-###` codes
-  (e.g. AINS6003 Deep Learning ↔ AI-103). Establish that mapping so one identity flows through
-  enrollment → provisioning → completion. The platform's provisioning profiles are keyed by the
-  **magisterium** code.
+- **Reconciliation → [COURSE-CODE-MAP.md](COURSE-CODE-MAP.md).** Five core AINS courses map
+  cleanly to AI-college codes (AINS6003 ↔ AI-103, etc.); Aurnova specializations align to
+  magisterium's `AIN-<domain>-MAG` *programs* (Business ↔ active `AIN-COM-MAG`; Healthcare ↔
+  planned `AIN-HLT-MAG`). ⚠️ Magisterium's program prefix `AIN-<domain>-MAG` (AI-Native) is
+  unrelated to Aurnova's course prefix `AIN####` — keep distinct. Profiles are keyed by the
+  magisterium code; exact Aurnova matches resolve via `COURSE_CODE_ALIASES`.
 
 ## Degrees, certificates, credentials — keep these distinct
 

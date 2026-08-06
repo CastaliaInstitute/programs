@@ -209,9 +209,10 @@ to manual, removed after cutover).
 ## Open items
 
 1. **inqspace provisioning API** — wire `fulfillment/lib/inqspace.ts` when the prototype surfaces.
-2. **Course-code reconciliation** — magisterium uses `AI-103`; the Aurnova catalog uses
-   `AINS6003`/`AIN6003`. Establish the mapping (which AINS courses correspond to which magisterium
-   `AI-###`) so a single identity flows through enrollment, provisioning, and completion.
+2. ~~Course-code reconciliation~~ → **[COURSE-CODE-MAP.md](COURSE-CODE-MAP.md)**. Magisterium codes
+   are canonical; exact Aurnova matches resolve via `COURSE_CODE_ALIASES` in
+   `provisioning-profiles.ts`. Remaining: fill or scope out the AINS courses with no canonical
+   equivalent, and reconcile Aurnova specializations with magisterium's `AIN-<domain>-MAG` programs.
 3. **Shared Supabase assumption** — confirm `programs` and `magisterium` share one Supabase
    project. If not, `/api/completion` posts to a magisterium ingest API instead of writing tables.
 4. **Exam-path protection** — enforce that only the App can write `exam/` (branch/ruleset or a
