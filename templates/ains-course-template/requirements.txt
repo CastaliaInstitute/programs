@@ -1,0 +1,4 @@
+# Course toolchain + per-course dependencies. The provisioner/course author extends this.
+jupyter-book
+thebe
+ipywidgets

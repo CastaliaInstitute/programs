@@ -1,0 +1,10 @@
+{
+  "_comment": "Feature manifest. The provisioner overwrites `course` and `features` from the course's provisioning profile (fulfillment/lib/provisioning-profiles.ts) when it generates a learner repo. These are template defaults.",
+  "course": "AI-000",
+  "features": {
+    "inqspace": true,
+    "dialogic": true,
+    "beatrice": true,
+    "samwise": true
+  }
+}

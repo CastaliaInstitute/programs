@@ -1,0 +1,16 @@
+# Jupyter Book / MyST config. Title and TOC are filled per course; the module layout below is the
+# standard five-layer structure (prose, assignment, slides, narration, instructor notes).
+version: 1
+project:
+  title: 'Castalia course'
+  toc:
+    - file: intro.md
+    - title: Module 1
+      children:
+        - file: modules/module-1/overview.md
+        - file: modules/module-1/book-prose.md
+        - file: modules/module-1/assignment.md
+        - file: modules/module-1/narration.md
+        - file: modules/module-1/instructor-notes.md
+site:
+  template: book-theme

@@ -1,0 +1,51 @@
+# Completion signal — fires when the Socratic defense transcript lands in exam/.
+# Computes the transcript hash and reports completion + evidence to the platform, which writes it
+# into magisterium (artifact + course_completion). This closes the pipeline automatically: the App
+# commits the transcript → this runs → magisterium has the evidence.
+#
+# Repo config (set by the provisioner):
+#   secrets:   COMPLETION_SIGNAL_SECRET
+#   variables: PLATFORM_URL (e.g. https://programs.castalia.institute), LEARNER_LOGIN
+
+name: Course completion signal
+
+on:
+  push:
+    paths:
+      - 'exam/transcript.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  report-completion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute evidence
+        id: ev
+        run: |
+          test -f exam/transcript.md || { echo "no transcript yet"; exit 0; }
+          echo "sha256=$(sha256sum exam/transcript.md | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+          echo "course=$(jq -r .course castalia-course.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Report to platform → magisterium
+        if: steps.ev.outputs.sha256 != ''
+        env:
+          SECRET: ${{ secrets.COMPLETION_SIGNAL_SECRET }}
+          PLATFORM_URL: ${{ vars.PLATFORM_URL }}
+          LEARNER: ${{ vars.LEARNER_LOGIN }}
+        run: |
+          curl -sS --fail -X POST "$PLATFORM_URL/api/completion" \
+            -H "x-completion-secret: $SECRET" \
+            -H 'content-type: application/json' \
+            -d "$(jq -n \
+              --arg course "${{ steps.ev.outputs.course }}" \
+              --arg login "$LEARNER" \
+              --arg repo "${{ github.server_url }}/${{ github.repository }}" \
+              --arg sha "${{ github.sha }}" \
+              --arg turl "${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/exam/transcript.md" \
+              --arg tsha "${{ steps.ev.outputs.sha256 }}" \
+              '{course_code:$course, github_login:$login, repo_url:$repo, commit_sha:$sha, transcript_url:$turl, transcript_sha256:$tsha}')"

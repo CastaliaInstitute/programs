@@ -1,0 +1,9 @@
+{
+  "_comment": "inqspace workspace config — Castalia's cloud dev environment, replacing GitHub Codespaces/devcontainer. The exact schema is finalized when the inqspace prototype is wired (fulfillment/lib/inqspace.ts); these fields are the stable surface: image, setup, and the paths a learner works in.",
+  "name": "Castalia course workspace",
+  "image": "castalia/inqspace-python:3.12",
+  "onCreate": "pip install --user -r requirements.txt",
+  "open": ["book/intro.md", "work/"],
+  "workDirs": ["work"],
+  "readonlyDirs": ["exam"]
+}

@@ -66,8 +66,13 @@ one-time operator action, none touched by customers.
 
 ## Still to build (automatable, no external account)
 
+- ✅ **Course template repo** — `templates/ains-course-template/` (book five layers, inqspace
+  config, `castalia-course.json`, App-only `exam/`, `work/`). `bootstrap.mjs` creates the empty
+  template repo; push this content into it (a `git push`, or extend bootstrap).
+- ✅ **Completion-signal workflow** — `templates/ains-course-template/.github/workflows/completion.yml`
+  hashes the transcript and POSTs `/api/completion` on a Socratic pass.
+- ✅ **GitHub App manifest + bootstrap** — `automation/github-app-manifest.json`, `automation/bootstrap.mjs`.
 - **Book access-gate Function** — verify enrollment before serving a course book on Cloudflare.
-- **Completion-signal workflow** — a learner-repo CI job that, on Socratic pass, POSTs to
-  `/api/completion` with the transcript hash.
-- **GitHub App manifest + bootstrap script** — to make step 1 above one click.
-- **Bulk course onboarding script** — register all `ains-*`/`AI-###` courses + their profiles.
+- **Bulk course onboarding script** — register all `AI-###` courses + their provisioning profiles.
+- **Apply DB migrations in CI** — run `supabase db push` from a workflow that holds the Supabase
+  secret, so schema changes (magisterium 006, platform tables) apply without a manual step.
