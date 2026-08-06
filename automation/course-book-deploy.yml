@@ -1,0 +1,49 @@
+# Reusable course-book build + deploy → Cloudflare Pages.
+#
+# Drop this into each ains-* / AI-### course repo as .github/workflows/deploy.yml. Builds the
+# Jupyter Book and deploys the static output to a Cloudflare Pages project, replacing per-repo
+# GitHub Pages. Gating (only enrolled learners see the book) is a Cloudflare Access policy /
+# Pages Function on the project — configured once per project, not here.
+#
+# Requires, on the course repo:
+#   secrets:  CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+#   variables: CF_PAGES_PROJECT  (the course's Cloudflare Pages project name)
+
+name: Build & deploy course book
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: course-book-pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install book toolchain
+        run: pip install -r requirements.txt   # jupyter-book (or myst) + course deps
+
+      - name: Build the book
+        # Jupyter Book → _build/html. Swap for `myst build --html` if the repo uses MyST.
+        run: jupyter-book build . --path-output _build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _build/html --project-name=${{ vars.CF_PAGES_PROJECT }}
