@@ -9,7 +9,7 @@
  * Body: { sku, github_login, purchase_type, target_org? }. github_login and (for institutional)
  * target_org come from the verified GitHub connect flow, not free text.
  */
-import { resolveCourse } from '../../fulfillment/lib/course-catalog'
+import { resolveProfile } from '../../fulfillment/lib/provisioning-profiles'
 import { isCastaliaMember, type MembershipEnv } from '../../fulfillment/lib/membership'
 
 interface Env extends MembershipEnv {
@@ -32,7 +32,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     purchase_type?: string
     target_org?: string
   }
-  const course = body.sku ? resolveCourse(body.sku) : null
+  const course = body.sku ? resolveProfile(body.sku) : null
   if (!course || !body.github_login) return new Response('missing sku or github_login', { status: 400 })
 
   const purchaseType = body.purchase_type ?? 'individual'

@@ -7,7 +7,7 @@
  * Deploy: this file sits at functions/api/stripe-webhook.ts in the Cloudflare Pages project for
  * courses.castalia.institute. Secrets below are Pages environment secrets, never committed.
  */
-import { resolveCourse } from '../../fulfillment/lib/course-catalog'
+import { resolveProfile, needsProvisioning } from '../../fulfillment/lib/provisioning-profiles'
 import { provisionCourseRepo, type GitHubAppEnv } from '../../fulfillment/lib/github-provision'
 import { launchInqspace, type InqspaceEnv } from '../../fulfillment/lib/inqspace'
 
@@ -79,52 +79,53 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const purchaseType: string = session.metadata?.purchase_type ?? 'individual'
   const institutionalOrg: string | undefined = session.metadata?.target_org
 
-  const course = sku ? resolveCourse(sku) : null
+  // Purchase = ENROLLMENT. It grants access and provisions a working environment (when the
+  // course needs one). It is NOT a credential — completion + evidence + credentialing are
+  // magisterium's, handled later via /api/completion. No MagAI here.
+  const profile = sku ? resolveProfile(sku) : null
   const orgMissing = purchaseType === 'institutional' && !institutionalOrg
-  if (!course || !buyerLogin || orgMissing) {
+  if (!profile || !buyerLogin || orgMissing) {
     // Record for manual follow-up rather than dropping the sale.
     await env.FULFILLMENT.put(
       `unresolved:${event.id}`,
       JSON.stringify({ sku, buyerLogin, buyerEmail, purchaseType, institutionalOrg }),
     )
-    return new Response('unresolved purchase recorded', { status: 202 })
+    return new Response('unresolved enrollment recorded', { status: 202 })
   }
 
+  // Provision a working environment only for course types that need one (github-repo/inqspace).
   // Individual → repo in CastaliaInstitute with the buyer as collaborator.
   // Institutional → repo in the institution's own org (e.g. Aurnova); admins manage cohort access.
-  const target =
-    purchaseType === 'institutional'
-      ? { org: institutionalOrg as string }
-      : { org: env.GITHUB_STUDENTS_ORG, collaborator: buyerLogin }
-
-  const now = Math.floor(Date.parse(request.headers.get('date') ?? '') / 1000) || 0
-  const provisioned = await provisionCourseRepo(course, target, env, now)
-  const inqspace = await launchInqspace(provisioned.repoFullName, env)
-
-  // Record the provisioning result.
-  //   Individual (Castalia direct) → MagAI credit entitlement, read by magisterium.
-  //   Institutional (e.g. Aurnova)  → provisioning record only; the institution owns its own
-  //   credentialing (its degree). MagAI is NOT part of the institutional context.
-  const record = {
-    course: course.code,
-    buyerLogin,
-    buyerEmail,
-    org: target.org,
-    repo: provisioned.repoFullName,
-    inqspace: inqspace.launchUrl,
-    purchasedEvent: event.id,
+  let repoFullName: string | undefined
+  let repoUrl: string | undefined
+  let inqspaceUrl: string | undefined
+  if (needsProvisioning(profile)) {
+    const target =
+      purchaseType === 'institutional'
+        ? { org: institutionalOrg as string }
+        : { org: env.GITHUB_STUDENTS_ORG, collaborator: buyerLogin }
+    const now = Math.floor(Date.parse(request.headers.get('date') ?? '') / 1000) || 0
+    const provisioned = await provisionCourseRepo(profile, target, env, now)
+    repoFullName = provisioned.repoFullName
+    repoUrl = provisioned.repoUrl
+    inqspaceUrl = (await launchInqspace(provisioned.repoFullName, env)).launchUrl
   }
-  const key =
-    purchaseType === 'institutional'
-      ? `institutional_provision:${target.org}:${course.code}`
-      : `magai_entitlement:${course.code}:${buyerLogin}`
-  await env.FULFILLMENT.put(key, JSON.stringify(record))
+
+  // Enrollment record (platform-side, generic — no credential semantics).
+  await env.FULFILLMENT.put(
+    `enrollment:${profile.code}:${buyerLogin}`,
+    JSON.stringify({
+      course: profile.code,
+      buyerLogin,
+      buyerEmail,
+      purchaseType,
+      org: purchaseType === 'institutional' ? institutionalOrg : env.GITHUB_STUDENTS_ORG,
+      repo: repoFullName,
+      inqspace: inqspaceUrl,
+      enrolledEvent: event.id,
+    }),
+  )
   await env.FULFILLMENT.put(`evt:${event.id}`, '1', { expirationTtl: 60 * 60 * 24 * 30 })
 
-  return Response.json({
-    ok: true,
-    repo: provisioned.repoUrl,
-    inqspace: inqspace.launchUrl,
-    inqspaceProvisioned: inqspace.provisioned,
-  })
+  return Response.json({ ok: true, enrolled: profile.code, repo: repoUrl, inqspace: inqspaceUrl })
 }

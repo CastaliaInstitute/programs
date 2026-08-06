@@ -1,26 +1,28 @@
-# fulfillment/ — course purchase → repo provisioning (shared library)
+# fulfillment/ — enroll, provision, capture evidence (shared library)
 
-Shared provisioning library behind the purchase-fulfillment API. The Cloudflare Pages **Functions**
-live at the repo root in [`../functions/`](../functions/) (Cloudflare requires that name/location);
-they import the logic here. On a completed Stripe checkout the API creates the buyer's GitHub repo
-from a course template with **inqspace** and the **Dialogic / BEATRICE / SAMWISE** stack enabled.
-Full design: [`../COURSE-PURCHASE-FULFILLMENT.md`](../COURSE-PURCHASE-FULFILLMENT.md).
+Shared logic behind the course-platform API. The Cloudflare Pages **Functions** live at the repo
+root in [`../functions/`](../functions/) (Cloudflare requires that name/location) and import from
+here. The platform **enrolls** learners, **provisions** a working environment for courses that
+need one (GitHub repo + inqspace + Dialogic/BEATRICE/SAMWISE), and on completion **captures
+evidence into magisterium**. It does not own the course catalog or issue credentials — those are
+magisterium's. Full design: [`../COURSE-PLATFORM.md`](../COURSE-PLATFORM.md).
 
-Both individual (self-serve) and **institutional** purchases route through the same API; an
+Both individual (direct) and **institutional** enrollments route through the same API; an
 institutional purchase (e.g. Aurnova) provisions into the **institution's own GitHub org**.
 
-This is a **scaffold**: the flow is complete and correct except integrations stubbed and marked
-`TODO` — inqspace provisioning (prototype not yet located), the MagAI credit grant, and OAuth
-`state` validation. Everything compiles around those seams.
+This is a **scaffold**: complete and correct except stubs flagged `TODO` — inqspace provisioning,
+evidence tamper-evidence hardening, and the shared-Supabase assumption. Everything compiles.
 
 ## Layout
 
 ```
 ../functions/api/checkout.ts          Pages Function — create Stripe session; members $0, priced server-side
-../functions/api/stripe-webhook.ts    Pages Function — verify Stripe sig, provision, record result
-../functions/api/github/connect.ts    Pages Function — start GitHub "connect" (onboarding + pre-purchase)
+../functions/api/stripe-webhook.ts    Pages Function — verify sig, ENROLL + provision environment
+../functions/api/completion.ts        Pages Function — capture evidence → magisterium (artifact + completion)
+../functions/api/github/connect.ts    Pages Function — start GitHub "connect" (onboarding + pre-enroll)
 ../functions/api/github/callback.ts   Pages Function — finish OAuth / org install, store identity/org
-lib/course-catalog.ts                 SKU → template repo + features + list price (source of truth)
+lib/provisioning-profiles.ts          magisterium course code → delivery + template + features (NOT a catalog)
+lib/magisterium.ts                    write artifacts + course_completions into magisterium's schema
 lib/membership.ts                     Castalia membership check (members → $0)
 lib/github-provision.ts               GitHub App: per-org install lookup, repo-from-template, feature manifest
 lib/github-oauth.ts                   GitHub connect (authorize/install URL, code exchange, identify + orgs)
@@ -35,18 +37,20 @@ lib/inqspace.ts                       the ONLY inqspace-specific code (stubbed p
 | `STRIPE_WEBHOOK_SECRET` | Verify webhook signatures |
 | `CHECKOUT_SUCCESS_URL`, `CHECKOUT_CANCEL_URL` | Stripe Checkout redirect targets |
 | `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY` | Provision repos as the Castalia GitHub App (installation resolved per org) |
-| `GITHUB_STUDENTS_ORG` | Default org for individual buyer repos (**`CastaliaInstitute`**) |
-| `GITHUB_APP_CLIENT_ID`, `GITHUB_APP_CLIENT_SECRET`, `GITHUB_OAUTH_REDIRECT_URI` | GitHub connect (OAuth) |
-| `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` | Provisioning + connection records (direct-context MagAI entitlements read by magisterium; institutional records are audit-only) |
+| `GITHUB_STUDENTS_ORG` | Default org for individual learner repos (**`CastaliaInstitute`**) |
+| `GITHUB_APP_CLIENT_ID`, `GITHUB_APP_CLIENT_SECRET`, `GITHUB_APP_SLUG`, `GITHUB_OAUTH_REDIRECT_URI` | GitHub connect (OAuth + org install) |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` | magisterium schema (artifacts, completions) + platform tables (members, connections, enrollments) |
+| `COMPLETION_SIGNAL_SECRET` | Authorize `/api/completion` evidence signals |
 | `INQSPACE_API_BASE`, `INQSPACE_API_TOKEN` | inqspace provisioning (optional until wired) |
 | `FULFILLMENT` (KV binding) | Webhook idempotency + OAuth state |
 
-## Stripe Checkout expectations
+## Metadata expectations
 
-The Checkout Session carries, in `metadata`: `sku` (course code, e.g. `AINS6001`), `github_login`
-(from the pre-purchase connect flow — not free text), `purchase_type` (`individual` |
-`institutional`), and for institutional, `target_org` (the buyer's GitHub org). Email comes from
-`customer_details.email`.
+- **Checkout/webhook** metadata: `sku` (**magisterium** course code, e.g. `AI-103`),
+  `github_login` (from the connect flow — not free text), `purchase_type` (`individual` |
+  `institutional`), and for institutional, `target_org` (the verified GitHub org).
+- **Completion** body: `course_code`, `github_login`, `repo_url`, `commit_sha`, optional
+  `evidence_digest`, `grade`.
 
 ## Institutional prerequisite
 
@@ -56,4 +60,4 @@ org name and fails clearly if it is absent. This is part of institutional onboar
 
 ## Before this goes live
 
-See [Open items](../COURSE-PURCHASE-FULFILLMENT.md#open-items).
+See [Open items](../COURSE-PLATFORM.md#open-items).

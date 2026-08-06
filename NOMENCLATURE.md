@@ -15,13 +15,17 @@ catalog copy, and code. Where two names exist for one thing, the **canonical** c
 
 ## Course codes
 
-- **`AINS####`** — Castalia's internal course code. Also the repo name (`ains-<number>-<slug>`)
-  and Jupyter Book title.
-- **`AIN####`** — the **same** course as published in Aurnova's MSAI catalog (drops the `S`).
-  `AINS6003` ≡ `AIN6003`. Confirmed in the repo descriptions themselves ("AINS6003 … (AIN6003)").
-- Repo naming: `ains-<number>-<kebab-title>` (e.g. `ains-6007-applied-ai-programming-with-python`).
-- **Convention:** use `AINS####` internally (repos, this catalog's data); display `AIN####` in
-  Aurnova-facing catalog copy.
+- **`AI-###` (and `SP-`, `SS-`, `LY-`, …)** — **magisterium's canonical course codes**, the
+  authoritative catalog (209 courses, K–PhD+, keyed by `era` and college). `AI-103` = Deep
+  Learning, `AI-402` = Large Language Models, etc. **This is the course identity of record.**
+- **`AINS####`** — the **Aurnova catalog** code for the courses licensed into their MSAI (repos
+  `ains-<number>-<slug>`, Jupyter Book titles).
+- **`AIN####`** — the same Aurnova course as **published** on aurnova.com (drops the `S`).
+  `AINS6003` ≡ `AIN6003`.
+- **Open reconciliation:** the Aurnova `AINS####` courses map to magisterium `AI-###` codes
+  (e.g. AINS6003 Deep Learning ↔ AI-103). Establish that mapping so one identity flows through
+  enrollment → provisioning → completion. The platform's provisioning profiles are keyed by the
+  **magisterium** code.
 
 ## Degrees, certificates, credentials — keep these distinct
 
@@ -29,13 +33,17 @@ These are four different things and have been conflated. They are not interchang
 
 | Name | What it is | Home |
 | --- | --- | --- |
-| **MagAI** | **Castalia's own** *Magister of AI* online **certificate** — AI faculty, direct learners. Castalia's offering. | `CastaliaInstitute/MagAI` (public landing) |
+| **MagAI** = **Mag.AI** | Castalia's *Magister of Artificial Intelligence* — an **evidence-based credential** awarded by magisterium **on course completion**. A level in the pathway, not a purchase. | `CastaliaInstitute/MagAI` (landing); credential in `magisterium` |
 | **MSAI** | **Aurnova University's** *Master of Science in AI* degree (12 AIN courses, 36 cr). Aurnova's brand. **Deprecated as a Castalia label.** | `aurnova.com/msai`; `CastaliaInstitute/MSAI` (deprecated) |
 | **AIMA 5001** | The *AI: A Modern Approach* (Russell & Norvig) course product, sold as Simple / Advanced SKUs | this `programs` catalog; `CastaliaInstitute/aima` |
-| **Magisterium** | The artifact-based **credentialing system** that administers credits/certificates (incl. MagAI) | `CastaliaInstitute/magisterium` (Astro); `magisterium.castalia.institute` |
+| **Magisterium** | The authoritative **course catalog (209, K–PhD+)** *and* the artifact-based **credentialing system** (artifacts, completions, evaluations, credentials). Owns MagAI end to end. | `CastaliaInstitute/magisterium` (Astro); `magisterium.castalia.institute` |
 
-> **MagAI is Castalia's credential; MSAI is Aurnova's degree; Magisterium is the system that
-> administers credit.** Don't use one to mean another.
+> **MagAI is a credential magisterium awards from completion evidence; MSAI is Aurnova's degree;
+> Magisterium owns the course catalog and all credentialing.** The `programs` platform enrolls,
+> provisions, and captures evidence — it never issues credentials.
+
+**Credential pathway (magisterium):** `Bac.X → certificates → Mag.X → Doc.X`, across seven
+colleges (.AI .CS .Math .Sci .Phil .Eng .Com). MagAI = `Mag.AI`.
 
 ### Provider vs. customer — who supplies faculty and students
 
@@ -82,7 +90,7 @@ institutional-facing material.
 
 1. ✅ **`InquiryInstitute` → `CastaliaInstitute`** — the org evolved (renamed). All source
    references migrated (`AIMA_REPO`, codespace/variant scripts, demo sources, catalog page).
-2. **Buyer-repo org depends on purchase type** (see COURSE-PURCHASE-FULFILLMENT.md):
+2. **Buyer-repo org depends on purchase type** (see COURSE-PLATFORM.md):
    individual self-serve → under `CastaliaInstitute`; **institutional → under the institution's
    own org** (e.g. Aurnova buys → repo created in Aurnova's org).
 3. **Self-serve SKU:** use `AINS####` as the Stripe SKU internally, display `AIN####` to buyers.

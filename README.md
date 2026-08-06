@@ -10,7 +10,7 @@ This repository is the public catalog for Castalia programs sold to institutions
   serves the static site plus the repo-root `functions/` purchase-fulfillment API. The legacy
   GitHub Pages workflow (`pages.yml`) is manual-only during cutover.
 - Custom domain `programs.castalia.institute`
-- Purchase → repo provisioning: see `COURSE-PURCHASE-FULFILLMENT.md`, `functions/`, `fulfillment/`
+- Purchase → repo provisioning: see `COURSE-PLATFORM.md`, `functions/`, `fulfillment/`
 
 ## Local development
 

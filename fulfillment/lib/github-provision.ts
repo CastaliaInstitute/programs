@@ -5,7 +5,7 @@
  * Runs in a Cloudflare Pages Function (Workers runtime) — uses fetch + Web Crypto only, no Node
  * built-ins.
  */
-import type { CourseProvisionConfig } from './course-catalog'
+import type { ProvisioningProfile } from './provisioning-profiles'
 
 export interface GitHubAppEnv {
   GITHUB_APP_ID: string
@@ -118,7 +118,7 @@ async function installationToken(installationId: number, jwt: string): Promise<s
  * deterministic in tests.
  */
 export async function provisionCourseRepo(
-  course: CourseProvisionConfig,
+  course: ProvisioningProfile,
   target: ProvisionTarget,
   env: GitHubAppEnv,
   now: number,
