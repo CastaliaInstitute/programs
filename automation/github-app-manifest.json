@@ -1,0 +1,26 @@
+{
+  "_comment": "GitHub App manifest for the Castalia Course Provisioner. Creating a GitHub App is the ONE step GitHub has no pure-API for — but the manifest flow makes it a single click: POST this to https://github.com/organizations/CastaliaInstitute/settings/apps/new?state=<csrf> via a form (see automation/github-app-create.html), approve once, and GitHub returns the App id, private key, client id/secret, and webhook secret. Everything else (install, provision, connect) is API/click-driven. Customers never see this — they only OAuth-connect or click Install.",
+  "name": "Castalia Course Provisioner",
+  "url": "https://programs.castalia.institute",
+  "hook_attributes": {
+    "url": "https://programs.castalia.institute/api/github/app-events",
+    "active": false
+  },
+  "redirect_url": "https://programs.castalia.institute/api/github/callback",
+  "callback_urls": [
+    "https://programs.castalia.institute/api/github/callback"
+  ],
+  "setup_url": "https://programs.castalia.institute/api/github/callback",
+  "setup_on_update": true,
+  "public": true,
+  "default_permissions": {
+    "administration": "write",
+    "contents": "write",
+    "metadata": "read",
+    "members": "read"
+  },
+  "default_events": [
+    "installation",
+    "installation_repositories"
+  ]
+}

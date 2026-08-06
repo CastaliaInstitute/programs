@@ -19,21 +19,34 @@ every stage to its automation, and is honest about the one-time human setup no c
 | Platform data | `members`, `github_connections`, `enrollments` (Supabase) | migration added (`fulfillment/supabase/migrations/`) |
 | Deploy | `.github/workflows/cloudflare-pages.yml` (build + Functions) | workflow added; cutover pending |
 
-## One-time human setup (cannot be self-automated)
+## Who sets up what
 
-Each needs an account action; I provide the script/manifest/checklist so it's as close to
-one-command as possible, but a person must create the resource and paste back secrets.
+**Customers set up NOTHING.** No tokens, no policies. By design:
+- An **individual** clicks *Connect GitHub* — one OAuth screen.
+- An **institution** clicks *Install the Castalia App on your org* — GitHub mints and manages the
+  token itself. This is the whole reason we use a GitHub App, not PATs.
 
-1. **GitHub App** — create the "Castalia Course Provisioner" App (repo admin, contents; OAuth for
-   connect). Semi-automatable via a **GitHub App manifest** flow (human clicks once; GitHub returns
-   the App id + keys). Install on `CastaliaInstitute`; institutions install on their own org.
-2. **Stripe** — account, product per course, price; webhook endpoint → `/api/stripe-webhook`.
-3. **Supabase** — project (or share magisterium's); run the platform migration; set service key.
-4. **Cloudflare Pages** — project for `programs`, custom domain, KV namespace binding, and
-   Access policy for gated books. Point DNS.
-5. **Secrets** — paste all of the above into Cloudflare Pages env (see `fulfillment/README.md`).
+**Castalia's one-time operator setup** is automated by `automation/bootstrap.mjs` (idempotent,
+create-only) plus a single App-creation click. It reduces to:
 
-Once these exist and secrets are set, the whole in-repo pipeline runs unattended.
+1. **Create the GitHub App** — the one step GitHub has no pure-API for. `github-app-manifest.json`
+   makes it a single click that returns the App id + keys. Install once on `CastaliaInstitute`.
+2. **Provide two operator credentials** (created once, by Castalia): a scoped
+   **Cloudflare API token** (`CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID`) and the
+   **`GITHUB_APP_*`** values from step 1.
+3. **Run `node automation/bootstrap.mjs`** — creates the Cloudflare Pages project + KV namespace
+   and the `ains-course-template` repo. Idempotent; skips any section whose creds are absent.
+4. **Set secrets + Access policy** — the Stripe/GitHub/Supabase secrets on the Pages project, the
+   KV binding, and the Cloudflare Access policy that gates books to enrolled learners. Documented
+   here; kept out of bootstrap so the script stays create-only and safe.
+
+Stripe (account, products/prices, webhook endpoint) and Supabase (project or shared with
+magisterium; run `fulfillment/supabase/migrations/`) are the remaining account creations — each a
+one-time operator action, none touched by customers.
+
+> Credential reality in this session: a repo-scoped GitHub token is present (no org-admin: `orgs`
+> endpoints 403), and **no** Cloudflare token. So bootstrap is authored and dry-run-clean but
+> can't be *run* here until the operator drops in a Cloudflare token and the `GITHUB_APP_*` creds.
 
 ## Automated in-repo (no external account to author)
 
