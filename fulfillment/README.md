@@ -16,12 +16,14 @@ This is a **scaffold**: the flow is complete and correct except integrations stu
 ## Layout
 
 ```
-../functions/api/stripe-webhook.ts    Pages Function — verify Stripe sig, provision, record entitlement
+../functions/api/checkout.ts          Pages Function — create Stripe session; members $0, priced server-side
+../functions/api/stripe-webhook.ts    Pages Function — verify Stripe sig, provision, record result
 ../functions/api/github/connect.ts    Pages Function — start GitHub "connect" (onboarding + pre-purchase)
-../functions/api/github/callback.ts   Pages Function — finish OAuth, store identity + orgs
-lib/course-catalog.ts                 SKU → template repo + enabled features (source of truth)
+../functions/api/github/callback.ts   Pages Function — finish OAuth / org install, store identity/org
+lib/course-catalog.ts                 SKU → template repo + features + list price (source of truth)
+lib/membership.ts                     Castalia membership check (members → $0)
 lib/github-provision.ts               GitHub App: per-org install lookup, repo-from-template, feature manifest
-lib/github-oauth.ts                   GitHub connect (authorize URL, code exchange, identify + orgs)
+lib/github-oauth.ts                   GitHub connect (authorize/install URL, code exchange, identify + orgs)
 lib/inqspace.ts                       the ONLY inqspace-specific code (stubbed pending prototype)
 ```
 
@@ -29,7 +31,9 @@ lib/inqspace.ts                       the ONLY inqspace-specific code (stubbed p
 
 | Name | Purpose |
 | --- | --- |
+| `STRIPE_SECRET_KEY` | Create Checkout Sessions (`/api/checkout`) |
 | `STRIPE_WEBHOOK_SECRET` | Verify webhook signatures |
+| `CHECKOUT_SUCCESS_URL`, `CHECKOUT_CANCEL_URL` | Stripe Checkout redirect targets |
 | `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY` | Provision repos as the Castalia GitHub App (installation resolved per org) |
 | `GITHUB_STUDENTS_ORG` | Default org for individual buyer repos (**`CastaliaInstitute`**) |
 | `GITHUB_APP_CLIENT_ID`, `GITHUB_APP_CLIENT_SECRET`, `GITHUB_OAUTH_REDIRECT_URI` | GitHub connect (OAuth) |

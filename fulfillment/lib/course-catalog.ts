@@ -24,7 +24,16 @@ export interface CourseProvisionConfig {
   /** `owner/repo` template the buyer's repo is generated from (GitHub "generate" endpoint). */
   templateRepo: string
   features: CourseFeatures
+  /**
+   * List price in cents for the direct (MagAI) context when the buyer is NOT a Castalia member.
+   * Castalia **members pay $0** (free) — resolved at checkout, not here. Institutional pricing is
+   * contractual and set outside this catalog.
+   */
+  listPriceCents: number
 }
+
+/** Reference per-course price ($1,500) — Aurnova per-course tuition and the AIMA5001 Simple price. */
+const LIST_PRICE_CENTS = 150000
 
 /** Every self-serve course provisions the full teaching stack by default. */
 const ALL_FEATURES: CourseFeatures = {
@@ -47,12 +56,14 @@ export const COURSE_CATALOG: Record<string, CourseProvisionConfig> = {
     title: 'Foundations of Artificial Intelligence',
     templateRepo: DEFAULT_TEMPLATE,
     features: ALL_FEATURES,
+    listPriceCents: LIST_PRICE_CENTS,
   },
   AINS6007: {
     code: 'AINS6007',
     title: 'Applied AI Programming with Python',
     templateRepo: DEFAULT_TEMPLATE,
     features: ALL_FEATURES,
+    listPriceCents: LIST_PRICE_CENTS,
   },
 }
 

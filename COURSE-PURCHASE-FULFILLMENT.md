@@ -51,11 +51,23 @@ to **Cloudflare Pages**: the Astro site still builds to `web/dist`, and the repo
 removed after cutover. One backend serves both individual and institutional purchases (Stripe
 posts to a single webhook).
 
-## Pricing
+## Pricing & membership
 
-Per-course self-serve price: **$1,500**, matching Aurnova's per-course tuition ($18,000 ÷ 12
-courses) and the existing AIMA5001 Simple Stripe price. Set per SKU via Stripe; the $1,000
-Aurnova admin fee is a program-level charge and does not apply to self-serve single courses.
+| Context | Buyer | Price |
+| --- | --- | --- |
+| Direct (MagAI) | **Castalia member** | **$0 — free** |
+| Direct (MagAI) | Non-member | List price ($1,500 reference) |
+| Institutional | Institution (e.g. Aurnova) | Contract price (per-course reference $1,500) |
+
+**Castalia courses are free to members: a $0 checkout that runs the *same* flow** — a Stripe
+Checkout Session with `unit_amount: 0` completes as `no_payment_required`, fires
+`checkout.session.completed`, and provisions identically. No separate free path.
+
+Pricing is decided **server-side** in `/api/checkout` (`functions/api/checkout.ts`): membership
+is verified against Supabase (`lib/membership.ts`), so the $0 price cannot be forged from the
+client. The webhook and provisioner are amount-agnostic — they never special-case free. The
+$1,500 reference matches Aurnova's per-course tuition ($18,000 ÷ 12) and the AIMA5001 Simple
+price; the $1,000 Aurnova admin fee is program-level and does not apply to single courses.
 
 ## Why Cloudflare Pages
 
@@ -70,8 +82,11 @@ No separate server to operate.
 Buyer connects GitHub  (/api/github/connect → callback)  — onboarding + before purchase
   │  verified login + orgs stored (Supabase); login carried to checkout
   ▼
-Stripe Checkout  (metadata: sku, github_login, purchase_type, target_org for institutional)
-  │  payment succeeds
+POST /api/checkout  → creates Stripe session, priced server-side (member → $0)
+  │  (metadata: sku, github_login, purchase_type, target_org for institutional)
+  ▼
+Stripe Checkout  ($0 completes as no_payment_required; same event either way)
+  │  session completes
   ▼
 POST /api/stripe-webhook   (Cloudflare Pages Function on programs.castalia.institute)
   │  1. verify Stripe signature (Web Crypto)
