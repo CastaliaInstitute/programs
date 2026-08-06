@@ -51,6 +51,20 @@ async function importPrivateKey(pem: string): Promise<CryptoKey> {
   )
 }
 
+/**
+ * Resolve the GitHub Organization an App installation belongs to. Used by the institutional
+ * connect callback to record the verified org (the one the App was just installed on) rather than
+ * trusting a free-text org name.
+ */
+export async function installationOrg(installationId: string, env: GitHubAppEnv, now: number): Promise<string> {
+  const jwt = await appJwt(env, now)
+  const res = await fetch(`${GH}/app/installations/${installationId}`, {
+    headers: { authorization: `Bearer ${jwt}`, accept: 'application/vnd.github+json', 'user-agent': UA },
+  })
+  if (!res.ok) throw new Error(`installation lookup failed: ${res.status} ${await res.text()}`)
+  return ((await res.json()) as { account: { login: string } }).account.login
+}
+
 /** Mint a short-lived GitHub App JWT (RS256). `now` is injected for testability. */
 async function appJwt(env: GitHubAppEnv, now: number): Promise<string> {
   const header = b64url(JSON.stringify({ alg: 'RS256', typ: 'JWT' }))

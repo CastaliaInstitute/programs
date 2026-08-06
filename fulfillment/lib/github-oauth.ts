@@ -11,6 +11,8 @@ export interface GitHubOAuthEnv {
   GITHUB_APP_CLIENT_SECRET: string
   /** e.g. https://programs.castalia.institute/api/github/callback */
   GITHUB_OAUTH_REDIRECT_URI: string
+  /** The GitHub App's public slug, for the org-installation flow (institutional connect). */
+  GITHUB_APP_SLUG: string
 }
 
 export interface ConnectedIdentity {
@@ -20,7 +22,10 @@ export interface ConnectedIdentity {
   orgs: string[]
 }
 
-/** Build the URL to send the user to GitHub for authorization. `state` is a CSRF/session token. */
+/**
+ * Individual connect: send the user to GitHub to authorize their personal account.
+ * `state` is a CSRF/session token.
+ */
 export function authorizeUrl(env: GitHubOAuthEnv, state: string): string {
   const p = new URLSearchParams({
     client_id: env.GITHUB_APP_CLIENT_ID,
@@ -28,6 +33,17 @@ export function authorizeUrl(env: GitHubOAuthEnv, state: string): string {
     state,
   })
   return `https://github.com/login/oauth/authorize?${p.toString()}`
+}
+
+/**
+ * Institutional connect: send the org admin to **install the Castalia App on their GitHub
+ * Organization**. Installing on the org is the hard prerequisite for provisioning course repos
+ * into it; on completion GitHub redirects to the callback with `installation_id` and
+ * `setup_action=install`.
+ */
+export function appInstallUrl(env: GitHubOAuthEnv, state: string): string {
+  const p = new URLSearchParams({ state })
+  return `https://github.com/apps/${env.GITHUB_APP_SLUG}/installations/new?${p.toString()}`
 }
 
 /** Exchange the OAuth `code` for a user access token. */

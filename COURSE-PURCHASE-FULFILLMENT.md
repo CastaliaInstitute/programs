@@ -2,10 +2,12 @@
 
 How a buyer purchases a Castalia course and automatically receives a ready-to-work GitHub
 repository, with **inqspace** (our Codespaces equivalent) and the **Dialogic**, **BEATRICE**,
-and **SAMWISE** teaching stack enabled. Covers **both** purchase types:
+and **SAMWISE** teaching stack enabled. Covers **both** purchase types (see NOMENCLATURE.md for the MagAI vs MSAI split):
 
-- **Individual (self-serve):** repo created under `CastaliaInstitute`, buyer added as collaborator.
-- **Institutional (e.g. Aurnova):** repo created in the **institution's own GitHub org**.
+- **Individual (self-serve → Castalia MagAI):** repo under `CastaliaInstitute`, buyer added as
+  collaborator; AI faculty (BEATRICE/Dialogic/SAMWISE).
+- **Institutional (e.g. Aurnova → their MSAI):** repo created in the **institution's own GitHub
+  org**; the institution brings its own human faculty and students.
 
 Status: **design + scaffold.** The Pages Functions live in [`functions/`](functions/) (repo root)
 and import shared logic from [`fulfillment/lib/`](fulfillment/lib/). Integrations stubbed pending
@@ -24,13 +26,17 @@ is the system that administers it.
 
 ## GitHub connect (before purchase, and in onboarding)
 
-Buyers **connect GitHub** via the Castalia App's OAuth flow (`/api/github/connect` →
-`/api/github/callback`) during onboarding **and** again before purchase, so checkout always
-carries a *verified* GitHub identity rather than a typed-in handle. The callback records the
-login and the user's orgs in Supabase; the buyer's login is attached to the Stripe session
-metadata. For institutional buyers, connect also surfaces which org to provision into and lets
-onboarding confirm the **GitHub App is installed on that org** (the prerequisite for creating
-repos there).
+Buyers **connect GitHub** (`/api/github/connect` → `/api/github/callback`) during onboarding
+**and** again before purchase, so checkout always carries a *verified* GitHub target rather than
+a typed-in name. Two modes:
+
+- **Individual** (`type=individual`): user OAuth authorizes the buyer's personal account; the
+  callback records the login + orgs and carries `github_login` to checkout.
+- **Institutional** (`type=institutional`): **connecting requires connecting a GitHub
+  Organization** — the admin installs the Castalia App on their org. The callback resolves the
+  org from the installation (`installation_id`) and records it. Provisioning targets *that*
+  verified org, and the required App installation is established as a side effect. No org
+  installation → no institutional purchase.
 
 ## Programs → Cloudflare Pages
 
@@ -135,10 +141,10 @@ Suggested tables: `entitlements` (buyer, course, repo, inqspace_url, stripe_even
 - **Least privilege**: the GitHub App is scoped to repo administration (Contents +
   Administration). For institutional provisioning it acts through the **institution's own
   installation** — the institution grants and can revoke that access.
-- Buyer's GitHub identity comes from the **connect (OAuth) flow before purchase**, so we act on a
-  verified account, not a typed handle or an email guess.
-- **Validate OAuth `state`** on callback against the value issued at connect (CSRF) — stubbed
-  `TODO` in the scaffold.
+- Buyer's GitHub target comes from the **connect flow before purchase** — a verified personal
+  account (individual) or a verified org installation (institutional), never a typed name.
+- **OAuth `state`** is validated on callback against a KV-stored value issued at connect (CSRF),
+  which also carries the connect type.
 
 ## Open items
 
@@ -152,9 +158,9 @@ These are stubbed in the scaffold and flagged with `TODO(owner)`:
 3. **Buyer repo org + naming** — individual → **`CastaliaInstitute`**, repo
    `<course-code>-<login>`; institutional → the buyer's org, repo `<course-code>-cohort`. Confirm
    individual repos belong in `CastaliaInstitute` vs. a dedicated students org.
-4. **Institutional onboarding: GitHub App install** — an institution must install the Castalia
-   App on its org before provisioning. Add this to the institutional onboarding checklist and to
-   the connect flow (detect + prompt install when the org lacks the installation).
+4. ✅ **Institutional connect = GitHub Organization** — institutional connect routes the admin
+   through installing the Castalia App on their org, and provisioning targets that verified org.
+   (Remaining: a UI affordance to re-check/repair a revoked installation.)
 5. **Course template repo** — one template per course to `generate` from. The existing
    `CastaliaInstitute/ains-6001-…` repos are course **content** (Jupyter Books), not the student
    working template; extend `aima-codespace-repo/` into `CastaliaInstitute/ains-course-template`.

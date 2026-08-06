@@ -29,13 +29,30 @@ These are four different things and have been conflated. They are not interchang
 
 | Name | What it is | Home |
 | --- | --- | --- |
-| **MSAI** | Aurnova University's *Master of Science in Artificial Intelligence* — the degree, 12 AIN courses (36 cr) | `aurnova.com/msai`; repo `CastaliaInstitute/MSAI` |
+| **MagAI** | **Castalia's own** *Magister of AI* online **certificate** — AI faculty, direct learners. Castalia's offering. | `CastaliaInstitute/MagAI` (public landing) |
+| **MSAI** | **Aurnova University's** *Master of Science in AI* degree (12 AIN courses, 36 cr). Aurnova's brand. **Deprecated as a Castalia label.** | `aurnova.com/msai`; `CastaliaInstitute/MSAI` (deprecated) |
 | **AIMA 5001** | The *AI: A Modern Approach* (Russell & Norvig) course product, sold as Simple / Advanced SKUs | this `programs` catalog; `CastaliaInstitute/aima` |
-| **MagAI** | Castalia's own *Magister of AI* online **certificate** (non-accredited, no faculty) — the credential | `CastaliaInstitute/MagAI` (public landing) |
 | **Magisterium** | The artifact-based **credentialing system** that administers credits/certificates (incl. MagAI) | `CastaliaInstitute/magisterium` (Astro); `magisterium.castalia.institute` |
 
-> **MagAI is the credential; Magisterium is the system that issues it.** Don't use one to mean
-> the other.
+> **MagAI is Castalia's credential; MSAI is Aurnova's degree; Magisterium is the system that
+> administers credit.** Don't use one to mean another.
+
+### Provider vs. customer — who supplies faculty and students
+
+The same courseware is delivered two ways, differing in who teaches and who enrolls:
+
+| | **Castalia — MagAI** | **Aurnova — MSAI** |
+| --- | --- | --- |
+| Role | Provider (courseware + platform) | Institutional **customer** |
+| Faculty | **AI** (BEATRICE, Dialogic, SAMWISE) — no human faculty | **Human faculty** (their own) |
+| Students | Direct learners | **Aurnova's own students** |
+| Credential | MagAI certificate | MSAI degree |
+| GitHub repos | Under `CastaliaInstitute` | In **Aurnova's own org** |
+
+**MSAI is deprecated as a Castalia offering** — it is Aurnova's degree brand. Castalia's direct
+product for this courseware is **MagAI**; retire the `CastaliaInstitute/MSAI` "curriculum system"
+framing in favor of MagAI. Keep `AURNOVA-MSAI-PROGRAM-MAP.md` — it documents the **customer's**
+degree.
 
 ## Platform & teaching stack
 

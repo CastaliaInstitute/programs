@@ -46,7 +46,7 @@ export const specializationDetails: SpecializationDetail[] = [
     paragraphs: [
       'Business AI focuses on measurable outcomes: customer analytics, process automation with oversight, and portfolio-level AI strategy. Cases emphasize experimentation design, ROI framing, and responsible personalization.',
       'Institutions use this cluster for concentrations in analytics, operations, or innovation leadership; credits and prerequisites are defined locally.',
-      'Designed to stack after shared AI foundations and alongside the capstone in the reference MSAI-style sequence.',
+      'Designed to stack after shared AI foundations and alongside the capstone in the reference graduate AI sequence.',
     ],
     outcomes: [
       'Design experiments and automation workflows with clear KPIs and governance.',
