@@ -23,7 +23,7 @@ lib/inqspace.ts                   the ONLY inqspace-specific code (stubbed pendi
 | --- | --- |
 | `STRIPE_WEBHOOK_SECRET` | Verify webhook signatures |
 | `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_INSTALLATION_ID` | Provision repos as the Castalia GitHub App |
-| `GITHUB_COURSE_ORG` | Org buyer repos are created under |
+| `GITHUB_COURSE_ORG` | Org buyer repos are created under (**`CastaliaInstitute`** — see NOMENCLATURE.md) |
 | `INQSPACE_API_BASE`, `INQSPACE_API_TOKEN` | inqspace provisioning (optional until wired) |
 | `FULFILLMENT` (KV binding) | Webhook idempotency + entitlement records |
 

@@ -36,8 +36,9 @@ const ALL_FEATURES: CourseFeatures = {
 
 // TODO(catalog): confirm the per-course template source. `aima-codespace-repo/` is today's
 // student-workspace template; extend it into one template per course, or point each course at
-// its own template repo here.
-const DEFAULT_TEMPLATE = 'InquiryInstitute/ains-course-template'
+// its own template repo here. Org is CastaliaInstitute — where the ains-* course books live
+// (see NOMENCLATURE.md); the legacy InquiryInstitute org is not used for new course repos.
+const DEFAULT_TEMPLATE = 'CastaliaInstitute/ains-course-template'
 
 /** Provisionable courses, keyed by SKU/course code. Extend as courses go on self-serve sale. */
 export const COURSE_CATALOG: Record<string, CourseProvisionConfig> = {
