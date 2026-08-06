@@ -1,20 +1,29 @@
-# AurNova MSAI — Program Map & Recommended Sequence
+# Aurnova MSAI — Program Map & Recommended Sequence
 
-Working reference for AurNova's Master of Science in Artificial Intelligence, assembled from the
-licensed `AINS` graduate courses (see `AINS-Courses.md`). Castalia licenses the courses; AurNova
-defines the official program title, credit values, admissions rules, and catalog copy. This
-document is the recommended assembly, not a contractual constraint.
+Operational companion for Aurnova University's Master of Science in Artificial Intelligence,
+assembled from the licensed `AINS` graduate courses (see `AINS-Courses.md`).
 
-## Program shape (reference)
+**The definitive public program map is <https://aurnova.com/msai/>.** Aurnova defines the
+official program title, codes, credits, admissions rules, and catalog copy; this document
+covers the Castalia side — sequencing recommendations, delivery repositories, and items to
+reconcile. Where this document and aurnova.com disagree, aurnova.com wins and this document
+should be updated.
 
-- **36 credit hours** total (assuming 3 credits per course)
-- **27 core credits** — AINS6001–AINS6009 (capstone included)
-- **9 specialization credits** — one three-course cluster: Healthcare, Business, Cybersecurity, or Robotics
-- **100% online** in the current course designs
+## Program shape (per aurnova.com/msai, retrieved 2026-08-06)
+
+- **Credential:** Master of Science in Artificial Intelligence (MSAI), 100% online
+- **36 credit hours** — 27 core + 9 specialization, all courses 3 credits
+- **Core:** AIN6001–AIN6009 (capstone included)
+- **Specializations (choose one, 3 courses):** Healthcare AI, Business AI, Cybersecurity AI
+- **Course codes:** Aurnova publishes the courses as `AIN####` — same numbering as Castalia's
+  `AINS####` repos and catalog, without the S. Titles and descriptions match `AINS-Courses.md`
+  (Aurnova's AIN6009 capstone description is a local rewrite).
+- **Tuition + fees:** $19,000 total ($18,000 tuition + $1,000 administration fee); no Title IV
+- **Typical completion:** 18–24 months
 
 ## Audience & admission readiness
 
-The AurNova MSAI is designed to be completable by students **without a programming
+The Aurnova MSAI is designed to be completable by students **without a programming
 background**. Programming is taught inside the program, not assumed at admission:
 
 - **No programming prerequisite.** `AINS6007` (Applied AI Programming with Python) is the
@@ -25,7 +34,16 @@ background**. Programming is taught inside the program, not assumed at admission
   students run, modify, and complete guided code inside the book rather than authoring
   programs from scratch.
 
-**Quantitative readiness** is still needed for the ML/DL sequence. AurNova should adopt
+> **⚠️ Unresolved conflict with the published admissions page.** aurnova.com/msai currently
+> requires "Coursework in calculus, statistics, and Python programming" and "Familiarity with
+> data structures and algorithm analysis," and the "Who is this program for?" section
+> describes applicants with CS-adjacent degrees and TensorFlow/PyTorch proficiency. That
+> directly contradicts the non-programming-audience design above. If the no-Python-prerequisite
+> goal stands, Aurnova's admission requirements and audience copy need revision; if the
+> published requirements stand, AIN6007 is remedial rather than an on-ramp and this section
+> should be rewritten. One of the two must change.
+
+**Quantitative readiness** is still needed for the ML/DL sequence. Aurnova should adopt
 **one** of the following (in order of preference):
 
 1. **Stated admissions expectation** — college-level algebra and introductory statistics (no
@@ -35,7 +53,7 @@ background**. Programming is taught inside the program, not assumed at admission
 3. **Embedded bootcamp** — a non-credit quantitative readiness module delivered alongside
    Term 1 (inside the AINS6001/AINS6007 shells) for admits who miss the expectation.
 
-Whichever option is chosen, publish it in the AurNova catalog; do not leave readiness implicit.
+Whichever option is chosen, publish it in the Aurnova catalog; do not leave readiness implicit.
 
 ## Prerequisite graph
 
@@ -86,10 +104,10 @@ Notes:
 ## Capstone (AINS6009) — working specification
 
 - **Credits:** 3 (final term). Institutions wanting a 6-credit capstone can pair it with an
-  independent-study shell on the AurNova side.
+  independent-study shell on the Aurnova side.
 - **Placement:** final term, concurrent with or after the specialization cluster; project topic
   must sit within the chosen specialization.
-- **Sponsorship:** industry-sponsored where AurNova has partners; student-designed with faculty
+- **Sponsorship:** industry-sponsored where Aurnova has partners; student-designed with faculty
   approval otherwise.
 - **Deliverables:** proposal with ethics checklist (Phase 1), working artifact with milestone
   demos and reproducibility package (Phase 2), final evaluation report + stakeholder
@@ -109,19 +127,19 @@ clusters. The Robotics cluster (AINS6400–6402) and AINS6010 are Phase 2 course
 published.
 
 Each book carries the five instructional layers (prose, Thebe-enabled assignments, RISE
-slides, narration, instructor notes), so a course is deliverable to AurNova as a
+slides, narration, instructor notes), so a course is deliverable to Aurnova as a
 self-contained artifact. The executable-assignment layer (Thebe + `ipywidgets`) is what makes
 the non-programmer design work: it is the mechanism by which students in AINS6002–6004 and
 the specializations do real work with code they did not have to write from a blank editor.
 
-## Disclosures for AurNova program committee
+## Disclosures for Aurnova program committee
 
 Items to surface before launch, so they are decisions rather than discoveries:
 
 - **Robotics cluster (AINS6400–6402):** assumes kinematics/dynamics/control background not
   provided by the AI core. Labs are **simulator-first** with optional hardware tie-ins; the
   100%-online claim holds only for the simulator path. Map prerequisites from robotics or
-  mechanical engineering coursework if AurNova offers this track.
+  mechanical engineering coursework if Aurnova offers this track.
 - **AINS6202 (AI Strategy for Executives):** a leadership/strategy seminar, not a technical
   course. Appropriate inside the Business cluster; position it accordingly in the catalog.
 - **Healthcare cluster (AINS6100–6102):** taught as education/simulation; not clinical training
@@ -131,10 +149,10 @@ Items to surface before launch, so they are decisions rather than discoveries:
   present. Before the first cohort, audit the executable assignments in AINS6007 and the
   Term 2 courses specifically for from-zero students.
 - **Robotics track is Phase 2:** the Robotics cluster (AINS6400–6402) is scheduled for
-  Phase 2 delivery. At launch, AurNova's specialization menu is Healthcare, Business, and
-  Cybersecurity; the AurNova catalog should list Robotics as a forthcoming track (or omit it)
-  until the Phase 2 books publish. Students entering in year one still reach their
-  specialization no earlier than Term 3, which is the window Phase 2 has to land in if
-  Robotics is offered to the first cohort.
+  Phase 2 delivery, and aurnova.com/msai consistently lists only the three Phase 1 tracks
+  (Healthcare, Business, Cybersecurity). Keep Robotics off the Aurnova catalog until the
+  Phase 2 books publish. Students entering in year one reach their specialization no earlier
+  than Term 3 — that is the window Phase 2 has to land in if Robotics is to be offered to the
+  first cohort.
 - **Learning outcomes:** per-course measurable CLOs and an assessment plan are required for
   accreditation review and are authored separately from this map (in progress).
