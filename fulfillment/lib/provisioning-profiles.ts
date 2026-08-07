@@ -48,11 +48,18 @@ const AI_TEMPLATE = 'CastaliaInstitute/ains-course-template'
  * here are simply not repo-provisioned — correct for most K–PhD+ courses.
  */
 export const PROVISIONING_PROFILES: Record<string, ProvisioningProfile> = {
+  // Aurnova Q1 (Term 1): AIN6007→CS-100, AIN6001→AI-101, AIN6005→AI-109.
+  'CS-100': { code: 'CS-100', title: 'Programming Foundations', delivery: 'github-repo', templateRepo: AI_TEMPLATE, features: FULL_AI_STACK, listPriceCents: LIST_PRICE_CENTS },
+  'AI-101': { code: 'AI-101', title: 'Mathematical Foundations for AI', delivery: 'github-repo', templateRepo: AI_TEMPLATE, features: FULL_AI_STACK, listPriceCents: LIST_PRICE_CENTS },
+  'AI-109': { code: 'AI-109', title: 'Ethics & Governance of AI', delivery: 'github-repo', templateRepo: AI_TEMPLATE, features: FULL_AI_STACK, listPriceCents: LIST_PRICE_CENTS },
   'AI-102': { code: 'AI-102', title: 'Machine Learning', delivery: 'github-repo', templateRepo: AI_TEMPLATE, features: FULL_AI_STACK, listPriceCents: LIST_PRICE_CENTS },
   'AI-103': { code: 'AI-103', title: 'Deep Learning', delivery: 'github-repo', templateRepo: AI_TEMPLATE, features: FULL_AI_STACK, listPriceCents: LIST_PRICE_CENTS },
   'AI-104': { code: 'AI-104', title: 'Natural Language Processing', delivery: 'github-repo', templateRepo: AI_TEMPLATE, features: FULL_AI_STACK, listPriceCents: LIST_PRICE_CENTS },
   'AI-402': { code: 'AI-402', title: 'Large Language Models', delivery: 'github-repo', templateRepo: AI_TEMPLATE, features: FULL_AI_STACK, listPriceCents: LIST_PRICE_CENTS },
 }
+
+/** Aurnova Q1 (Term 1) course set, by magisterium canonical code. */
+export const AURNOVA_Q1_CODES = ['CS-100', 'AI-101', 'AI-109'] as const
 
 /**
  * Aurnova course code → magisterium canonical code, for the exact matches (see COURSE-CODE-MAP.md).
@@ -61,10 +68,12 @@ export const PROVISIONING_PROFILES: Record<string, ProvisioningProfile> = {
  * intentionally absent — they resolve to no profile until reconciled.
  */
 export const COURSE_CODE_ALIASES: Record<string, string> = {
+  AINS6001: 'AI-101', AIN6001: 'AI-101', // Q1
+  AINS6007: 'CS-100', AIN6007: 'CS-100', // Q1 (CS-100 added via magisterium migration 006)
+  AINS6005: 'AI-109', AIN6005: 'AI-109', // Q1
   AINS6002: 'AI-102', AIN6002: 'AI-102',
   AINS6003: 'AI-103', AIN6003: 'AI-103',
   AINS6004: 'AI-104', AIN6004: 'AI-104',
-  AINS6005: 'AI-109', AIN6005: 'AI-109',
   AINS6006: 'AI-108', AIN6006: 'AI-108',
 }
 

@@ -70,7 +70,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   if (seen) return new Response('already processed', { status: 200 })
 
   const session = event.data.object
-  const sku: string | undefined = session.metadata?.sku ?? session.client_reference_id
+  // One purchase can carry MULTIPLE courses (e.g. Aurnova Q1 = 3). `skus` is a comma-separated
+  // list; single `sku`/client_reference_id still works.
+  const skuList = (session.metadata?.skus ?? session.metadata?.sku ?? session.client_reference_id ?? '')
+    .split(',').map((s) => s.trim()).filter(Boolean)
   // Buyer's GitHub login comes from the pre-purchase "connect" flow (see lib/github-oauth.ts),
   // carried into the Stripe session metadata — not a free-text field.
   const buyerLogin: string | undefined = session.metadata?.github_login
@@ -79,53 +82,41 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const purchaseType: string = session.metadata?.purchase_type ?? 'individual'
   const institutionalOrg: string | undefined = session.metadata?.target_org
 
-  // Purchase = ENROLLMENT. It grants access and provisions a working environment (when the
-  // course needs one). It is NOT a credential — completion + evidence + credentialing are
-  // magisterium's, handled later via /api/completion. No MagAI here.
-  const profile = sku ? resolveProfile(sku) : null
+  // Purchase = ENROLLMENT: grants access and provisions a working environment per course. It is
+  // NOT a credential — completion/evidence/credentialing are magisterium's (via /api/completion).
+  const profiles = skuList.map((s) => resolveProfile(s)).filter(Boolean)
   const orgMissing = purchaseType === 'institutional' && !institutionalOrg
-  if (!profile || !buyerLogin || orgMissing) {
-    // Record for manual follow-up rather than dropping the sale.
+  if (profiles.length === 0 || !buyerLogin || orgMissing) {
     await env.FULFILLMENT.put(
       `unresolved:${event.id}`,
-      JSON.stringify({ sku, buyerLogin, buyerEmail, purchaseType, institutionalOrg }),
+      JSON.stringify({ skus: skuList, buyerLogin, buyerEmail, purchaseType, institutionalOrg }),
     )
     return new Response('unresolved enrollment recorded', { status: 202 })
   }
 
-  // Provision a working environment only for course types that need one (github-repo/inqspace).
-  // Individual → repo in CastaliaInstitute with the buyer as collaborator.
-  // Institutional → repo in the institution's own org (e.g. Aurnova); admins manage cohort access.
-  let repoFullName: string | undefined
-  let repoUrl: string | undefined
-  let inqspaceUrl: string | undefined
-  if (needsProvisioning(profile)) {
-    const target =
-      purchaseType === 'institutional'
-        ? { org: institutionalOrg as string }
-        : { org: env.GITHUB_STUDENTS_ORG, collaborator: buyerLogin }
-    const now = Math.floor(Date.parse(request.headers.get('date') ?? '') / 1000) || 0
-    const provisioned = await provisionCourseRepo(profile, target, env, now)
-    repoFullName = provisioned.repoFullName
-    repoUrl = provisioned.repoUrl
-    inqspaceUrl = (await launchInqspace(provisioned.repoFullName, env)).launchUrl
-  }
+  // Individual → repos in CastaliaInstitute with the buyer as collaborator.
+  // Institutional (e.g. Aurnova) → repos in the institution's own org; admins manage cohort access.
+  const target =
+    purchaseType === 'institutional'
+      ? { org: institutionalOrg as string }
+      : { org: env.GITHUB_STUDENTS_ORG, collaborator: buyerLogin }
+  const now = Math.floor(Date.parse(request.headers.get('date') ?? '') / 1000) || 0
 
-  // Enrollment record (platform-side, generic — no credential semantics).
-  await env.FULFILLMENT.put(
-    `enrollment:${profile.code}:${buyerLogin}`,
-    JSON.stringify({
-      course: profile.code,
-      buyerLogin,
-      buyerEmail,
-      purchaseType,
-      org: purchaseType === 'institutional' ? institutionalOrg : env.GITHUB_STUDENTS_ORG,
-      repo: repoFullName,
-      inqspace: inqspaceUrl,
-      enrolledEvent: event.id,
-    }),
-  )
+  const results = []
+  for (const profile of profiles) {
+    let repoUrl, inqspaceUrl
+    if (needsProvisioning(profile)) {
+      const provisioned = await provisionCourseRepo(profile, target, env, now)
+      repoUrl = provisioned.repoUrl
+      inqspaceUrl = (await launchInqspace(provisioned.repoFullName, env)).launchUrl
+    }
+    await env.FULFILLMENT.put(
+      `enrollment:${profile.code}:${buyerLogin}`,
+      JSON.stringify({ course: profile.code, buyerLogin, buyerEmail, purchaseType, org: target.org, repo: repoUrl, inqspace: inqspaceUrl, enrolledEvent: event.id }),
+    )
+    results.push({ course: profile.code, repo: repoUrl, inqspace: inqspaceUrl })
+  }
   await env.FULFILLMENT.put(`evt:${event.id}`, '1', { expirationTtl: 60 * 60 * 24 * 30 })
 
-  return Response.json({ ok: true, enrolled: profile.code, repo: repoUrl, inqspace: inqspaceUrl })
+  return Response.json({ ok: true, org: target.org, enrolled: results })
 }

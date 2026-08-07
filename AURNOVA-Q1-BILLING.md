@@ -1,39 +1,50 @@
-# Aurnova — Q1 billing
+# Aurnova Q1 — buy on Stripe → repos in their org
 
-**Goal: Aurnova can pay Castalia for their first-quarter courses.** This is a billing transaction,
-deliberately decoupled from the course platform (provisioning, credentialing, inqspace, etc.) —
-none of that is needed to invoice and get paid.
+**Goal: Aurnova pays Castalia for their first-quarter courses by purchasing on Stripe, and the
+purchase creates the course repos in Aurnova's own GitHub org.** No invoice; self-serve checkout.
 
-## What Q1 is
+## Q1
 
-Aurnova MSAI, full-time Term 1 (see `AURNOVA-MSAI-PROGRAM-MAP.md`) — 3 courses, 9 credits:
+Aurnova MSAI, Term 1 — 3 courses (magisterium canonical codes in parentheses):
 
-| Aurnova code | Course |
-| --- | --- |
-| AINS6007 / AIN6007 | Applied AI Programming with Python |
-| AINS6001 / AIN6001 | Foundations of Artificial Intelligence |
-| AINS6005 / AIN6005 | AI Ethics, Law & Policy |
+| Aurnova | Course | Provisions |
+| --- | --- | --- |
+| AIN6007 | Applied AI Programming with Python | `CS-100` |
+| AIN6001 | Foundations of Artificial Intelligence | `AI-101` |
+| AIN6005 | AI Ethics, Law & Policy | `AI-109` |
 
-## Mechanism — Stripe Invoice
+All three now have provisioning profiles and code aliases, so a purchase provisions each into a
+repo. (`AURNOVA_Q1_CODES = ['CS-100','AI-101','AI-109']`.)
 
-For an institutional license payment, a **Stripe Invoice** fits better than a card Checkout:
-emailed to Aurnova, payable by **ACH / wire / card**, supports **net terms** and a **PO number**.
-`automation/invoice-aurnova-q1.mjs` creates it via the Stripe API.
-
-It creates a **draft** by default (a human reviews before it goes out); `--send` finalizes and
-emails it. Run it locally where your Stripe key lives:
+## Flow
 
 ```
-STRIPE_SECRET_KEY=sk_... node automation/invoice-aurnova-q1.mjs \
-  --email billing@aurnova.example --per-course 150000 --dry-run   # preview
-# drop --dry-run to create the draft; add --send to email it
+Aurnova installs the Castalia App on their GitHub org   (one click — connect = org install)
+  ▼
+Aurnova buys Q1 on Stripe   POST /api/checkout { skus:[AIN6007,AIN6001,AIN6005],
+                              github_login, purchase_type:'institutional', target_org:'<aurnova-org>' }
+  ▼  one Checkout, 3 line items, priced server-side
+Stripe Checkout → payment succeeds
+  ▼
+/api/stripe-webhook  → for each course: GitHub App generates a repo in Aurnova's org from the
+                        template + writes castalia-course.json; records enrollment.
+  ▼
+3 course repos exist in Aurnova's GitHub org.
 ```
 
-## To confirm before sending (business inputs, not code)
+The webhook provisions **multiple courses per purchase** (one repo each). Individual purchases work
+the same with `purchase_type` omitted (repos under `CastaliaInstitute`, buyer as collaborator).
 
-1. **Price** — what Aurnova pays Castalia per course (the license/wholesale price). The $1,500
-   figure elsewhere is *student tuition*, not necessarily the institutional rate. `--per-course`
-   (or `--total`) sets it; there is no default, so a wrong amount can't be sent by accident.
-2. **Billing entity + contact** — Aurnova's billing email and legal entity name (`--email`, `--name`).
-3. **Terms** — net-30 by default (`--net`), and any PO number to reference (`--po`).
-4. **Count** — 3 courses assumed (Term 1). One combined line or per-course lines: `--line-mode`.
+## What's still required to run it live (operator, not customer)
+
+Aurnova does two clicks (install App, buy). Castalia's one-time setup, unchanged from
+[`AUTOMATION.md`](AUTOMATION.md): create the GitHub App, deploy the Functions to Cloudflare Pages,
+push the course template to `CastaliaInstitute/ains-course-template`, set the Stripe/GitHub/Supabase
+secrets. Then `node automation/bootstrap.mjs`.
+
+## The one business input
+
+**Q1 price** — what Aurnova pays Castalia per course (the institutional/license rate). Set it as
+`listPriceCents` on the Q1 profiles in `fulfillment/lib/provisioning-profiles.ts` (currently the
+$1,500 student-tuition placeholder), or override per Checkout. The webhook/provisioner are
+amount-agnostic — pricing is decided at checkout.
