@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://programs.castalia.institute/sitemap.xml
