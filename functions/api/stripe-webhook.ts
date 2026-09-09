@@ -86,7 +86,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   // NOT a credential — completion/evidence/credentialing are magisterium's (via /api/completion).
   const profiles = skuList.map((s) => resolveProfile(s)).filter(Boolean)
   const orgMissing = purchaseType === 'institutional' && !institutionalOrg
-  if (profiles.length === 0 || !buyerLogin || orgMissing) {
+  // Institutional buys are identified by the org (from the App install); individual by the login.
+  const identity = buyerLogin ?? (purchaseType === 'institutional' ? institutionalOrg : undefined)
+  if (profiles.length === 0 || !identity || orgMissing) {
     await env.FULFILLMENT.put(
       `unresolved:${event.id}`,
       JSON.stringify({ skus: skuList, buyerLogin, buyerEmail, purchaseType, institutionalOrg }),
@@ -111,7 +113,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       inqspaceUrl = (await launchInqspace(provisioned.repoFullName, env)).launchUrl
     }
     await env.FULFILLMENT.put(
-      `enrollment:${profile.code}:${buyerLogin}`,
+      `enrollment:${profile.code}:${identity}`,
       JSON.stringify({ course: profile.code, buyerLogin, buyerEmail, purchaseType, org: target.org, repo: repoUrl, inqspace: inqspaceUrl, enrolledEvent: event.id }),
     )
     results.push({ course: profile.code, repo: repoUrl, inqspace: inqspaceUrl })

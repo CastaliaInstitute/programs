@@ -14,6 +14,8 @@ which is marked as a GitHub template repo.
 - **inqspace** — open the repo in inqspace (Castalia's cloud workspace) to run everything; no
   local setup. See `.inqspace/config.json`.
 - **`castalia-course.json`** — which teaching features are enabled (set by the provisioner).
+- **`wiki/`** — how-to docs, including **installing the course cartridge (`.imscc`) into Populi**
+  (`wiki/install-to-populi.md`).
 
 ## How completion works
 

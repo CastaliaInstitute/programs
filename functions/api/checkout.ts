@@ -35,11 +35,15 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
   const codes = body.skus ?? (body.sku ? [body.sku] : [])
   const courses = codes.map((c) => resolveProfile(c)).filter(Boolean)
-  if (courses.length === 0 || !body.github_login) return new Response('missing sku(s) or github_login', { status: 400 })
-
   const purchaseType = body.purchase_type ?? 'individual'
-  // Direct members pay $0; everyone else pays list price. (Institutional list = contract price.)
-  const member = purchaseType !== 'institutional' && (await isCastaliaMember(body.github_login, env))
+  const institutional = purchaseType === 'institutional'
+  // Institutional buys are identified by the org (from the App install); individual by the login.
+  if (courses.length === 0 || (institutional ? !body.target_org : !body.github_login)) {
+    return new Response('missing sku(s), and github_login (individual) or target_org (institutional)', { status: 400 })
+  }
+
+  // Direct members pay $0; everyone else pays list price. (Institutional = contract price.)
+  const member = !institutional && !!body.github_login && (await isCastaliaMember(body.github_login, env))
 
   // One Stripe line item per course.
   const lineItems: Record<string, string | number> = {}
@@ -57,8 +61,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     cancel_url: env.CHECKOUT_CANCEL_URL,
     ...lineItems,
     'metadata[skus]': courses.map((c) => c.code).join(','),
-    'metadata[github_login]': body.github_login,
     'metadata[purchase_type]': purchaseType,
+    ...(body.github_login ? { 'metadata[github_login]': body.github_login } : {}),
     ...(body.target_org ? { 'metadata[target_org]': body.target_org } : {}),
   })
 
