@@ -4,6 +4,10 @@ This course ships as an **IMS Common Cartridge** (`.imscc`) so it can be importe
 any Common-Cartridge-compatible LMS). The cartridge carries the syllabus, module pages, readings,
 and assignment shells; the interactive code work still happens in this GitHub repo / inqspace.
 
+> **Import into the PRODUCTION Populi site.** Content import is **disabled in the Populi sandbox**,
+> so the cartridge won't import there — use the live/production instance (with a role that can
+> manage the course). Test with one course first before importing the full term.
+
 ## What you need
 
 - The course cartridge: `course.imscc` (built from `book/` — see "Building the cartridge" below).
