@@ -8,3 +8,4 @@ web/public/demos/course/
 web/demo-sources/**/_build/
 .aima-variant-repos/
 .cartridges/
+automation/node_modules/

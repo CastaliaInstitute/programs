@@ -1,0 +1,11 @@
+{
+  "name": "castalia-automation",
+  "private": true,
+  "type": "module",
+  "description": "Operator/build scripts (bootstrap, cartridge builder, slide PDF). Run: npm i",
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "js-yaml": "^4.1.0",
+    "playwright-core": "^1.47.0"
+  }
+}
