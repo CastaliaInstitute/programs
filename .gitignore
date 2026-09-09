@@ -7,3 +7,4 @@ web/public/demos/imscc-unpacked/
 web/public/demos/course/
 web/demo-sources/**/_build/
 .aima-variant-repos/
+.cartridges/
