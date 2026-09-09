@@ -16,6 +16,9 @@ which is marked as a GitHub template repo.
 - **`castalia-course.json`** — which teaching features are enabled (set by the provisioner).
 - **`wiki/`** — how-to docs, including **installing the course cartridge (`.imscc`) into Populi**
   (`wiki/install-to-populi.md`).
+- **`slides/`** — the shared, refined slide theme (`theme.css`) and an example lecture
+  (`example.html`). Author decks as `.slide` sections; build beautiful PDFs with
+  `node automation/build-slides-pdf.mjs slides/example.html` (uses the pre-installed Chromium).
 
 ## How completion works
 

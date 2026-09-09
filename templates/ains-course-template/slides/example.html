@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AIN6001 · Module 1 — Foundations of AI</title>
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+
+<!-- Title -->
+<section class="slide title">
+  <div class="eyebrow">AIN6001 · Aurnova MSAI · Module 1</div>
+  <h1>Foundations of Artificial Intelligence</h1>
+  <div class="sub">What makes an agent intelligent?</div>
+  <div class="rule"></div>
+  <div class="footer"><span class="mark">Castalia Institute</span><span>Lecture 1</span></div>
+</section>
+
+<!-- Section divider -->
+<section class="slide section">
+  <div class="num">01</div>
+  <h1>Agents &amp; Environments</h1>
+  <div class="footer"><span class="mark">Castalia Institute</span><span>AIN6001 · Module 1</span></div>
+</section>
+
+<!-- Content: bullets -->
+<section class="slide">
+  <div class="eyebrow">The core idea</div>
+  <div class="body top">
+    <h2>The agent–environment loop<span class="accent"></span></h2>
+    <ul class="points">
+      <li><strong>Perceive</strong> — the agent reads the environment through sensors.</li>
+      <li><strong>Decide</strong> — a policy maps what it perceives to an action.
+        <span class="sub">The design question is what makes that mapping <em>rational</em>.</span></li>
+      <li><strong>Act</strong> — actuators change the environment, and the loop repeats.</li>
+    </ul>
+  </div>
+  <div class="footer"><span class="mark">Castalia Institute</span><span>AIN6001 · Module 1 · 3</span></div>
+</section>
+
+<!-- Two column -->
+<section class="slide">
+  <div class="eyebrow">Framing a task</div>
+  <div class="body top">
+    <h2>PEAS — specify before you build<span class="accent"></span></h2>
+    <div class="cols">
+      <div class="card"><h3>Performance &amp; Environment</h3><p>What counts as success, and the world the agent acts in — observable? dynamic? uncertain?</p></div>
+      <div class="card"><h3>Actuators &amp; Sensors</h3><p>What the agent can <em>do</em>, and what it can <em>know</em>. Everything else follows from these.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="mark">Castalia Institute</span><span>AIN6001 · Module 1 · 4</span></div>
+</section>
+
+<!-- Code -->
+<section class="slide">
+  <div class="eyebrow">A rational agent, in miniature</div>
+  <div class="body top">
+    <h2>Policy as a function<span class="accent"></span></h2>
+    <pre class="code"><span class="c"># choose the action with the best expected outcome</span>
+<span class="k">def</span> agent(percept, model):
+    actions = model.actions(percept)
+    <span class="k">return</span> max(actions, key=model.expected_value)</pre>
+    <div class="caption">Run it, change <code>expected_value</code>, and explain how behavior shifts — the pattern for every assignment.</div>
+  </div>
+  <div class="footer"><span class="mark">Castalia Institute</span><span>AIN6001 · Module 1 · 5</span></div>
+</section>
+
+<!-- Quote -->
+<section class="slide quote">
+  <blockquote>A rational agent does the right thing — given what it knows, and what it can do.</blockquote>
+  <div class="attrib">— after Russell &amp; Norvig, <em>Artificial Intelligence: A Modern Approach</em></div>
+  <div class="footer"><span class="mark">Castalia Institute</span><span>AIN6001 · Module 1 · 6</span></div>
+</section>
+
+<!-- Outcomes -->
+<section class="slide">
+  <div class="eyebrow">By the end of this module</div>
+  <div class="body top">
+    <h2>You will be able to<span class="accent"></span></h2>
+    <ul class="check">
+      <li>Model a task as an agent acting in an environment.</li>
+      <li>Specify a problem with PEAS before choosing a method.</li>
+      <li>Explain what makes a decision <em>rational</em> under uncertainty.</li>
+    </ul>
+  </div>
+  <div class="footer"><span class="mark">Castalia Institute</span><span>AIN6001 · Module 1 · 7</span></div>
+</section>
+
+<!-- Closing -->
+<section class="slide title">
+  <div class="eyebrow">Next</div>
+  <h1>Search as problem-solving</h1>
+  <div class="sub">Turning "do the right thing" into an algorithm.</div>
+  <div class="rule"></div>
+  <div class="footer"><span class="mark">Castalia Institute</span><span>AIN6001 · Module 1</span></div>
+</section>
+
+</body>
+</html>
